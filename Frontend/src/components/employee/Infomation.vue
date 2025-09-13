@@ -8,7 +8,7 @@
         <p><b>Địa chỉ: </b>{{ users.diachi }}</p>
         <p><b>Số điện thoại: </b>{{ users.sodienthoai }}</p>
         <p><b>Chức vụ: </b>{{ users.chucvu }}</p>
-        <p><b>Ngày tạo: </b>{{ users.ngaytao }}</p>
+        <p><b>Ngày tạo: </b>{{ formatDate(users.ngaytao) }}</p>
       </div>
       <div class="col-md-8 d-grid gap-2 mt-3">
         <button class="btn btn-success" @click="goUpdate">Cập nhật</button>
@@ -58,6 +58,13 @@ const deleteInfo = async () => {
     alert(error.response?.data?.message || "Xóa tài khoản không thành công");
   }
 };
+
+const formatDate = (dateStr) => {
+  if (!dateStr) return "";
+  const date = new Date(dateStr);
+  return date.toLocaleDateString("vi-VN"); 
+};
+
 
 const goUpdate = () => {
   const id = route.params.id;
