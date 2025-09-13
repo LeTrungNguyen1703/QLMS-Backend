@@ -3,9 +3,9 @@ import helmet from "helmet";
 import cors from "cors";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
-import routernv from "./Routers/Nhanvien";
-import routerdg from "./Routers/Docgia";
-import routersach from "./Routers/Sach";
+import routerDocGia from "./Routers/DocGia";
+import routerSach from "./Routers/Sach";
+import routerNhanVien from "./Routers/NhanVien";
 
 dotenv.config();
 const app = express();
@@ -15,9 +15,9 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
-app.use("/api/nhanvien", routernv);
-app.use("/api/docgia", routerdg);
-app.use("/api/sach", routersach);
+app.use("/api/nhanvien", routerNhanVien);
+app.use("/api/docgia", routerDocGia);
+app.use("/api/sach", routerSach);
 
 const database = process.env.MONGODB as string;
 mongoose.connect(database)

@@ -10,7 +10,7 @@ export interface ISach extends Document {
     tacgia: string
 }
 
-const sach = new mongoose.Schema({
+const SACH = new mongoose.Schema({
     hinhanh: {type: String, required: false},
     tensach: {type: String, required: true},
     dongia: {type: Number, required: true},
@@ -20,5 +20,5 @@ const sach = new mongoose.Schema({
     tacgia: {type: String, required: true}
 });
 
-const Sach = mongoose.model<ISach>("sach", sach);
+const Sach = mongoose.model<ISach>("SACH", SACH);
 export default Sach;
