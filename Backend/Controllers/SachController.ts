@@ -4,30 +4,30 @@ import Sach from "../Models/SACH";
 
 export const addSach = async (req: Request, res: Response) => {
   try {
-    const { tensach, dongia, soquyen, namxuatban, idnxb, tacgia } = req.body;
-    let hinhanh = req.file ? req.file.path : "";
-    if (!req.body?.tensach) {
+    const { TenSach, DonGia, SoQuyen, NamXuatBan, IdNxb, TacGia } = req.body;
+    let HinhAnh = req.file ? req.file.path : "";
+    if (!req.body?.TenSach) {
       return res.status(400).json({ message: "Vui lòng nhập tên sách" });
-    } else if (!req.body?.dongia) {
+    } else if (!req.body?.DonGia) {
       return res.status(400).json({ message: "Vui lòng nhập đơn giá sách" });
-    } else if (!req.body?.soquyen) {
+    } else if (!req.body?.SoQuyen) {
       return res.status(400).json({ message: "Vui lòng nhập số lượng sách" });
-    } else if (!req.body?.namxuatban) {
+    } else if (!req.body?.NamXuatBan) {
       return res.status(400).json({ message: "Vui lòng chọn năm xuất bản sách" });
-    } else if (!req.body?.idnxb) {
+    } else if (!req.body?.IdNxb) {
       return res.status(400).json({ message: "Vui lòng chọn nhà xuất bản sách" });
-    }else if(!req.body?.tacgia){
+    }else if(!req.body?.TacGia){
       return res.status(400).json({ message: "Vui lòng chọn tác giả sách" });  
     }
 
     const sach = new Sach({
-      hinhanh,
-      tensach,
-      dongia,
-      soquyen,
-      namxuatban,
-      idnxb,
-      tacgia,
+      HinhAnh,
+      TenSach,
+      DonGia,
+      SoQuyen,
+      NamXuatBan,
+      IdNxb,
+      TacGia,
     });
 
     await sach.save();

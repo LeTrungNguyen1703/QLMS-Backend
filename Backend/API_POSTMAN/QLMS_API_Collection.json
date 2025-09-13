@@ -1,0 +1,401 @@
+{
+  "info": {
+    "_postman_id": "e4e3f73f-b1b2-4c6c-8d5a-f3a4e89d6a0c",
+    "name": "QLMS API Collection",
+    "description": "API collection for the Library Management System (QLMS)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Độc Giả (DocGia)",
+      "item": [
+        {
+          "name": "Thêm Độc Giả",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"holot\": \"Nguyễn Văn\",\n    \"ten\": \"An\",\n    \"ngaysinh\": \"2000-01-01\",\n    \"phai\": \"Nam\",\n    \"diachi\": \"123 Đường ABC, Phường XYZ, Quận/Huyện, Tỉnh/Thành phố\",\n    \"sodienthoai\": \"0123456789\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/docgia/add-dg",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "docgia",
+                "add-dg"
+              ]
+            },
+            "description": "Thêm độc giả mới vào hệ thống"
+          }
+        },
+        {
+          "name": "Cập Nhật Độc Giả",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"holot\": \"Nguyễn Văn\",\n    \"ten\": \"An (Updated)\",\n    \"ngaysinh\": \"2000-01-01\",\n    \"phai\": \"Nam\",\n    \"diachi\": \"456 Đường DEF, Phường UVW, Quận/Huyện, Tỉnh/Thành phố\",\n    \"sodienthoai\": \"0123456789\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/docgia/update-dg/:id",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "docgia",
+                "update-dg",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{docgia_id}}",
+                  "description": "ID của độc giả cần cập nhật"
+                }
+              ]
+            },
+            "description": "Cập nhật thông tin độc giả"
+          }
+        },
+        {
+          "name": "Xem Thông Tin Độc Giả",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/docgia/get-dg/:id",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "docgia",
+                "get-dg",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{docgia_id}}",
+                  "description": "ID của độc giả cần xem thông tin"
+                }
+              ]
+            },
+            "description": "Lấy thông tin của độc giả theo ID"
+          }
+        },
+        {
+          "name": "Xóa Độc Giả",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/docgia/delete-dg/:id",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "docgia",
+                "delete-dg",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{docgia_id}}",
+                  "description": "ID của độc giả cần xóa"
+                }
+              ]
+            },
+            "description": "Xóa độc giả khỏi hệ thống"
+          }
+        }
+      ],
+      "description": "Các API liên quan đến Độc Giả"
+    },
+    {
+      "name": "Nhân Viên (NhanVien)",
+      "item": [
+        {
+          "name": "Đăng Ký Nhân Viên",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"hotennv\": \"Nguyễn Thị Bình\",\n    \"matkhau\": \"password123\",\n    \"diachi\": \"789 Đường GHI, Phường JKL, Quận/Huyện, Tỉnh/Thành phố\",\n    \"sodienthoai\": \"0987654321\",\n    \"chucvu\": \"Nhân viên\",\n    \"ngaytao\": \"2023-01-01\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/nhanvien/register",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "nhanvien",
+                "register"
+              ]
+            },
+            "description": "Đăng ký tài khoản nhân viên mới"
+          }
+        },
+        {
+          "name": "Đăng Nhập",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"sodienthoai\": \"0987654321\",\n    \"matkhau\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/nhanvien/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "nhanvien",
+                "login"
+              ]
+            },
+            "description": "Đăng nhập vào hệ thống"
+          }
+        },
+        {
+          "name": "Cập Nhật Thông Tin Nhân Viên",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"hotennv\": \"Nguyễn Thị Bình (Updated)\",\n    \"diachi\": \"101 Đường MNO, Phường PQR, Quận/Huyện, Tỉnh/Thành phố\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/nhanvien/update-nv/:id",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "nhanvien",
+                "update-nv",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{nhanvien_id}}",
+                  "description": "ID của nhân viên cần cập nhật"
+                }
+              ]
+            },
+            "description": "Cập nhật thông tin nhân viên"
+          }
+        },
+        {
+          "name": "Đổi Mật Khẩu",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"matkhau\": \"password123\",\n    \"nhapmatkhaumoi\": \"newpassword456\",\n    \"nhaplaimatkhaumoi\": \"newpassword456\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/nhanvien/changpassword-nv/:id",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "nhanvien",
+                "changpassword-nv",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{nhanvien_id}}",
+                  "description": "ID của nhân viên cần đổi mật khẩu"
+                }
+              ]
+            },
+            "description": "Đổi mật khẩu nhân viên"
+          }
+        },
+        {
+          "name": "Xem Thông Tin Nhân Viên",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/nhanvien/get-nv/:id",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "nhanvien",
+                "get-nv",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{nhanvien_id}}",
+                  "description": "ID của nhân viên cần xem thông tin"
+                }
+              ]
+            },
+            "description": "Lấy thông tin của nhân viên theo ID"
+          }
+        },
+        {
+          "name": "Xóa Nhân Viên",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/nhanvien/delete-nv/:id",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "nhanvien",
+                "delete-nv",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{nhanvien_id}}",
+                  "description": "ID của nhân viên cần xóa"
+                }
+              ]
+            },
+            "description": "Xóa nhân viên khỏi hệ thống"
+          }
+        }
+      ],
+      "description": "Các API liên quan đến Nhân Viên"
+    },
+    {
+      "name": "Sách (Sach)",
+      "item": [
+        {
+          "name": "Thêm Sách",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "tensach",
+                  "value": "Lập Trình Web Hiện Đại",
+                  "type": "text"
+                },
+                {
+                  "key": "dongia",
+                  "value": "150000",
+                  "type": "text"
+                },
+                {
+                  "key": "soquyen",
+                  "value": "10",
+                  "type": "text"
+                },
+                {
+                  "key": "namxuatban",
+                  "value": "2023",
+                  "type": "text"
+                },
+                {
+                  "key": "idnxb",
+                  "value": "61234567890abcdef1234567",
+                  "type": "text",
+                  "description": "ID của nhà xuất bản"
+                },
+                {
+                  "key": "tacgia",
+                  "value": "Nguyễn Văn A",
+                  "type": "text"
+                },
+                {
+                  "key": "hinhanh",
+                  "type": "file",
+                  "src": "/path/to/your/image.jpg",
+                  "description": "Hình ảnh của sách"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/sach/add-sach",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "sach",
+                "add-sach"
+              ]
+            },
+            "description": "Thêm sách mới vào hệ thống"
+          }
+        }
+      ],
+      "description": "Các API liên quan đến Sách"
+    }
+  ],
+  "variable": [
+    {
+      "key": "docgia_id",
+      "value": "",
+      "description": "ID của độc giả"
+    },
+    {
+      "key": "nhanvien_id",
+      "value": "",
+      "description": "ID của nhân viên"
+    }
+  ]
+}

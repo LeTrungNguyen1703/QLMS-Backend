@@ -1,13 +1,13 @@
 import mongoose, { Schema, Document } from "mongoose";
 
 export interface INhaxuatban extends Document {
-    tennxb: string,
-    diachi: string
+    TenNXB: string,
+    DiaChi: string
 }
 
 const NHAXUATBAN = new mongoose.Schema({
-    tennxb: {type: String, required: true, unique: true},
-    diachi: {type: String, required: true}
+    TenNXB: {type: String, required: true, unique: true},
+    DiaChi: {type: String, required: true}
 });
 
 const NhaXuatBan = mongoose.model<INhaxuatban>("NHAXUATBAN", NHAXUATBAN);

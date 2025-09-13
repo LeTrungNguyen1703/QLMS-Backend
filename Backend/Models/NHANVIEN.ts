@@ -1,22 +1,22 @@
 import mongoose, { Schema, Document } from "mongoose";
 
 export interface INhanvien extends Document {
-    hotennv?: string,
-    matkhau: string,
-    diachi?: string,
-    sodienthoai: string,
-    chucvu: "nhân viên" | "admin",
-    ngaytao: Date
+    HoTenNV?: string,
+    MatKhau: string,
+    DiaChi?: string,
+    SoDienThoai: string,
+    ChucVu: "nhân viên" | "admin",
+    NgayTao: Date
 }
 
 const NHANVIEN: Schema = new Schema({
-    hotennv: {type: String, required: false, default: ""},
-    matkhau: {type: String, required: true},
-    diachi: {type: String, required: false, default: ""},
-    sodienthoai: {type: String, required: true, unique: true},
-    chucvu: {type: String, required: false, enum:["nhân viên", "admin"], default: "nhân viên"},
-    ngaytao: {type: Date, default: Date.now}
+    HoTenNV: {type: String, required: false, default: ""},
+    MatKhau: {type: String, required: true},
+    DiaChi: {type: String, required: false, default: ""},
+    SoDienThoai: {type: String, required: true, unique: true},
+    ChucVu: {type: String, required: false, enum:["nhân viên", "admin"], default: "nhân viên"},
+    NgayTao: {type: Date, default: Date.now}
 });
 
 const NhanVien = mongoose.model<INhanvien>("NHANVIEN", NHANVIEN);
-export default NhanVien;  
+export default NhanVien;

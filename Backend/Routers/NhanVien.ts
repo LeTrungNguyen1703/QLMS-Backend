@@ -1,5 +1,5 @@
 import {Router} from "express";
-import {Register, Login, UpdateInfoNV, changePassword, getNV, deleteNV } from "../Controllers/NhanVien";
+import {Register, Login, UpdateInfoNV, changePassword, getNV, deleteNV } from "../Controllers/NhanVienController";
 const routerNhanVien = Router();
 
 routerNhanVien.get("/get-nv/:id", getNV);

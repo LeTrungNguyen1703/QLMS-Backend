@@ -6,27 +6,27 @@ import NhanVien from "../Models/NHANVIEN";
 
 export const Register = async (req: Request, res: Response) => {
   try {
-    const { hotennv, matkhau, diachi, sodienthoai, chucvu, ngaytao } = req.body;
-    if (!req.body?.sodienthoai) {
+    const { HoTenNV, MatKhau, DiaChi, SoDienThoai, ChucVu, NgayTao } = req.body;
+    if (!req.body?.SoDienThoai) {
       return res.status(400).json({ message: "Vui lòng nhập số điện thoại" });
-    } else if (!req.body?.matkhau) {
+    } else if (!req.body?.MatKhau) {
       return res.status(400).json({ message: "Vui lòng nhập mật khẩu" });
     }
 
-    const phone = await NhanVien.findOne({ sodienthoai });
+    const phone = await NhanVien.findOne({ SoDienThoai });
     if (phone) {
       return res.status(400).json({ message: "Số điện thoại đã tồn tại" });
     }
 
-    const hashpass = await bcrypt.hash(matkhau, 10);
+    const hashpass = await bcrypt.hash(MatKhau, 10);
 
     const register = new NhanVien({
-      hotennv,
-      matkhau: hashpass,
-      diachi,
-      sodienthoai,
-      chucvu,
-      ngaytao,
+      HoTenNV,
+      MatKhau: hashpass,
+      DiaChi,
+      SoDienThoai,
+      ChucVu,
+      NgayTao,
     });
     await register.save();
     if (!register) {
@@ -45,19 +45,19 @@ export const Register = async (req: Request, res: Response) => {
 
 export const Login = async (req: Request, res: Response) => {
   try {
-    const { sodienthoai, matkhau } = req.body;
-    if (!req.body?.sodienthoai) {
+    const { SoDienThoai, MatKhau } = req.body;
+    if (!req.body?.SoDienThoai) {
       return res.status(400).json({ message: "Vui lòng nhập số điện thoại" });
-    } else if (!req.body?.matkhau) {
+    } else if (!req.body?.MatKhau) {
       return res.status(400).json({ message: "Vui lòng nhập mật khẩu" });
     }
 
-    const phone = await NhanVien.findOne({ sodienthoai });
+    const phone = await NhanVien.findOne({ SoDienThoai });
     if (!phone) {
       return res.status(400).json({ message: "Số điện thoại không tồn tại" });
     }
 
-    const comparepass = await bcrypt.compare(matkhau, phone.matkhau);
+    const comparepass = await bcrypt.compare(MatKhau, phone.MatKhau);
     if (!comparepass) {
       return res.status(400).json({ message: "Mật khẩu sai" });
     }
@@ -90,12 +90,12 @@ export const Login = async (req: Request, res: Response) => {
 
 export const UpdateInfoNV = async (req: Request, res: Response) => {
   try {
-    const { hotennv, diachi } = req.body;
+    const { HoTenNV, DiaChi } = req.body;
     const update = await NhanVien.findByIdAndUpdate(
       req.params.id,
       {
-        hotennv: hotennv || "",
-        diachi: diachi || "",
+        HoTenNV: HoTenNV || "",
+        DiaChi: DiaChi || "",
       },
       { new: true }
     );
@@ -116,16 +116,16 @@ export const UpdateInfoNV = async (req: Request, res: Response) => {
 
 export const changePassword = async (req: Request, res: Response) => {
   try {
-    const { matkhau, nhapmatkhaumoi, nhaplaimatkhaumoi } = req.body;
-    if (!req.body?.matkhau) {
+    const { MatKhau, NhapMatKhauMoi, NhapLaiMatKhauMoi } = req.body;
+    if (!req.body?.MatKhau) {
       return res.status(400).json({ message: "Vui lòng nhập mật khẩu" });
-    } else if (!req.body?.nhapmatkhaumoi) {
+    } else if (!req.body?.NhapMatKhauMoi) {
       return res.status(400).json({ message: "Vui lòng nhập mật khẩu mới" });
-    } else if (!req.body?.nhaplaimatkhaumoi) {
+    } else if (!req.body?.NhapLaiMatKhauMoi) {
       return res
         .status(400)
         .json({ message: "Vui lòng nhập lại mật khẩu mới" });
-    } else if (nhaplaimatkhaumoi !== nhapmatkhaumoi) {
+    } else if (NhapLaiMatKhauMoi !== NhapMatKhauMoi) {
       return res.status(400).json({ message: "Mật khẩu mới không trùng nhau" });
     }
 
@@ -134,15 +134,15 @@ export const changePassword = async (req: Request, res: Response) => {
       return res.status(400).json({ message: "Tài khoản không tồn tại" });
     }
 
-    const comparepass = await bcrypt.compare(matkhau, user.matkhau);
+    const comparepass = await bcrypt.compare(MatKhau, user.MatKhau);
     if (!comparepass) {
       return res
         .status(400)
         .json({ message: "Mật khẩu cũ tài khoản không chính xác" });
     }
 
-    const hashpass = await bcrypt.hash(nhapmatkhaumoi, 10);
-    user.matkhau = hashpass;
+    const hashpass = await bcrypt.hash(NhapMatKhauMoi, 10);
+    user.MatKhau = hashpass;
     await user.save();
     return res.status(200).json({ message: "Đổi mật khẩu thành công" });
   } catch (error) {
