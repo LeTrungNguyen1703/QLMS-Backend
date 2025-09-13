@@ -1,6 +1,6 @@
 
 import { Router } from "express";
-import {addDG, updateDG, getDG, getallDG, deleteDG} from "../Controllers/Docgia";
+import {addDG, deleteDG, getallDG, getDG, updateDG} from "../Controllers/DocGia";
 const routerdg = Router();
 routerdg.get("/get-dg/:id", getDG);
 routerdg.get("/getall-dg", getallDG);
