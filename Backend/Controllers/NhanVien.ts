@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import cookie from "cookie";
-import NhanVien from "../Models/Nhanvien";
+import NhanVien from "../Models/NHANVIEN";
 
 export const Register = async (req: Request, res: Response) => {
   try {

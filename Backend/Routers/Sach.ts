@@ -1,8 +1,8 @@
 import { Router } from "express";
 import {addSach} from "../Controllers/Sach";
-import upload from "../Middleware/multer";
-const routersach = Router();
+import upload from "../Middleware/Multer";
+const routerSach = Router();
 
-routersach.post("/add-sach", upload.single("hinhanh"), addSach);
+routerSach.post("/add-sach", upload.single("hinhanh"), addSach);
 
-export default routersach;
+export default routerSach;

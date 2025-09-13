@@ -5,10 +5,10 @@ export interface INhaxuatban extends Document {
     diachi: string
 }
 
-const nhaxuatban = new mongoose.Schema({
+const NHAXUATBAN = new mongoose.Schema({
     tennxb: {type: String, required: true, unique: true},
     diachi: {type: String, required: true}
 });
 
-const NhaXuatBan = mongoose.model<INhaxuatban>("nhaxuatban", nhaxuatban);
+const NhaXuatBan = mongoose.model<INhaxuatban>("NHAXUATBAN", NHAXUATBAN);
 export default NhaXuatBan;

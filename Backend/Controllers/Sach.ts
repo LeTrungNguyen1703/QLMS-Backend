@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import multer from "multer";
-import Sach from "../Models/Sach";
+import Sach from "../Models/SACH";
 
 export const addSach = async (req: Request, res: Response) => {
   try {
