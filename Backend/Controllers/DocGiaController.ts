@@ -1,127 +1,68 @@
 import { Request, Response } from "express";
-import DocGia from "../Models/DOCGIA";
-//Thêm đọc giả
+import DocGiaService from "../Services/DocGiaService";
 
+// Thêm đọc giả
 export const addDG = async (req: Request, res: Response) => {
   try {
-    const { HoLot, Ten, NgaySinh, Phai, DiaChi, SoDienThoai } = req.body;
-    if (!req.body?.HoLot) {
-      return res.status(400).json({ message: "Vui lòng nhập họ lót" });
-    } else if (!req.body?.Ten) {
-      return res.status(400).json({ message: "Vui lòng nhập tên" });
-    } else if (!req.body?.NgaySinh) {
-      return res.status(400).json({ message: "Vui lòng chọn ngày sinh" });
-    } else if (!req.body?.Phai) {
-      return res.status(400).json({ message: "Vui lòng chọn giới tính" });
-    } else if (!req.body?.DiaChi) {
-      return res.status(400).json({ message: "Vui lòng nhập địa chỉ" });
-    } else if (!req.body?.SoDienThoai) {
-      return res.status(400).json({ message: "Vui lòng nhập số điện thoại" });
-    }
-
-    const checksdt = await DocGia.findOne({ SoDienThoai });
-    if (checksdt) {
-      return res.status(400).json({ message: "Số điện thoại đã tồn tại" });
-    }
-
-    const docgia = new DocGia({
-      HoLot,
-      Ten,
-      NgaySinh,
-      Phai,
-      DiaChi,
-      SoDienThoai,
-    });
-    await docgia.save();
-
-    if (!docgia) {
-      return res.status(400).json({ message: "Thêm đọc giả không thành công" });
-    }
-
+    const docGia = await DocGiaService.createDocGia(req.body);
     return res.status(200).json({
       message: "Thêm đọc giả thành công",
-      data: docgia,
+      data: docGia,
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error(error);
-    return res.status(500).json({ message: "Lỗi Server", error });
+    return res.status(400).json({ message: error.message || "Lỗi Server" });
   }
 };
-//Update đọc giả
+
+// Update đọc giả
 export const updateDG = async (req: Request, res: Response) => {
   try {
-    const { HoLot, Ten, NgaySinh, Phai, DiaChi, SoDienThoai } = req.body;
-    const update = await DocGia.findByIdAndUpdate(
-      req.params.id,
-      {
-        HoLot,
-        Ten,
-        NgaySinh,
-        Phai,
-        DiaChi,
-        SoDienThoai,
-      },
-      { new: true }
-    );
-    if (!update) {
-      return res
-        .status(400)
-        .json({ message: "Cập nhật đọc giả không thành công" });
-    }
-
+    await DocGiaService.updateDocGia(req.params.id, req.body);
     return res.status(200).json({ message: "Cập nhật đọc giả thành công" });
-  } catch (error) {
+  } catch (error: any) {
     console.error(error);
-    return res.status(500).json({ message: "Lỗi Server", error });
+    return res.status(400).json({ message: error.message || "Lỗi Server" });
   }
 };
-//Lấy người dùng dựa theo id
+
+// Lấy người dùng dựa theo id
 export const getDG = async (req: Request, res: Response) => {
   try {
-    const docgia = await DocGia.findById(req.params.id);
-    if (!docgia) {
-      return res
-        .status(400)
-        .json({ message: "Lấy thông tin đọc giả không thành công" });
-    }
+    const docGia = await DocGiaService.getDocGiaById(req.params.id);
     return res.status(200).json({
       message: "Lấy thông tin đọc giả thành công",
-      data: docgia,
+      data: docGia,
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error(error);
-    return res.status(500).json({ message: "Lỗi Server", error });
+    return res.status(400).json({ message: error.message || "Lỗi Server" });
   }
 };
-//Xóa đọc giả dựa theo id
+
+// Xóa đọc giả dựa theo id
 export const deleteDG = async (req: Request, res: Response) => {
   try {
-    const docgia = await DocGia.findByIdAndDelete(req.params.id);
-    if (!docgia) {
-      return res.status(400).json({ message: "Xóa đọc giả không thành công" });
-    }
+    const docGia = await DocGiaService.deleteDocGia(req.params.id);
     return res.status(200).json({
       message: "Xóa đọc giả thành công",
-      data: docgia,
+      data: docGia,
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error(error);
-    return res.status(500).json({ message: "Lỗi Server", error });
+    return res.status(400).json({ message: error.message || "Lỗi Server" });
   }
 };
 
 export const getallDG = async (req: Request, res: Response) => {
   try {
-    const docgia = await DocGia.find({});
-    if (!docgia) {
-      return res.status(400).json({ message: "Lấy tất cả đọc giả không thành công" });
-    }
+    const docgia = await DocGiaService.getAllDocGia();
     return res.status(200).json({
       message: "Lấy tất cả đọc giả thành công",
       data: docgia,
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error(error);
-    return res.status(500).json({ message: "Lỗi Server", error });
+    return res.status(400).json({ message: error.message || "Lỗi Server" });
   }
 };

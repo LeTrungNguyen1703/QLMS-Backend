@@ -21,7 +21,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"holot\": \"Nguyễn Văn\",\n    \"ten\": \"An\",\n    \"ngaysinh\": \"2000-01-01\",\n    \"phai\": \"Nam\",\n    \"diachi\": \"123 Đường ABC, Phường XYZ, Quận/Huyện, Tỉnh/Thành phố\",\n    \"sodienthoai\": \"0123456789\"\n}"
+              "raw": "{\n    \"HoLot\": \"Nguyễn Văn\",\n    \"Ten\": \"An\",\n    \"NgaySinh\": \"2000-01-01\",\n    \"Phai\": \"nam\",\n    \"DiaChi\": \"123 Đường ABC, Phường XYZ, Quận/Huyện, Tỉnh/Thành phố\",\n    \"SoDienThoai\": \"0123456789\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/docgia/add-dg",
@@ -49,7 +49,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"holot\": \"Nguyễn Văn\",\n    \"ten\": \"An (Updated)\",\n    \"ngaysinh\": \"2000-01-01\",\n    \"phai\": \"Nam\",\n    \"diachi\": \"456 Đường DEF, Phường UVW, Quận/Huyện, Tỉnh/Thành phố\",\n    \"sodienthoai\": \"0123456789\"\n}"
+              "raw": "{\n    \"HoLot\": \"Nguyễn Văn\",\n    \"Ten\": \"An (Updated)\",\n    \"NgaySinh\": \"2000-01-01\",\n    \"Phai\": \"nam\",\n    \"DiaChi\": \"456 Đư��ng DEF, Phường UVW, Quận/Huyện, Tỉnh/Thành phố\",\n    \"SoDienThoai\": \"0123456789\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/docgia/update-dg/:id",
@@ -126,6 +126,25 @@
             },
             "description": "Xóa độc giả khỏi hệ thống"
           }
+        },
+        {
+          "name": "Xem Tất Cả Độc Giả",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/docgia/get-all-dg",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "docgia",
+                "get-all-dg"
+              ]
+            },
+            "description": "Lấy thông tin của tất cả độc giả trong hệ thống"
+          }
         }
       ],
       "description": "Các API liên quan đến Độc Giả"
@@ -145,7 +164,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"hotennv\": \"Nguyễn Thị Bình\",\n    \"matkhau\": \"password123\",\n    \"diachi\": \"789 Đường GHI, Phường JKL, Quận/Huyện, Tỉnh/Thành phố\",\n    \"sodienthoai\": \"0987654321\",\n    \"chucvu\": \"Nhân viên\",\n    \"ngaytao\": \"2023-01-01\"\n}"
+              "raw": "{\n    \"HoTenNV\": \"Nguyễn Thị Bình\",\n    \"MatKhau\": \"password123\",\n    \"DiaChi\": \"789 Đường GHI, Phường JKL, Quận/Huyện, Tỉnh/Thành phố\",\n    \"SoDienThoai\": \"0987654321\",\n    \"ChucVu\": \"nhân viên\",\n    \"NgayTao\": \"2023-01-01\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/nhanvien/register",
@@ -162,7 +181,7 @@
           }
         },
         {
-          "name": "Đăng Nhập",
+          "name": "Đăng Nh��p",
           "request": {
             "method": "POST",
             "header": [
@@ -173,7 +192,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"sodienthoai\": \"0987654321\",\n    \"matkhau\": \"password123\"\n}"
+              "raw": "{\n    \"SoDienThoai\": \"0987654321\",\n    \"MatKhau\": \"password123\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/nhanvien/login",
@@ -197,11 +216,15 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
               }
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"hotennv\": \"Nguyễn Thị Bình (Updated)\",\n    \"diachi\": \"101 Đường MNO, Phường PQR, Quận/Huyện, Tỉnh/Thành phố\"\n}"
+              "raw": "{\n    \"HoTenNV\": \"Nguyễn Thị Bình (Updated)\",\n    \"DiaChi\": \"101 Đường MNO, Phường PQR, Quận/Huyện, Tỉnh/Thành phố\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/nhanvien/update-nv/:id",
@@ -233,11 +256,15 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
               }
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"matkhau\": \"password123\",\n    \"nhapmatkhaumoi\": \"newpassword456\",\n    \"nhaplaimatkhaumoi\": \"newpassword456\"\n}"
+              "raw": "{\n    \"MatKhau\": \"password123\",\n    \"NhapMatKhauMoi\": \"newpassword456\",\n    \"NhapLaiMatKhauMoi\": \"newpassword456\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/nhanvien/changpassword-nv/:id",
@@ -265,7 +292,12 @@
           "name": "Xem Thông Tin Nhân Viên",
           "request": {
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
             "url": {
               "raw": "{{base_url}}/api/nhanvien/get-nv/:id",
               "host": [
@@ -292,7 +324,12 @@
           "name": "Xóa Nhân Viên",
           "request": {
             "method": "DELETE",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
             "url": {
               "raw": "{{base_url}}/api/nhanvien/delete-nv/:id",
               "host": [
@@ -314,6 +351,30 @@
             },
             "description": "Xóa nhân viên khỏi hệ thống"
           }
+        },
+        {
+          "name": "Xem Tất Cả Nhân Viên",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/nhanvien/get-all-nv",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "nhanvien",
+                "get-all-nv"
+              ]
+            },
+            "description": "Lấy thông tin của tất cả nhân viên trong hệ thống"
+          }
         }
       ],
       "description": "Các API liên quan đến Nhân Viên"
@@ -325,43 +386,48 @@
           "name": "Thêm Sách",
           "request": {
             "method": "POST",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
             "body": {
               "mode": "formdata",
               "formdata": [
                 {
-                  "key": "tensach",
+                  "key": "TenSach",
                   "value": "Lập Trình Web Hiện Đại",
                   "type": "text"
                 },
                 {
-                  "key": "dongia",
+                  "key": "DonGia",
                   "value": "150000",
                   "type": "text"
                 },
                 {
-                  "key": "soquyen",
+                  "key": "SoQuyen",
                   "value": "10",
                   "type": "text"
                 },
                 {
-                  "key": "namxuatban",
+                  "key": "NamXuatBan",
                   "value": "2023",
                   "type": "text"
                 },
                 {
-                  "key": "idnxb",
+                  "key": "IdNxb",
                   "value": "61234567890abcdef1234567",
                   "type": "text",
                   "description": "ID của nhà xuất bản"
                 },
                 {
-                  "key": "tacgia",
+                  "key": "TacGia",
                   "value": "Nguyễn Văn A",
                   "type": "text"
                 },
                 {
-                  "key": "hinhanh",
+                  "key": "HinhAnh",
                   "type": "file",
                   "src": "/path/to/your/image.jpg",
                   "description": "Hình ảnh của sách"
@@ -381,12 +447,372 @@
             },
             "description": "Thêm sách mới vào hệ thống"
           }
+        },
+        {
+          "name": "Cập Nhật Sách",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "TenSach",
+                  "value": "Lập Trình Web Hiện Đại (Updated)",
+                  "type": "text"
+                },
+                {
+                  "key": "DonGia",
+                  "value": "180000",
+                  "type": "text"
+                },
+                {
+                  "key": "SoQuyen",
+                  "value": "15",
+                  "type": "text"
+                },
+                {
+                  "key": "NamXuatBan",
+                  "value": "2023",
+                  "type": "text"
+                },
+                {
+                  "key": "IdNxb",
+                  "value": "61234567890abcdef1234567",
+                  "type": "text",
+                  "description": "ID của nhà xuất bản"
+                },
+                {
+                  "key": "TacGia",
+                  "value": "Nguyễn Văn A",
+                  "type": "text"
+                },
+                {
+                  "key": "HinhAnh",
+                  "type": "file",
+                  "src": "/path/to/your/image.jpg",
+                  "description": "Hình ảnh của sách (tùy chọn)"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/sach/update-sach/:id",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "sach",
+                "update-sach",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{sach_id}}",
+                  "description": "ID của sách cần cập nhật"
+                }
+              ]
+            },
+            "description": "Cập nhật thông tin sách"
+          }
+        },
+        {
+          "name": "Xem Thông Tin Sách",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/sach/get-sach/:id",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "sach",
+                "get-sach",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{sach_id}}",
+                  "description": "ID của sách cần xem thông tin"
+                }
+              ]
+            },
+            "description": "Lấy thông tin của sách theo ID"
+          }
+        },
+        {
+          "name": "Xóa Sách",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/sach/delete-sach/:id",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "sach",
+                "delete-sach",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{sach_id}}",
+                  "description": "ID của sách cần xóa"
+                }
+              ]
+            },
+            "description": "Xóa sách khỏi hệ thống"
+          }
+        },
+        {
+          "name": "Xem Tất Cả Sách",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/sach/get-all-sach",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "sach",
+                "get-all-sach"
+              ]
+            },
+            "description": "Lấy thông tin của tất cả sách trong hệ thống"
+          }
         }
       ],
       "description": "Các API liên quan đến Sách"
+    },
+    {
+      "name": "Theo Dõi Mượn Sách",
+      "item": [
+        {
+          "name": "Thêm Thông Tin Mượn Sách",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"IdDocGia\": \"{{docgia_id}}\",\n    \"IdSach\": \"{{sach_id}}\",\n    \"NgayMuon\": \"2023-09-01\",\n    \"NgayTra\": \"2023-09-15\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/muonsach/add-muonsach",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "muonsach",
+                "add-muonsach"
+              ]
+            },
+            "description": "Thêm thông tin mượn sách mới vào hệ thống"
+          }
+        },
+        {
+          "name": "Cập Nhật Thông Tin Mượn Sách",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"NgayMuon\": \"2023-09-01\",\n    \"NgayTra\": \"2023-09-20\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/muonsach/update-muonsach/:id",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "muonsach",
+                "update-muonsach",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{muonsach_id}}",
+                  "description": "ID của thông tin mượn sách cần cập nhật"
+                }
+              ]
+            },
+            "description": "Cập nhật thông tin mượn sách"
+          }
+        },
+        {
+          "name": "Xem Thông Tin Mượn Sách",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/muonsach/get-muonsach/:id",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "muonsach",
+                "get-muonsach",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{muonsach_id}}",
+                  "description": "ID của thông tin mượn sách cần xem"
+                }
+              ]
+            },
+            "description": "Lấy thông tin mượn sách theo ID"
+          }
+        },
+        {
+          "name": "Xóa Thông Tin Mượn Sách",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/muonsach/delete-muonsach/:id",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "muonsach",
+                "delete-muonsach",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{muonsach_id}}",
+                  "description": "ID của thông tin mượn sách cần xóa"
+                }
+              ]
+            },
+            "description": "Xóa thông tin mượn sách khỏi hệ thống"
+          }
+        },
+        {
+          "name": "Xem Tất Cả Thông Tin Mượn Sách",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/muonsach/get-all-muonsach",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "muonsach",
+                "get-all-muonsach"
+              ]
+            },
+            "description": "Lấy tất cả thông tin mượn sách trong hệ thống"
+          }
+        },
+        {
+          "name": "Xem Thông Tin Mượn Sách Theo Độc Giả",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/muonsach/get-by-docgia/:docgiaId",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "muonsach",
+                "get-by-docgia",
+                ":docgiaId"
+              ],
+              "variable": [
+                {
+                  "key": "docgiaId",
+                  "value": "{{docgia_id}}",
+                  "description": "ID của độc giả cần xem thông tin mượn sách"
+                }
+              ]
+            },
+            "description": "Lấy thông tin mượn sách theo độc giả"
+          }
+        }
+      ],
+      "description": "Các API liên quan đến việc mượn sách"
     }
   ],
   "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080",
+      "description": "URL cơ sở của API"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "description": "JWT Token xác thực"
+    },
     {
       "key": "docgia_id",
       "value": "",
@@ -396,6 +822,16 @@
       "key": "nhanvien_id",
       "value": "",
       "description": "ID của nhân viên"
+    },
+    {
+      "key": "sach_id",
+      "value": "",
+      "description": "ID của sách"
+    },
+    {
+      "key": "muonsach_id",
+      "value": "",
+      "description": "ID của thông tin mượn sách"
     }
   ]
 }
