@@ -1,35 +1,36 @@
 import { Request, Response } from "express";
 import DocGia from "../Models/DOCGIA";
 //Thêm đọc giả
+
 export const addDG = async (req: Request, res: Response) => {
   try {
-    const { holot, ten, ngaysinh, phai, diachi, sodienthoai } = req.body;
-    if (!req.body?.holot) {
+    const { HoLot, Ten, NgaySinh, Phai, DiaChi, SoDienThoai } = req.body;
+    if (!req.body?.HoLot) {
       return res.status(400).json({ message: "Vui lòng nhập họ lót" });
-    } else if (!req.body?.ten) {
+    } else if (!req.body?.Ten) {
       return res.status(400).json({ message: "Vui lòng nhập tên" });
-    } else if (!req.body?.ngaysinh) {
+    } else if (!req.body?.NgaySinh) {
       return res.status(400).json({ message: "Vui lòng chọn ngày sinh" });
-    } else if (!req.body?.phai) {
+    } else if (!req.body?.Phai) {
       return res.status(400).json({ message: "Vui lòng chọn giới tính" });
-    } else if (!req.body?.diachi) {
+    } else if (!req.body?.DiaChi) {
       return res.status(400).json({ message: "Vui lòng nhập địa chỉ" });
-    } else if (!req.body?.sodienthoai) {
+    } else if (!req.body?.SoDienThoai) {
       return res.status(400).json({ message: "Vui lòng nhập số điện thoại" });
     }
 
-    const checksdt = await DocGia.findOne({ sodienthoai });
+    const checksdt = await DocGia.findOne({ SoDienThoai });
     if (checksdt) {
       return res.status(400).json({ message: "Số điện thoại đã tồn tại" });
     }
 
     const docgia = new DocGia({
-      holot,
-      ten,
-      ngaysinh,
-      phai,
-      diachi,
-      sodienthoai,
+      HoLot,
+      Ten,
+      NgaySinh,
+      Phai,
+      DiaChi,
+      SoDienThoai,
     });
     await docgia.save();
 
@@ -49,16 +50,16 @@ export const addDG = async (req: Request, res: Response) => {
 //Update đọc giả
 export const updateDG = async (req: Request, res: Response) => {
   try {
-    const { holot, ten, ngaysinh, phai, diachi, sodienthoai } = req.body;
+    const { HoLot, Ten, NgaySinh, Phai, DiaChi, SoDienThoai } = req.body;
     const update = await DocGia.findByIdAndUpdate(
       req.params.id,
       {
-        holot,
-        ten,
-        ngaysinh,
-        phai,
-        diachi,
-        sodienthoai,
+        HoLot,
+        Ten,
+        NgaySinh,
+        Phai,
+        DiaChi,
+        SoDienThoai,
       },
       { new: true }
     );

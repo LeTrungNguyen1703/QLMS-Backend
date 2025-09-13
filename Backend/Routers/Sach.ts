@@ -1,5 +1,5 @@
 import { Router } from "express";
-import {addSach} from "../Controllers/Sach";
+import {addSach} from "../Controllers/SachController";
 import upload from "../Middleware/Multer";
 const routerSach = Router();
 

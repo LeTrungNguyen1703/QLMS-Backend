@@ -1,23 +1,23 @@
 import mongoose, {Schema, Document} from "mongoose";
 
 export interface ISach extends Document {
-    hinhanh: string,
-    tensach: string,
-    dongia: number,
-    soquyen: number,
-    namxuatban: Date,
-    idnxb: string,
-    tacgia: string
+    HinhAnh: string,
+    TenSach: string,
+    DonGia: number,
+    SoQuyen: number,
+    NamXuatBan: Date,
+    IdNxb: string,
+    TacGia: string
 }
 
 const SACH = new mongoose.Schema({
-    hinhanh: {type: String, required: false},
-    tensach: {type: String, required: true},
-    dongia: {type: Number, required: true},
-    soquyen: {type: Number, required: true},
-    namxuatban: {type: Date, required: true},
-    idnxb: {type: String, required: true},
-    tacgia: {type: String, required: true}
+    HinhAnh: {type: String, required: false},
+    TenSach: {type: String, required: true},
+    DonGia: {type: Number, required: true},
+    SoQuyen: {type: Number, required: true},
+    NamXuatBan: {type: Date, required: true},
+    IdNxb: {type: String, required: true},
+    TacGia: {type: String, required: true}
 });
 
 const Sach = mongoose.model<ISach>("SACH", SACH);
