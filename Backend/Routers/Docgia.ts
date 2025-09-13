@@ -1,11 +1,10 @@
-
 import { Router } from "express";
-import {addDG, deleteDG, getallDG, getDG, updateDG} from "../Controllers/DocGia";
-const routerdg = Router();
-routerdg.get("/get-dg/:id", getDG);
-routerdg.get("/getall-dg", getallDG);
-routerdg.post("/add-dg", addDG);
-routerdg.put("/update-dg/:id", updateDG);
-routerdg.delete("/delete-dg/:id", deleteDG);
+import {addDG, updateDG, getDG, deleteDG} from "../Controllers/DocGia";
+const routerDocGia = Router();
 
-export default routerdg;
+routerDocGia.get("/get-dg/:id", getDG);
+routerDocGia.post("/add-dg", addDG);
+routerDocGia.put("/update-dg/:id", updateDG);
+routerDocGia.delete("/delete-dg/:id", deleteDG);
+
+export default routerDocGia;
