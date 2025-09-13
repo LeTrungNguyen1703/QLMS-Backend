@@ -9,7 +9,7 @@ export interface IDocgia extends Document {
     sodienthoai: string
 }
 
-const docgia: Schema = new Schema({
+const DOCGIA: Schema = new Schema({
     holot: {type: String, required: true},
     ten: {type: String, required: true},
     ngaysinh: {type: Date, required: true},
@@ -18,5 +18,5 @@ const docgia: Schema = new Schema({
     sodienthoai: {type: String, required: true, unique: true}
 });
 
-const DocGia = mongoose.model<IDocgia>("docgia", docgia);
+const DocGia = mongoose.model<IDocgia>("DOCGIA", DOCGIA);
 export default DocGia;

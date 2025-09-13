@@ -9,7 +9,7 @@ export interface INhanvien extends Document {
     ngaytao: Date
 }
 
-const nhanvien: Schema = new Schema({
+const NHANVIEN: Schema = new Schema({
     hotennv: {type: String, required: false, default: ""},
     matkhau: {type: String, required: true},
     diachi: {type: String, required: false, default: ""},
@@ -18,5 +18,5 @@ const nhanvien: Schema = new Schema({
     ngaytao: {type: Date, default: Date.now}
 });
 
-const NhanVien = mongoose.model<INhanvien>("nhanvien", nhanvien);
+const NhanVien = mongoose.model<INhanvien>("NHANVIEN", NHANVIEN);
 export default NhanVien;  

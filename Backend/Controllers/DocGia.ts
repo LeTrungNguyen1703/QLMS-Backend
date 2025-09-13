@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import DocGia from "../Models/Docgia";
+import DocGia from "../Models/DOCGIA";
 //Thêm đọc giả
 export const addDG = async (req: Request, res: Response) => {
   try {
