@@ -9,6 +9,10 @@ class DocGiaRepository {
     async findById(id: string) {
         return DocGia.findById(id);
     }
+    
+    async findByMaDocGia(MaDocGia: string) {
+        return DocGia.findOne({MaDocGia});
+    }
 
     async findBySoDienThoai(SoDienThoai: string) {
         return DocGia.findOne({SoDienThoai});

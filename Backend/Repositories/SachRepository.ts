@@ -7,7 +7,11 @@ class SachRepository {
     }
 
     async findById(id: string) {
-        return await Sach.findById(id);
+        return Sach.findById(id);
+    }
+    
+    async findByMaSach(MaSach: string) {
+        return Sach.findOne({MaSach});
     }
 
     async create(sachData: Partial<ISach>) {
@@ -16,11 +20,11 @@ class SachRepository {
     }
 
     async update(id: string, sachData: Partial<ISach>) {
-        return await Sach.findByIdAndUpdate(id, sachData, { new: true });
+        return Sach.findByIdAndUpdate(id, sachData, {new: true});
     }
 
     async delete(id: string) {
-        return await Sach.findByIdAndDelete(id);
+        return Sach.findByIdAndDelete(id);
     }
 }
 

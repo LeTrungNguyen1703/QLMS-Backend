@@ -22,10 +22,10 @@ class TheoDoiMuonSachService {
 
     async createMuonSach(muonSachData: Partial<ITHEODOIMUONSACH>) {
         // Kiểm tra dữ liệu đầu vào
-        if (!muonSachData.IdDocGia) {
+        if (!muonSachData.MaDocGia) {
             throw new Error("Vui lòng chọn độc giả");
         }
-        if (!muonSachData.IdSach) {
+        if (!muonSachData.MaSach) {
             throw new Error("Vui lòng chọn sách");
         }
         if (!muonSachData.NgayMuon) {
@@ -36,13 +36,13 @@ class TheoDoiMuonSachService {
         }
 
         // Kiểm tra độc giả có tồn tại không
-        const docGia = await DocGiaRepository.findById(muonSachData.IdDocGia);
+        const docGia = await DocGiaRepository.findByMaDocGia(muonSachData.MaDocGia);
         if (!docGia) {
             throw new Error("Độc giả không tồn tại");
         }
 
         // Kiểm tra sách có tồn tại không
-        const sach = await SachRepository.findById(muonSachData.IdSach);
+        const sach = await SachRepository.findByMaSach(muonSachData.MaSach);
         if (!sach) {
             throw new Error("Sách không tồn tại");
         }
@@ -75,7 +75,7 @@ class TheoDoiMuonSachService {
         }
 
         // Tăng số lượng sách khi xóa phiếu mượn
-        const sach = await SachRepository.findById(existingMuonSach.IdSach);
+        const sach = await SachRepository.findByMaSach(existingMuonSach.MaSach);
         if (sach) {
             sach.SoQuyen += 1;
             await sach.save();

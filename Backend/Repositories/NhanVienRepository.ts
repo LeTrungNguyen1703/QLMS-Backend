@@ -3,15 +3,15 @@ import { INhanvien } from "../Models/NHANVIEN";
 
 class NhanVienRepository {
     async findAll() {
-        return await NhanVien.find();
+        return NhanVien.find();
     }
 
     async findById(id: string) {
-        return await NhanVien.findById(id);
+        return NhanVien.findById(id);
     }
 
     async findBySoDienThoai(SoDienThoai: string) {
-        return await NhanVien.findOne({ SoDienThoai });
+        return NhanVien.findOne({SoDienThoai});
     }
 
     async create(nhanVienData: Partial<INhanvien>) {
@@ -20,11 +20,11 @@ class NhanVienRepository {
     }
 
     async update(id: string, nhanVienData: Partial<INhanvien>) {
-        return await NhanVien.findByIdAndUpdate(id, nhanVienData, { new: true });
+        return NhanVien.findByIdAndUpdate(id, nhanVienData, {new: true});
     }
 
     async delete(id: string) {
-        return await NhanVien.findByIdAndDelete(id);
+        return NhanVien.findByIdAndDelete(id);
     }
 }
 

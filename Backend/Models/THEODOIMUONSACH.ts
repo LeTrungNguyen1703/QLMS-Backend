@@ -1,18 +1,21 @@
 import mongoose, {Schema, Document} from "mongoose";
 
 export interface ITHEODOIMUONSACH extends Document {
-    IdDocGia: string,
-    IdSach: string,
+    MaDocGia: string,
+    MaSach: string,
     NgayMuon: Date,
     NgayTra: Date,
 }
 
 const THEODOIMUONSACH = new mongoose.Schema({
-    IdDocGia: {type: String, required: true},
-    IdSach: {type: String, required: true},
-    NgayMuon: {type: Date, required: true ,default: Date.now},
+    MaDocGia: {type: String, required: true},
+    MaSach: {type: String, required: true},
+    NgayMuon: {type: Date, required: true, default: Date.now},
     NgayTra: {type: Date, required: true}
+}, {
+    timestamps: true
 });
+
 
 const TheoDoiMuonSach = mongoose.model<ITHEODOIMUONSACH>("THEODOIMUONSACH", THEODOIMUONSACH);
 export default TheoDoiMuonSach;
