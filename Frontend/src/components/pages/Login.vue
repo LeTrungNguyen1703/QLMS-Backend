@@ -1,9 +1,8 @@
 <script setup>
-import { ref, inject } from "vue";
+import { ref } from "vue";
 import { useRouter } from "vue-router";
 import axios from "axios";
 
-const token = inject("token"); // token từ App.vue
 const router = useRouter();
 
 const form = ref({
@@ -18,22 +17,15 @@ const login = async () => {
       form.value
     );
     alert(res.data.message || "Đăng nhập thành công");
-
-    const tk = res.data.token; // 👉 đổi tên biến tạm để không trùng
     const id = res.data.id;
-
     // Cập nhật localStorage
-    localStorage.setItem("token", tk);
+    const token = res.data.token;
+    localStorage.setItem("token", token);
     localStorage.setItem("_id", id);
-
-    // Cập nhật reactive token (Header sẽ hiện ngay)
-    token.value = tk;
-
     // Reset form
     form.value.sodienthoai = "";
     form.value.matkhau = "";
-
-    router.push("/home");
+    window.location.href = "/home";
   } catch (error) {
     alert(error.response?.data?.message || "Đăng nhập không thành công");
   }
