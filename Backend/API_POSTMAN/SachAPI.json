@@ -1,0 +1,246 @@
+{
+  "info": {
+    "_postman_id": "e4e3f73f-b1b2-4c6c-8d5a-f3a4e89d6a0e",
+    "name": "QLMS - Sach API",
+    "description": "API collection for Sach in the Library Management System (QLMS)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Thêm Sách",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "TenSach",
+              "value": "Lập Trình Web Hiện Đại",
+              "type": "text"
+            },
+            {
+              "key": "DonGia",
+              "value": "150000",
+              "type": "text"
+            },
+            {
+              "key": "SoQuyen",
+              "value": "10",
+              "type": "text"
+            },
+            {
+              "key": "NamXuatBan",
+              "value": "2023",
+              "type": "text"
+            },
+            {
+              "key": "IdNxb",
+              "value": "61234567890abcdef1234567",
+              "type": "text",
+              "description": "ID của nhà xuất bản"
+            },
+            {
+              "key": "TacGia",
+              "value": "Nguyễn Văn A",
+              "type": "text"
+            },
+            {
+              "key": "HinhAnh",
+              "type": "file",
+              "src": "/path/to/your/image.jpg",
+              "description": "Hình ảnh của sách"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{base_url}}/api/sach/add-sach",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "sach",
+            "add-sach"
+          ]
+        },
+        "description": "Thêm sách mới vào hệ thống"
+      }
+    },
+    {
+      "name": "Cập Nhật Sách",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "TenSach",
+              "value": "Lập Trình Web Hiện Đại (Updated)",
+              "type": "text"
+            },
+            {
+              "key": "DonGia",
+              "value": "180000",
+              "type": "text"
+            },
+            {
+              "key": "SoQuyen",
+              "value": "15",
+              "type": "text"
+            },
+            {
+              "key": "NamXuatBan",
+              "value": "2023",
+              "type": "text"
+            },
+            {
+              "key": "IdNxb",
+              "value": "61234567890abcdef1234567",
+              "type": "text",
+              "description": "ID của nhà xuất bản"
+            },
+            {
+              "key": "TacGia",
+              "value": "Nguyễn Văn A",
+              "type": "text"
+            },
+            {
+              "key": "HinhAnh",
+              "type": "file",
+              "src": "/path/to/your/image.jpg",
+              "description": "Hình ảnh của sách (tùy chọn)"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{base_url}}/api/sach/update-sach/:id",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "sach",
+            "update-sach",
+            ":id"
+          ],
+          "variable": [
+            {
+              "key": "id",
+              "value": "{{sach_id}}",
+              "description": "ID của sách cần cập nhật"
+            }
+          ]
+        },
+        "description": "Cập nhật thông tin sách"
+      }
+    },
+    {
+      "name": "Xem Thông Tin Sách",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/sach/get-sach/:id",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "sach",
+            "get-sach",
+            ":id"
+          ],
+          "variable": [
+            {
+              "key": "id",
+              "value": "{{sach_id}}",
+              "description": "ID của sách cần xem thông tin"
+            }
+          ]
+        },
+        "description": "Lấy thông tin của sách theo ID"
+      }
+    },
+    {
+      "name": "Xóa Sách",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/sach/delete-sach/:id",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "sach",
+            "delete-sach",
+            ":id"
+          ],
+          "variable": [
+            {
+              "key": "id",
+              "value": "{{sach_id}}",
+              "description": "ID của sách cần xóa"
+            }
+          ]
+        },
+        "description": "Xóa sách khỏi hệ thống"
+      }
+    },
+    {
+      "name": "Xem Tất Cả Sách",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/sach/get-all-sach",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "sach",
+            "get-all-sach"
+          ]
+        },
+        "description": "Lấy thông tin của tất cả sách trong hệ thống"
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080",
+      "description": "URL cơ sở của API"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "description": "JWT Token xác thực"
+    },
+    {
+      "key": "sach_id",
+      "value": "",
+      "description": "ID của sách"
+    }
+  ]
+}
+

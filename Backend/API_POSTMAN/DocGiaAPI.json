@@ -1,0 +1,160 @@
+{
+  "info": {
+    "_postman_id": "e4e3f73f-b1b2-4c6c-8d5a-f3a4e89d6a0c",
+    "name": "QLMS - DocGia API",
+    "description": "API collection for DocGia in the Library Management System (QLMS)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Thêm Độc Giả",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"HoLot\": \"Nguyễn Văn\",\n    \"Ten\": \"An\",\n    \"NgaySinh\": \"2000-01-01\",\n    \"Phai\": \"nam\",\n    \"DiaChi\": \"123 Đường ABC, Phường XYZ, Quận/Huyện, Tỉnh/Thành phố\",\n    \"SoDienThoai\": \"0123456789\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/docgia/add-dg",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "docgia",
+            "add-dg"
+          ]
+        },
+        "description": "Thêm độc giả mới vào hệ thống"
+      }
+    },
+    {
+      "name": "Cập Nhật Độc Giả",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"HoLot\": \"Nguyễn Văn\",\n    \"Ten\": \"An (Updated)\",\n    \"NgaySinh\": \"2000-01-01\",\n    \"Phai\": \"nam\",\n    \"DiaChi\": \"456 Đường DEF, Phường UVW, Quận/Huyện, Tỉnh/Thành phố\",\n    \"SoDienThoai\": \"0123456789\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/docgia/update-dg/:id",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "docgia",
+            "update-dg",
+            ":id"
+          ],
+          "variable": [
+            {
+              "key": "id",
+              "value": "{{docgia_id}}",
+              "description": "ID của độc giả cần cập nhật"
+            }
+          ]
+        },
+        "description": "Cập nhật thông tin độc giả"
+      }
+    },
+    {
+      "name": "Xem Thông Tin Độc Giả",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/docgia/get-dg/:id",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "docgia",
+            "get-dg",
+            ":id"
+          ],
+          "variable": [
+            {
+              "key": "id",
+              "value": "{{docgia_id}}",
+              "description": "ID của độc giả cần xem thông tin"
+            }
+          ]
+        },
+        "description": "Lấy thông tin của độc giả theo ID"
+      }
+    },
+    {
+      "name": "Xóa Độc Giả",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/docgia/delete-dg/:id",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "docgia",
+            "delete-dg",
+            ":id"
+          ],
+          "variable": [
+            {
+              "key": "id",
+              "value": "{{docgia_id}}",
+              "description": "ID của độc giả cần xóa"
+            }
+          ]
+        },
+        "description": "Xóa độc giả khỏi hệ thống"
+      }
+    },
+    {
+      "name": "Xem Tất Cả Độc Giả",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/docgia/get-all-dg",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "docgia",
+            "get-all-dg"
+          ]
+        },
+        "description": "Lấy thông tin của tất cả độc giả trong hệ thống"
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080",
+      "description": "URL cơ sở của API"
+    },
+    {
+      "key": "docgia_id",
+      "value": "",
+      "description": "ID của độc giả"
+    }
+  ]
+}
+

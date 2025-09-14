@@ -1,5 +1,6 @@
 import TheoDoiMuonSach from "../Models/THEODOIMUONSACH";
 import { ITHEODOIMUONSACH } from "../Models/THEODOIMUONSACH";
+import mongoose from "mongoose";
 
 class TheoDoiMuonSachRepository {
     async findAll() {
@@ -10,8 +11,10 @@ class TheoDoiMuonSachRepository {
         return TheoDoiMuonSach.findById(id);
     }
 
-    async findByDocGiaId(MaDocGia: string) {
-        return TheoDoiMuonSach.find({MaDocGia});
+    async findByDocGiaId(docGiaId: string) {
+        return TheoDoiMuonSach.find({
+            MaDocGia: new mongoose.Types.ObjectId(docGiaId)
+        });
     }
 
     async create(muonSachData: Partial<ITHEODOIMUONSACH>) {
@@ -25,6 +28,39 @@ class TheoDoiMuonSachRepository {
 
     async delete(id: string) {
         return TheoDoiMuonSach.findByIdAndDelete(id);
+    }
+
+    /**
+     * Tìm kiếm theo khóa chính phức hợp (MaDocGia, MaSach, NgayMuon)
+     */
+    async findByCompoundKey(maDocGia: string, maSach: string, ngayMuon: Date) {
+        return TheoDoiMuonSach.findOne({
+            MaDocGia: new mongoose.Types.ObjectId(maDocGia),
+            MaSach: new mongoose.Types.ObjectId(maSach),
+            NgayMuon: ngayMuon
+        });
+    }
+
+    /**
+     * Cập nhật theo khóa chính phức hợp (MaDocGia, MaSach, NgayMuon)
+     */
+    async updateByCompoundKey(maDocGia: string, maSach: string, ngayMuon: Date, muonSachData: Partial<ITHEODOIMUONSACH>) {
+        return TheoDoiMuonSach.findOneAndUpdate({
+            MaDocGia: new mongoose.Types.ObjectId(maDocGia),
+            MaSach: new mongoose.Types.ObjectId(maSach),
+            NgayMuon: ngayMuon
+        }, muonSachData, { new: true });
+    }
+
+    /**
+     * Xóa theo khóa chính phức hợp (MaDocGia, MaSach, NgayMuon)
+     */
+    async deleteByCompoundKey(maDocGia: string, maSach: string, ngayMuon: Date) {
+        return TheoDoiMuonSach.findOneAndDelete({
+            MaDocGia: new mongoose.Types.ObjectId(maDocGia),
+            MaSach: new mongoose.Types.ObjectId(maSach),
+            NgayMuon: ngayMuon
+        });
     }
 }
 

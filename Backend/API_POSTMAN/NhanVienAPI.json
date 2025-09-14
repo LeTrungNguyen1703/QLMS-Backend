@@ -1,0 +1,252 @@
+{
+  "info": {
+    "_postman_id": "e4e3f73f-b1b2-4c6c-8d5a-f3a4e89d6a0d",
+    "name": "QLMS - NhanVien API",
+    "description": "API collection for NhanVien in the Library Management System (QLMS)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Đăng Ký Nhân Viên",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"HoTenNV\": \"Nguyễn Thị Bình\",\n    \"MatKhau\": \"password123\",\n    \"DiaChi\": \"789 Đường GHI, Phường JKL, Quận/Huyện, Tỉnh/Thành phố\",\n    \"SoDienThoai\": \"0987654321\",\n    \"ChucVu\": \"nhân viên\",\n    \"NgayTao\": \"2023-01-01\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/nhanvien/register",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "nhanvien",
+            "register"
+          ]
+        },
+        "description": "Đăng ký tài khoản nhân viên mới"
+      }
+    },
+    {
+      "name": "Đăng Nhập",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"SoDienThoai\": \"0987654321\",\n    \"MatKhau\": \"password123\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/nhanvien/login",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "nhanvien",
+            "login"
+          ]
+        },
+        "description": "Đăng nhập vào hệ thống"
+      }
+    },
+    {
+      "name": "Cập Nhật Thông Tin Nhân Viên",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"HoTenNV\": \"Nguyễn Thị Bình (Updated)\",\n    \"DiaChi\": \"101 Đường MNO, Phường PQR, Quận/Huyện, Tỉnh/Thành phố\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/nhanvien/update-nv/:id",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "nhanvien",
+            "update-nv",
+            ":id"
+          ],
+          "variable": [
+            {
+              "key": "id",
+              "value": "{{nhanvien_id}}",
+              "description": "ID của nhân viên cần cập nhật"
+            }
+          ]
+        },
+        "description": "Cập nhật thông tin nhân viên"
+      }
+    },
+    {
+      "name": "Đổi Mật Khẩu",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"MatKhau\": \"password123\",\n    \"NhapMatKhauMoi\": \"newpassword456\",\n    \"NhapLaiMatKhauMoi\": \"newpassword456\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/nhanvien/changpassword-nv/:id",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "nhanvien",
+            "changpassword-nv",
+            ":id"
+          ],
+          "variable": [
+            {
+              "key": "id",
+              "value": "{{nhanvien_id}}",
+              "description": "ID của nhân viên cần đổi mật khẩu"
+            }
+          ]
+        },
+        "description": "Đổi mật khẩu nhân viên"
+      }
+    },
+    {
+      "name": "Xem Thông Tin Nhân Viên",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/nhanvien/get-nv/:id",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "nhanvien",
+            "get-nv",
+            ":id"
+          ],
+          "variable": [
+            {
+              "key": "id",
+              "value": "{{nhanvien_id}}",
+              "description": "ID của nhân viên cần xem thông tin"
+            }
+          ]
+        },
+        "description": "Lấy thông tin của nhân viên theo ID"
+      }
+    },
+    {
+      "name": "Xóa Nhân Viên",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/nhanvien/delete-nv/:id",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "nhanvien",
+            "delete-nv",
+            ":id"
+          ],
+          "variable": [
+            {
+              "key": "id",
+              "value": "{{nhanvien_id}}",
+              "description": "ID của nhân viên cần xóa"
+            }
+          ]
+        },
+        "description": "Xóa nhân viên khỏi hệ thống"
+      }
+    },
+    {
+      "name": "Xem Tất Cả Nhân Viên",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/nhanvien/get-all-nv",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "nhanvien",
+            "get-all-nv"
+          ]
+        },
+        "description": "Lấy thông tin của tất cả nhân viên trong hệ thống"
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080",
+      "description": "URL cơ sở của API"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "description": "JWT Token xác thực"
+    },
+    {
+      "key": "nhanvien_id",
+      "value": "",
+      "description": "ID của nhân viên"
+    }
+  ]
+}
+
