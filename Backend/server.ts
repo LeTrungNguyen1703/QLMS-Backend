@@ -3,10 +3,10 @@ import helmet from "helmet";
 import cors from "cors";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
-import routerSach from "./Routers/Sach";
-import routerNhanVien from "./Routers/NhanVien";
-import routerTheoDoiMuonSach from "./Routers/TheoDoiMuonSach";
-import routerDocGia from "./Routers/Docgia";
+import routerSach from "./Routers/SachRouter";
+import routerNhanVien from "./Routers/NhanVienRouter";
+import routerTheoDoiMuonSach from "./Routers/TheoDoiMuonSachRouter";
+import routerDocGia from "./Routers/DocGiaRouter";
 
 dotenv.config();
 const app = express();

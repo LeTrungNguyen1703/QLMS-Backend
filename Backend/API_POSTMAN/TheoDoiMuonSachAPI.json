@@ -1,0 +1,268 @@
+{
+  "info": {
+    "_postman_id": "e4e3f73f-b1b2-4c6c-8d5a-f3a4e89d6a0f",
+    "name": "QLMS - TheoDoiMuonSach API",
+    "description": "API collection for TheoDoiMuonSach in the Library Management System (QLMS)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Thêm Thông Tin Mượn Sách",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"MaDocGia\": \"{{docgia_id}}\",\n    \"MaSach\": \"{{sach_id}}\",\n    \"NgayMuon\": \"2023-09-01\",\n    \"NgayTra\": \"2023-09-15\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/muonsach/add-muonsach",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "muonsach",
+            "add-muonsach"
+          ]
+        },
+        "description": "Thêm thông tin mượn sách mới vào hệ thống"
+      }
+    },
+    {
+      "name": "Cập Nhật Thông Tin Mượn Sách",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"NgayMuon\": \"2023-09-01\",\n    \"NgayTra\": \"2023-09-20\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/muonsach/update-muonsach/:id",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "muonsach",
+            "update-muonsach",
+            ":id"
+          ],
+          "variable": [
+            {
+              "key": "id",
+              "value": "{{muonsach_id}}",
+              "description": "ID của thông tin mượn sách cần cập nhật"
+            }
+          ]
+        },
+        "description": "Cập nhật thông tin mượn sách"
+      }
+    },
+    {
+      "name": "Xem Thông Tin Mượn Sách",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/muonsach/get-muonsach/:id",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "muonsach",
+            "get-muonsach",
+            ":id"
+          ],
+          "variable": [
+            {
+              "key": "id",
+              "value": "{{muonsach_id}}",
+              "description": "ID của thông tin mượn sách cần xem"
+            }
+          ]
+        },
+        "description": "Lấy thông tin mượn sách theo ID"
+      }
+    },
+    {
+      "name": "Xóa Thông Tin Mượn Sách",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/muonsach/delete-muonsach/:id",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "muonsach",
+            "delete-muonsach",
+            ":id"
+          ],
+          "variable": [
+            {
+              "key": "id",
+              "value": "{{muonsach_id}}",
+              "description": "ID của thông tin mượn sách cần xóa"
+            }
+          ]
+        },
+        "description": "Xóa thông tin mượn sách khỏi hệ thống"
+      }
+    },
+    {
+      "name": "Xem Tất Cả Thông Tin Mượn Sách",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/muonsach/get-all-muonsach",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "muonsach",
+            "get-all-muonsach"
+          ]
+        },
+        "description": "Lấy tất cả thông tin mượn sách trong hệ thống"
+      }
+    },
+    {
+      "name": "Xem Thông Tin Mượn Sách Theo Độc Giả",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/muonsach/get-by-docgia/:docgiaId",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "muonsach",
+            "get-by-docgia",
+            ":docgiaId"
+          ],
+          "variable": [
+            {
+              "key": "docgiaId",
+              "value": "{{docgia_id}}",
+              "description": "ID của độc giả cần xem thông tin mượn sách"
+            }
+          ]
+        },
+        "description": "Lấy thông tin mượn sách theo độc giả"
+      }
+    },
+    {
+      "name": "Tìm Kiếm Theo Khóa Chính (MaDocGia, MaSach, NgayMuon)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/muonsach/get-by-compound-key",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "muonsach",
+            "get-by-compound-key"
+          ],
+          "query": [
+            {
+              "key": "maDocGia",
+              "value": "{{docgia_id}}"
+            },
+            {
+              "key": "maSach",
+              "value": "{{sach_id}}"
+            },
+            {
+              "key": "ngayMuon",
+              "value": "2023-09-01"
+            }
+          ]
+        },
+        "description": "Tìm thông tin mượn sách theo khóa chính gồm MaDocGia, MaSach, NgayMuon"
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080",
+      "description": "URL cơ sở của API"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "description": "JWT Token xác thực"
+    },
+    {
+      "key": "docgia_id",
+      "value": "",
+      "description": "ID của độc giả"
+    },
+    {
+      "key": "sach_id",
+      "value": "",
+      "description": "ID của sách"
+    },
+    {
+      "key": "muonsach_id",
+      "value": "",
+      "description": "ID của thông tin mượn sách"
+    }
+  ]
+}
+
