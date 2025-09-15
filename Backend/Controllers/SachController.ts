@@ -1,78 +1,58 @@
-import { Request, Response } from "express";
+import {Request, Response, NextFunction} from "express";
 import SachService from "../Services/SachService";
+import {SachRequest, ISachRequestExtended} from "../DTO/Request/SachRequest";
+import {ISachResponse} from "../DTO/Response/ISachResponse";
+import {plainToClass} from "class-transformer";
+import {APIResponse, APIResponseError} from "../DTO/Response/APIResponse";
+import {catchAsync, AppError} from "../Middleware/ErrorHandler";
 
-export const addSach = async (req: Request, res: Response) => {
-  try {
-    // Lấy thông tin hình ảnh từ file upload (nếu có)
-    let sachData = req.body;
-    if (req.file) {
-      sachData.HinhAnh = req.file.path;
+// Thêm sách
+export const addSach = catchAsync(async (req: ISachRequestExtended, res: Response<APIResponse<ISachResponse>>) => {
+    const sachData = req.body;
+    const dto = plainToClass(SachRequest, sachData);
+
+    const sach = await SachService.createSach(dto);
+
+    return res.status(201).json(new APIResponse(sach));
+});
+
+// Update sách
+export const updateSach = catchAsync(async (req: ISachRequestExtended, res: Response) => {
+    const sachData = req.body;
+    const dto = plainToClass(SachRequest, sachData);
+    const sach = await SachService.updateSach(req.params.id, dto);
+
+    if (!sach) {
+        throw new AppError("Không tìm thấy sách", 404);
     }
-    const sach = await SachService.createSach(sachData);
-    return res.status(200).json({ 
-      message: "Thêm sách mới thành công", 
-      data: sach 
-    });
-  } catch (error: any) {
-    console.error(error);
-    return res.status(400).json({ message: error.message || "Lỗi Server" });
-  }
-};
+    return res.status(200).json(new APIResponse({
+        message: "Cập nhật sách thành công",
+    }));
+});
 
-export const updateSach = async (req: Request, res: Response) => {
-  try {
-    // Lấy thông tin hình ảnh từ file upload (nếu có)
-    let sachData = req.body;
-    if (req.file) {
-      sachData.HinhAnh = req.file.path;
-    }
-    
-    const sach = await SachService.updateSach(req.params.id, sachData);
-    return res.status(200).json({ 
-      message: "Cập nhật sách thành công", 
-      data: sach 
-    });
-  } catch (error: any) {
-    console.error(error);
-    return res.status(400).json({ message: error.message || "Lỗi Server" });
-  }
-};
-
-export const getSach = async (req: Request, res: Response) => {
-  try {
+// Lấy sách dựa theo id
+export const getSach = catchAsync(async (req: Request, res: Response<APIResponse<ISachResponse>>) => {
     const sach = await SachService.getSachById(req.params.id);
-    return res.status(200).json({
-      message: "Lấy thông tin sách thành công",
-      data: sach,
-    });
-  } catch (error: any) {
-    console.error(error);
-    return res.status(400).json({ message: error.message || "Lỗi Server" });
-  }
-};
 
-export const deleteSach = async (req: Request, res: Response) => {
-  try {
+    return res.status(200).json(new APIResponse({
+        message: "Lấy thông tin sách thành công",
+        data: sach
+    }));
+});
+
+// Xóa sách dựa theo id
+export const deleteSach = catchAsync(async (req: Request, res: Response) => {
     const sach = await SachService.deleteSach(req.params.id);
-    return res.status(200).json({
-      message: "Xóa sách thành công",
-      data: sach,
-    });
-  } catch (error: any) {
-    console.error(error);
-    return res.status(400).json({ message: error.message || "Lỗi Server" });
-  }
-};
+    return res.status(200).json(new APIResponse({
+        message: "Xóa sách thành công",
+    }));
+});
 
-export const getAllSach = async (req: Request, res: Response) => {
-  try {
+export const getallSach = catchAsync(async (req: Request, res: Response<APIResponse<ISachResponse[]>>) => {
     const sachs = await SachService.getAllSach();
-    return res.status(200).json({
-      message: "Lấy tất cả sách thành công",
-      data: sachs,
-    });
-  } catch (error: any) {
-    console.error(error);
-    return res.status(400).json({ message: error.message || "Lỗi Server" });
-  }
-};
+
+    return res.status(200).json(new APIResponse({
+        message: "Lấy tất cả sách thành công",
+        data: sachs
+    }));
+});

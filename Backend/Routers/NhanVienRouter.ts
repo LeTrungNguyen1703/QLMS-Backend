@@ -1,13 +1,11 @@
-import {Router} from "express";
-import {Register, Login, UpdateInfoNV, changePassword, getNV, deleteNV,getAllNV } from "../Controllers/NhanVienController";
+import { Router } from "express";
+import {addNV, updateNV, getNV, deleteNV, getallNV} from "../Controllers/NhanVienController";
 const routerNhanVien = Router();
 
 routerNhanVien.get("/get-nv/:id", getNV);
-routerNhanVien.post("/register", Register);
-routerNhanVien.post("/login", Login);
-routerNhanVien.put("/update-nv/:id", UpdateInfoNV);
-routerNhanVien.put("/changpassword-nv/:id", changePassword);
+routerNhanVien.post("/add-nv", addNV);
+routerNhanVien.put("/update-nv/:id", updateNV);
 routerNhanVien.delete("/delete-nv/:id", deleteNV);
-routerNhanVien.get("/get-all-nv", getAllNV);
+routerNhanVien.get("/get-all-nv", getallNV);
 
 export default routerNhanVien;

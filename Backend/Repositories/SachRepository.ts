@@ -1,30 +1,40 @@
 import Sach from "../Models/SACH";
 import { ISach } from "../Models/SACH";
+import { SachRequest } from "../DTO/Request/SachRequest";
+import { Document } from "mongoose";
+import { toPlainObject } from "../HelperMethods/Helpper";
 
 class SachRepository {
-    async findAll() {
-        return await Sach.find();
-    }
-
-    async findById(id: string) {
-        return Sach.findById(id);
+    async findAll(): Promise<ISach[]> {
+        const sachs = await Sach.find().populate('IdNxb');
+        return sachs.map(sach => toPlainObject(sach));
     }
     
-    async findByMaSach(MaSach: string) {
-        return Sach.findOne({MaSach});
+    async findByMaSach(MaSach: string): Promise<ISach | null> {
+        const sach = await Sach.findOne({ MaSach }).populate('IdNxb');
+        return toPlainObject(sach);
     }
 
-    async create(sachData: Partial<ISach>) {
+    async create(sachData: SachRequest): Promise<ISach> {
         const sach = new Sach(sachData);
-        return await sach.save();
+        const savedSach = await sach.save();
+        const populatedSach = await Sach.findById(savedSach._id).populate('IdNxb');
+        return toPlainObject(populatedSach);
     }
 
-    async update(MaSach: string, sachData: Partial<ISach>) {
-        return Sach.findOneAndUpdate({MaSach}, sachData, {new: true});
+    async update(MaSach: string, sachData: Partial<SachRequest>): Promise<ISach | null> {
+        const updatedSach = await Sach.findOneAndUpdate({ MaSach }, sachData, { new: true }).populate('IdNxb');
+        return toPlainObject(updatedSach);
     }
 
-    async delete(MaSach: string) {
-        return Sach.findOneAndDelete({MaSach});
+    async delete(MaSach: string): Promise<ISach | null> {
+        const deletedSach = await Sach.findOneAndDelete({ MaSach });
+        return toPlainObject(deletedSach);
+    }
+
+    async findById(id: string): Promise<ISach | null> {
+        const sach = await Sach.findById(id).populate('IdNxb');
+        return toPlainObject(sach);
     }
 }
 
