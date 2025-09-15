@@ -1,103 +1,58 @@
-import { Request, Response } from "express";
+import {Request, Response, NextFunction} from "express";
 import NhanVienService from "../Services/NhanVienService";
+import {NhanVienRequest, INhanVienRequestExtended} from "../DTO/Request/NhanVienRequest";
+import {INhanVienResponse} from "../DTO/Response/INhanVienResponse";
+import {plainToClass} from "class-transformer";
+import {APIResponse, APIResponseError} from "../DTO/Response/APIResponse";
+import {catchAsync, AppError} from "../Middleware/ErrorHandler";
 
-export const Register = async (req: Request, res: Response) => {
-  try {
-    const nhanVien = await NhanVienService.register(req.body);
-    return res.status(200).json({
-      message: "Đăng ký thành công",
-      data: nhanVien,
-    });
-  } catch (error: any) {
-    console.error(error);
-    return res.status(400).json({ message: error.message || "Lỗi Server" });
-  }
-};
+// Thêm nhân viên
+export const addNV = catchAsync(async (req: INhanVienRequestExtended, res: Response<APIResponse<INhanVienResponse>>) => {
+    const nhanVienData = req.body;
+    const dto = plainToClass(NhanVienRequest, nhanVienData);
 
-export const Login = async (req: Request, res: Response) => {
-  try {
-    const { SoDienThoai, MatKhau } = req.body;
-    const result = await NhanVienService.login(SoDienThoai, MatKhau);
+    const nhanVien = await NhanVienService.createNhanVien(dto);
 
-    // Thiết lập cookie
-    res.cookie("token", result.token, {
-      httpOnly: true,
-      secure: false,
-      maxAge: 20 * 60 * 60 * 1000,
-      sameSite: "strict",
-    });
+    return res.status(201).json(new APIResponse(nhanVien));
+});
 
-    return res.status(200).json({
-      message: result.message,
-      id: result.id,
-      token: result.token,
-    });
-  } catch (error: any) {
-    console.error(error);
-    return res.status(400).json({ message: error.message || "Lỗi Server" });
-  }
-};
+// Update nhân viên
+export const updateNV = catchAsync(async (req: INhanVienRequestExtended, res: Response) => {
+    const nhanVienData = req.body;
+    const dto = plainToClass(NhanVienRequest, nhanVienData);
+    const nhanVien = await NhanVienService.updateNhanVien(req.params.id, dto);
 
-export const UpdateInfoNV = async (req: Request, res: Response) => {
-  try {
-    await NhanVienService.updateInfo(req.params.id, req.body);
-    return res.status(200).json({
-      message: "Cập nhật thông tin nhân viên thành công",
-    });
-  } catch (error: any) {
-    console.error(error);
-    return res.status(400).json({ message: error.message || "Lỗi Server" });
-  }
-};
+    if (!nhanVien) {
+        throw new AppError("Không tìm thấy nhân viên", 404);
+    }
+    return res.status(200).json(new APIResponse({
+        message: "Cập nhật nhân viên thành công",
+    }));
+});
 
-export const changePassword = async (req: Request, res: Response) => {
-  try {
-    const { MatKhau, NhapMatKhauMoi, NhapLaiMatKhauMoi } = req.body;
-    await NhanVienService.changePassword(
-      req.params.id,
-      MatKhau,
-      NhapMatKhauMoi,
-      NhapLaiMatKhauMoi
-    );
-    return res.status(200).json({ message: "Đổi mật khẩu thành công" });
-  } catch (error: any) {
-    console.error(error);
-    return res.status(400).json({ message: error.message || "Lỗi Server" });
-  }
-};
-
-export const getNV = async (req: Request, res: Response) => {
-  try {
+// Lấy nhân viên dựa theo id
+export const getNV = catchAsync(async (req: Request, res: Response<APIResponse<INhanVienResponse>>) => {
     const nhanVien = await NhanVienService.getNhanVienById(req.params.id);
-    return res.status(200).json({
-      message: "Lấy thông tin người dùng thành công",
-      data: nhanVien,
-    });
-  } catch (error: any) {
-    console.error(error);
-    return res.status(400).json({ message: error.message || "Lỗi Server" });
-  }
-};
 
-export const deleteNV = async (req: Request, res: Response) => {
-  try {
-    await NhanVienService.deleteNhanVien(req.params.id);
-    return res.status(200).json({ message: "Xóa tài khoản thành công" });
-  } catch (error: any) {
-    console.error(error);
-    return res.status(400).json({ message: error.message || "Lỗi Server" });
-  }
-};
+    return res.status(200).json(new APIResponse({
+        message: "Lấy thông tin nhân viên thành công",
+        data: nhanVien
+    }));
+});
 
-export const getAllNV = async (req: Request, res: Response) => {
-  try {
+// Xóa nhân viên dựa theo id
+export const deleteNV = catchAsync(async (req: Request, res: Response) => {
+    const nhanVien = await NhanVienService.deleteNhanVien(req.params.id);
+    return res.status(200).json(new APIResponse({
+        message: "Xóa nhân viên thành công",
+    }));
+});
+
+export const getallNV = catchAsync(async (req: Request, res: Response<APIResponse<INhanVienResponse[]>>) => {
     const nhanViens = await NhanVienService.getAllNhanVien();
-    return res.status(200).json({
-      message: "Lấy tất cả nhân viên thành công",
-      data: nhanViens,
-    });
-  } catch (error: any) {
-    console.error(error);
-    return res.status(400).json({ message: error.message || "Lỗi Server" });
-  }
-};
+
+    return res.status(200).json(new APIResponse({
+        message: "Lấy tất cả nhân viên thành công",
+        data: nhanViens
+    }));
+});

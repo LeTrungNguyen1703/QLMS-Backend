@@ -23,6 +23,13 @@ export const errorHandler = (
 ) => {
   console.error('Error:', err);
 
+  // Handle validation errors specifically
+  if (err instanceof AppError && err.statusCode === 400) {
+    return res
+      .status(400)
+      .json(new APIResponseError(err.message));
+  }
+
   if (err instanceof AppError) {
     // Handle operational errors (expected errors)
     return res

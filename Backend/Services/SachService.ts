@@ -1,50 +1,57 @@
+import Sach, { ISach } from "../Models/SACH";
+import { SachRequest } from "../DTO/Request/SachRequest";
+import { ISachResponse } from "../DTO/Response/ISachResponse";
+import { validate } from "class-validator";
 import SachRepository from "../Repositories/SachRepository";
-import { ISach } from "../Models/SACH";
 
 class SachService {
-    async getAllSach() {
-        return await SachRepository.findAll();
+    async getAllSach(): Promise<ISachResponse[]> {
+        const sachs = await SachRepository.findAll();
+        return sachs.map(sach => {
+            return {
+                ...sach,
+                IdNxb: sach.IdNxb._id.toString(),
+                _id: sach._id?.toString() || "",
+            }
+
+        });
     }
 
-    async getSachById(id: string) {
-        // Simply use the MaSach for lookup
+    async getSachById(id: string): Promise<ISachResponse> {
         const sach = await SachRepository.findByMaSach(id);
-        
+
         if (!sach) {
             throw new Error("Sách không tồn tại");
         }
         
-        return sach;
+        return {
+            ...sach,
+            IdNxb: sach.IdNxb._id.toString(),
+            _id: sach._id?.toString() || ""
+        };
     }
 
-    async createSach(sachData: Partial<ISach>) {
-        // Kiểm tra dữ liệu đầu vào
-        if (!sachData.TenSach) {
-            throw new Error("Vui lòng nhập tên sách");
+    async createSach(sachData: SachRequest): Promise<ISachResponse> {
+        const errors = await validate(sachData);
+        
+        if (errors.length > 0) {
+            const messages = errors.map(err => Object.values(err.constraints || {}).join(", ")).join("; ");
+            throw new Error(messages);
         }
-        if (!sachData.DonGia) {
-            throw new Error("Vui lòng nhập đơn giá sách");
-        }
-        if (!sachData.SoQuyen) {
-            throw new Error("Vui lòng nhập số lượng sách");
-        }
-        if (!sachData.NamXuatBan) {
-            throw new Error("Vui lòng chọn năm xuất bản sách");
-        }
-        if (!sachData.IdNxb) {
-            throw new Error("Vui lòng chọn nhà xuất bản sách");
-        }
-        if (!sachData.TacGia) {
-            throw new Error("Vui lòng chọn tác giả sách");
-        }
+        
+        const sach = await SachRepository.create(sachData);
 
-        return await SachRepository.create(sachData);
+        return {
+            ...sach,
+            IdNxb: sach.IdNxb._id.toString(),
+            _id: sach._id?.toString() || ""
+        };
     }
 
-    async updateSach(id: string, sachData: Partial<ISach>) {
+    async updateSach(id: string, sachData: Partial<SachRequest>) {
         // Check if sach exists with this MaSach
         const existingSach = await SachRepository.findByMaSach(id);
-        
+
         if (!existingSach) {
             throw new Error("Sách không tồn tại");
         }
@@ -56,7 +63,7 @@ class SachService {
     async deleteSach(id: string) {
         // Check if sach exists with this MaSach
         const existingSach = await SachRepository.findByMaSach(id);
-        
+
         if (!existingSach) {
             throw new Error("Sách không tồn tại");
         }
