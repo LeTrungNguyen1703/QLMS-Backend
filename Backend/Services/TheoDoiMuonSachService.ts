@@ -2,6 +2,7 @@ import TheoDoiMuonSachRepository from "../Repositories/TheoDoiMuonSachRepository
 import DocGiaRepository from "../Repositories/DocGiaRepository";
 import SachRepository from "../Repositories/SachRepository";
 import { ITHEODOIMUONSACH } from "../Models/THEODOIMUONSACH";
+import DOCGIA from "../Models/DOCGIA";
 
 class TheoDoiMuonSachService {
     async getAllMuonSach() {

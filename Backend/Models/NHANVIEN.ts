@@ -1,6 +1,7 @@
 import mongoose, { Schema, Document } from "mongoose";
 
 export interface INhanvien extends Document {
+    _id: {type: mongoose.Schema.Types.ObjectId},
     MSNV: string,
     HoTenNV?: string,
     MatKhau: string,
@@ -10,6 +11,7 @@ export interface INhanvien extends Document {
 }
 
 const NHANVIEN: Schema = new Schema({
+    _id: {type: mongoose.Schema.Types.ObjectId, auto: true},
     MSNV: {type: String, unique: true}, // Bỏ required để hook có thể tạo trước khi validate
     HoTenNV: {type: String, required: false, default: ""},
     MatKhau: {type: String, required: true},

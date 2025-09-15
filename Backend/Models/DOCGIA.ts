@@ -1,6 +1,7 @@
 import mongoose, { Schema, Document } from "mongoose";
 
 export interface IDocgia extends Document {
+    _id: {type: mongoose.Schema.Types.ObjectId},
     MaDocGia: string,
     HoLot: string,
     Ten: string,
@@ -12,13 +13,14 @@ export interface IDocgia extends Document {
 }
 
 const DOCGIA: Schema = new Schema({
+    _id: {type: mongoose.Schema.Types.ObjectId, auto: true},
     MaDocGia: {type: String, unique: true}, // Bỏ required để hook có thể tạo trước khi validate
-    HoLot: {type: String, required: true},
-    Ten: {type: String, required: true},
-    NgaySinh: {type: Date, required: true},
-    Phai: {type: String, required: true, enum: ["nam", "nữ", "khác"], default: "nam"},
-    DiaChi: {type: String, required: true},
-    SoDienThoai: {type: String, required: true, unique: true},
+    HoLot: {type: String},
+    Ten: {type: String},
+    NgaySinh: {type: Date},
+    Phai: {type: String, enum: ["nam", "nữ", "khác"], default: "nam"},
+    DiaChi: {type: String},
+    SoDienThoai: {type: String, unique: true, required: true}, // Đặt unique và required
     ChucVu: {type: String, enum: "DOC_GIA", default: "DOC_GIA"},
 }, {
     timestamps: true
