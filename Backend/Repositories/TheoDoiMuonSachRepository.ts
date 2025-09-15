@@ -11,9 +11,19 @@ class TheoDoiMuonSachRepository {
         return TheoDoiMuonSach.findById(id);
     }
 
-    async findByDocGiaId(docGiaId: string) {
-        return TheoDoiMuonSach.find({
-            MaDocGia: new mongoose.Types.ObjectId(docGiaId)
+    async findByDocGiaId(maDocGia: string) {
+        return TheoDoiMuonSach.find({ MaDocGia: maDocGia });
+    }
+    
+    async findByMaSach(maSach: string) {
+        return TheoDoiMuonSach.find({ MaSach: maSach });
+    }
+    
+    async findByCompoundKey(maDocGia: string, maSach: string, ngayMuon: Date) {
+        return TheoDoiMuonSach.findOne({
+            MaDocGia: maDocGia,
+            MaSach: maSach,
+            NgayMuon: ngayMuon
         });
     }
 
@@ -22,46 +32,24 @@ class TheoDoiMuonSachRepository {
         return await muonSach.save();
     }
 
-    async update(id: string, muonSachData: Partial<ITHEODOIMUONSACH>) {
+    async update(criteria: { MaDocGia: string, MaSach: string, NgayMuon: Date }, muonSachData: Partial<ITHEODOIMUONSACH>) {
+        return TheoDoiMuonSach.findOneAndUpdate(criteria, muonSachData, {new: true});
+    }
+
+    async delete(criteria: { MaDocGia: string, MaSach: string, NgayMuon: Date }) {
+        return TheoDoiMuonSach.findOneAndDelete(criteria);
+    }
+    
+    // Backward compatibility method that will be deprecated
+    async updateById(id: string, muonSachData: Partial<ITHEODOIMUONSACH>) {
         return TheoDoiMuonSach.findByIdAndUpdate(id, muonSachData, {new: true});
     }
-
-    async delete(id: string) {
+    
+    // Backward compatibility method that will be deprecated
+    async deleteById(id: string) {
         return TheoDoiMuonSach.findByIdAndDelete(id);
     }
-
-    /**
-     * Tìm kiếm theo khóa chính phức hợp (MaDocGia, MaSach, NgayMuon)
-     */
-    async findByCompoundKey(maDocGia: string, maSach: string, ngayMuon: Date) {
-        return TheoDoiMuonSach.findOne({
-            MaDocGia: new mongoose.Types.ObjectId(maDocGia),
-            MaSach: new mongoose.Types.ObjectId(maSach),
-            NgayMuon: ngayMuon
-        });
-    }
-
-    /**
-     * Cập nhật theo khóa chính phức hợp (MaDocGia, MaSach, NgayMuon)
-     */
-    async updateByCompoundKey(maDocGia: string, maSach: string, ngayMuon: Date, muonSachData: Partial<ITHEODOIMUONSACH>) {
-        return TheoDoiMuonSach.findOneAndUpdate({
-            MaDocGia: new mongoose.Types.ObjectId(maDocGia),
-            MaSach: new mongoose.Types.ObjectId(maSach),
-            NgayMuon: ngayMuon
-        }, muonSachData, { new: true });
-    }
-
-    /**
-     * Xóa theo khóa chính phức hợp (MaDocGia, MaSach, NgayMuon)
-     */
-    async deleteByCompoundKey(maDocGia: string, maSach: string, ngayMuon: Date) {
-        return TheoDoiMuonSach.findOneAndDelete({
-            MaDocGia: new mongoose.Types.ObjectId(maDocGia),
-            MaSach: new mongoose.Types.ObjectId(maSach),
-            NgayMuon: ngayMuon
-        });
-    }
+    
 }
 
 export default new TheoDoiMuonSachRepository();

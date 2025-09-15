@@ -14,17 +14,21 @@ class NhanVienRepository {
         return NhanVien.findOne({SoDienThoai});
     }
 
+    async findByMSNV(MSNV: string) {
+        return NhanVien.findOne({MSNV});
+    }
+
     async create(nhanVienData: Partial<INhanvien>) {
         const nhanVien = new NhanVien(nhanVienData);
         return await nhanVien.save();
     }
 
-    async update(id: string, nhanVienData: Partial<INhanvien>) {
-        return NhanVien.findByIdAndUpdate(id, nhanVienData, {new: true});
+    async update(MSNV: string, nhanVienData: Partial<INhanvien>) {
+        return NhanVien.findOneAndUpdate({MSNV}, nhanVienData, {new: true});
     }
 
-    async delete(id: string) {
-        return NhanVien.findByIdAndDelete(id);
+    async delete(MSNV: string) {
+        return NhanVien.findOneAndDelete({MSNV});
     }
 }
 

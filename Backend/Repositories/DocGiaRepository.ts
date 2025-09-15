@@ -5,17 +5,13 @@ class DocGiaRepository {
     async findAll() {
         return DocGia.find();
     }
-
-    async findById(id: string) {
-        return DocGia.findById(id);
-    }
     
     async findByMaDocGia(MaDocGia: string) {
-        return DocGia.findOne({MaDocGia});
+        return DocGia.findOne({ MaDocGia });
     }
 
     async findBySoDienThoai(SoDienThoai: string) {
-        return DocGia.findOne({SoDienThoai});
+        return DocGia.findOne({ SoDienThoai });
     }
 
     async create(docGiaData: Partial<IDocgia>) {
@@ -23,12 +19,12 @@ class DocGiaRepository {
         return await docGia.save();
     }
 
-    async update(id: string, docGiaData: Partial<IDocgia>) {
-        return DocGia.findByIdAndUpdate(id, docGiaData, {new: true});
+    async update(MaDocGia: string, docGiaData: Partial<IDocgia>) {
+        return DocGia.findOneAndUpdate({ MaDocGia }, docGiaData, {new: true});
     }
 
-    async delete(id: string) {
-        return DocGia.findByIdAndDelete(id);
+    async delete(MaDocGia: string) {
+        return DocGia.findOneAndDelete({ MaDocGia });
     }
 }
 

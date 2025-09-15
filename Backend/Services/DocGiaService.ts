@@ -7,10 +7,13 @@ class DocGiaService {
     }
 
     async getDocGiaById(id: string) {
-        const docGia = await DocGiaRepository.findById(id);
+        // Simply use the MaDocGia for lookup
+        const docGia = await DocGiaRepository.findByMaDocGia(id);
+        
         if (!docGia) {
-            throw new Error("Đọc giả không tồn tại");
+            throw new Error("Độc giả không tồn tại");
         }
+        
         return docGia;
     }
 
@@ -45,20 +48,26 @@ class DocGiaService {
     }
 
     async updateDocGia(id: string, docGiaData: Partial<IDocgia>) {
-        const existingDocGia = await DocGiaRepository.findById(id);
+        // Check if doc gia exists with this MaDocGia
+        const existingDocGia = await DocGiaRepository.findByMaDocGia(id);
+        
         if (!existingDocGia) {
-            throw new Error("Đọc giả không tồn tại");
+            throw new Error("Độc giả không tồn tại");
         }
 
+        // Use MaDocGia to update
         return await DocGiaRepository.update(id, docGiaData);
     }
 
     async deleteDocGia(id: string) {
-        const existingDocGia = await DocGiaRepository.findById(id);
+        // Check if doc gia exists with this MaDocGia
+        const existingDocGia = await DocGiaRepository.findByMaDocGia(id);
+        
         if (!existingDocGia) {
-            throw new Error("Đọc giả không tồn tại");
+            throw new Error("Độc giả không tồn tại");
         }
 
+        // Use MaDocGia to delete
         return await DocGiaRepository.delete(id);
     }
 }

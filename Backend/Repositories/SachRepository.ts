@@ -19,12 +19,12 @@ class SachRepository {
         return await sach.save();
     }
 
-    async update(id: string, sachData: Partial<ISach>) {
-        return Sach.findByIdAndUpdate(id, sachData, {new: true});
+    async update(MaSach: string, sachData: Partial<ISach>) {
+        return Sach.findOneAndUpdate({MaSach}, sachData, {new: true});
     }
 
-    async delete(id: string) {
-        return Sach.findByIdAndDelete(id);
+    async delete(MaSach: string) {
+        return Sach.findOneAndDelete({MaSach});
     }
 }
 
