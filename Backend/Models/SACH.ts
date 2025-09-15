@@ -2,6 +2,7 @@ import mongoose, {Schema, Document} from "mongoose";
 import { INhaxuatban } from "./NHAXUATBAN";
 
 export interface ISach extends Document {
+    MaSach: string,
     HinhAnh: string,
     TenSach: string,
     DonGia: number,
@@ -12,7 +13,7 @@ export interface ISach extends Document {
 }
 
 const SACH = new mongoose.Schema({
-    MaSach: {type: String, required: true, unique: true},
+    MaSach: {type: String, unique: true}, // Bỏ required để hook có thể tạo trước khi validate
     HinhAnh: {type: String, required: false},
     TenSach: {type: String, required: true},
     DonGia: {type: Number, required: true},
@@ -20,6 +21,23 @@ const SACH = new mongoose.Schema({
     NamXuatBan: {type: Date, required: true},
     IdNxb: {type: mongoose.Schema.Types.ObjectId, ref: 'NHAXUATBAN', required: true},
     TacGia: {type: String, required: true}
+}, {
+    timestamps: true
+});
+
+// Pre-save hook để tự động tạo MaSach
+SACH.pre('save', async function(next) {
+    if (!this.isNew || this.MaSach) {
+        return next();
+    }
+
+    try {
+        const count = await mongoose.models.SACH.countDocuments({});
+        this.MaSach = `S${(count + 1).toString().padStart(4, '0')}`;
+        next();
+    } catch (error) {
+        next(error as Error);
+    }
 });
 
 const Sach = mongoose.model<ISach>("SACH", SACH);

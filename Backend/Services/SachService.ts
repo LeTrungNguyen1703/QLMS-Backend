@@ -7,10 +7,13 @@ class SachService {
     }
 
     async getSachById(id: string) {
-        const sach = await SachRepository.findById(id);
+        // Simply use the MaSach for lookup
+        const sach = await SachRepository.findByMaSach(id);
+        
         if (!sach) {
             throw new Error("Sách không tồn tại");
         }
+        
         return sach;
     }
 
@@ -39,20 +42,26 @@ class SachService {
     }
 
     async updateSach(id: string, sachData: Partial<ISach>) {
-        const existingSach = await SachRepository.findById(id);
+        // Check if sach exists with this MaSach
+        const existingSach = await SachRepository.findByMaSach(id);
+        
         if (!existingSach) {
             throw new Error("Sách không tồn tại");
         }
 
+        // Use MaSach to update
         return await SachRepository.update(id, sachData);
     }
 
     async deleteSach(id: string) {
-        const existingSach = await SachRepository.findById(id);
+        // Check if sach exists with this MaSach
+        const existingSach = await SachRepository.findByMaSach(id);
+        
         if (!existingSach) {
             throw new Error("Sách không tồn tại");
         }
 
+        // Use MaSach to delete
         return await SachRepository.delete(id);
     }
 }

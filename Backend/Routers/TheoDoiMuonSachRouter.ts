@@ -5,7 +5,7 @@ import { verifyToken } from "../Middleware/Token";
 const router = express.Router();
 
 // Thêm thông tin mượn sách mới
-router.post("/add-muonsach", verifyToken, addMuonSach);
+router.post("/add-muonsach", addMuonSach);
 
 // Lấy thông tin mượn sách theo ID
 router.get("/get-muonsach/:id", verifyToken, getMuonSach);

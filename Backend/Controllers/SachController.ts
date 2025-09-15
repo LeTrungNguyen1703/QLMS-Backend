@@ -8,7 +8,6 @@ export const addSach = async (req: Request, res: Response) => {
     if (req.file) {
       sachData.HinhAnh = req.file.path;
     }
-    
     const sach = await SachService.createSach(sachData);
     return res.status(200).json({ 
       message: "Thêm sách mới thành công", 

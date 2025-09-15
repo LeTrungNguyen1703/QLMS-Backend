@@ -1,8 +1,19 @@
 import { Request, Response } from "express";
 import DocGiaService from "../Services/DocGiaService";
 
+interface DocGiaRequest extends Request {
+  body: {
+    HoLot: string,
+    Ten: string,
+    NgaySinh: Date,
+    Phai: "nam" | "nữ" | "khác",
+    DiaChi: string,
+    SoDienThoai: string
+  };
+}
+
 // Thêm đọc giả
-export const addDG = async (req: Request, res: Response) => {
+export const addDG = async (req: DocGiaRequest, res: Response) => {
   try {
     const docGia = await DocGiaService.createDocGia(req.body);
     return res.status(200).json({
