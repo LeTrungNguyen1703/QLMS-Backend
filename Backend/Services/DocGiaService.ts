@@ -1,56 +1,59 @@
 import DocGiaRepository from "../Repositories/DocGiaRepository";
-import { IDocgia } from "../Models/DOCGIA";
+import DocGia, {IDocgia} from "../Models/DOCGIA";
+import {DocGiaRequest} from "../DTO/Request/DocGiaRequest";
+import {IDocGiaResponse} from "../DTO/Response/IDocGiaResponse";
+import {contentSecurityPolicy} from "helmet";
+import {validate} from "class-validator";
 
 class DocGiaService {
-    async getAllDocGia() {
-        return await DocGiaRepository.findAll();
+
+    async getAllDocGia(): Promise<IDocGiaResponse[]> {
+        const docGias = await DocGiaRepository.findAll();
+        return docGias.map(docGia => {
+            return {
+                ...docGia,
+                _id: docGia._id?.toString() || ""
+            }
+        });
     }
 
-    async getDocGiaById(id: string) {
+    async getDocGiaById(id: string): Promise<IDocGiaResponse> {
         // Simply use the MaDocGia for lookup
-        const docGia = await DocGiaRepository.findByMaDocGia(id);
         
+        const docGia = await DocGiaRepository.findByMaDocGia(id);
+
         if (!docGia) {
             throw new Error("Độc giả không tồn tại");
         }
         
-        return docGia;
+        return {
+            ...docGia,
+            _id: docGia._id?.toString() || ""
+        };
     }
 
-    async createDocGia(docGiaData: Partial<IDocgia>) {
-        // Kiểm tra dữ liệu đầu vào
-        if (!docGiaData.HoLot) {
-            throw new Error("Vui lòng nhập họ lót");
+    async createDocGia(docGiaData: DocGiaRequest): Promise<IDocGiaResponse> {
+        
+        const error = await validate(docGiaData);
+        
+        if (error.length > 0) {
+            const messages = error.map(err => Object.values(err.constraints || {}).join(", ")).join("; ");
+            throw new Error(messages);
         }
-        if (!docGiaData.Ten) {
-            throw new Error("Vui lòng nhập tên");
-        }
-        if (!docGiaData.NgaySinh) {
-            throw new Error("Vui lòng chọn ngày sinh");
-        }
-        if (!docGiaData.Phai) {
-            throw new Error("Vui lòng chọn giới tính");
-        }
-        if (!docGiaData.DiaChi) {
-            throw new Error("Vui lòng nhập địa chỉ");
-        }
-        if (!docGiaData.SoDienThoai) {
-            throw new Error("Vui lòng nhập số điện thoại");
-        }
+        
+        const savedData = await DocGiaRepository.create(docGiaData);
 
-        // Kiểm tra số điện thoại đã tồn tại chưa
-        const existingDocGia = await DocGiaRepository.findBySoDienThoai(docGiaData.SoDienThoai);
-        if (existingDocGia) {
-            throw new Error("Số điện thoại đã tồn tại");
-        }
+        return {
+            ...savedData,
+            _id: savedData._id?.toString() || ""
+        };
 
-        return await DocGiaRepository.create(docGiaData);
     }
 
     async updateDocGia(id: string, docGiaData: Partial<IDocgia>) {
         // Check if doc gia exists with this MaDocGia
         const existingDocGia = await DocGiaRepository.findByMaDocGia(id);
-        
+
         if (!existingDocGia) {
             throw new Error("Độc giả không tồn tại");
         }
@@ -62,7 +65,7 @@ class DocGiaService {
     async deleteDocGia(id: string) {
         // Check if doc gia exists with this MaDocGia
         const existingDocGia = await DocGiaRepository.findByMaDocGia(id);
-        
+
         if (!existingDocGia) {
             throw new Error("Độc giả không tồn tại");
         }

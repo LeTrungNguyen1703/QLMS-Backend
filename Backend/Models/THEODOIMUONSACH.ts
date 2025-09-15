@@ -3,6 +3,7 @@ import { IDocgia } from "./DOCGIA";
 import { ISach } from "./SACH";
 
 export interface ITHEODOIMUONSACH extends Document {
+    _id: mongoose.Types.ObjectId,
     MaDocGia: mongoose.Types.ObjectId | IDocgia,
     MaSach: mongoose.Types.ObjectId | ISach,
     NgayMuon: Date,
@@ -10,6 +11,7 @@ export interface ITHEODOIMUONSACH extends Document {
 }
 
 const THEODOIMUONSACH = new mongoose.Schema({
+    _id: {type: mongoose.Schema.Types.ObjectId, auto: true},
     MaDocGia: {type: mongoose.Schema.Types.ObjectId, ref: 'DOCGIA', required: true},
     MaSach: {type: mongoose.Schema.Types.ObjectId, ref: 'SACH', required: true},
     NgayMuon: {type: Date, required: true, default: Date.now},

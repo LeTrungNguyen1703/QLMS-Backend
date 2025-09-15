@@ -2,6 +2,7 @@ import mongoose, {Schema, Document} from "mongoose";
 import { INhaxuatban } from "./NHAXUATBAN";
 
 export interface ISach extends Document {
+    _id: {type: mongoose.Schema.Types.ObjectId},
     MaSach: string,
     HinhAnh: string,
     TenSach: string,
@@ -13,6 +14,7 @@ export interface ISach extends Document {
 }
 
 const SACH = new mongoose.Schema({
+    _id: {type: mongoose.Schema.Types.ObjectId, auto: true},
     MaSach: {type: String, unique: true}, // Bỏ required để hook có thể tạo trước khi validate
     HinhAnh: {type: String, required: false},
     TenSach: {type: String, required: true},

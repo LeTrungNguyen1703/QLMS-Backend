@@ -1,12 +1,14 @@
 import mongoose, { Schema, Document } from "mongoose";
 
 export interface INhaxuatban extends Document {
+    _id: {type: mongoose.Schema.Types.ObjectId},
     MaNXB: string,
     TenNXB: string,
     DiaChi: string
 }
 
 const NHAXUATBAN = new mongoose.Schema({
+    _id: {type: mongoose.Schema.Types.ObjectId, auto: true},
     MaNXB: {type: String, unique: true}, // Bỏ required để hook có thể tạo trước khi validate
     TenNXB: {type: String, required: true, unique: true},
     DiaChi: {type: String, required: true}
