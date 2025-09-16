@@ -11,6 +11,8 @@ export class DocGiaResponse {
     @Expose()
     Ten: string;
     @Expose()
+    TenTaiKhoan: string;
+    @Expose()
     NgaySinh: Date;
     @Expose()
     Phai: "nam" | "nữ" | "khác";
