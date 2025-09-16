@@ -1,147 +1,120 @@
 import TheoDoiMuonSachRepository from "../Repositories/TheoDoiMuonSachRepository";
 import DocGiaRepository from "../Repositories/DocGiaRepository";
 import SachRepository from "../Repositories/SachRepository";
-import { ITHEODOIMUONSACH } from "../Models/THEODOIMUONSACH";
+import TheoDoiMuonSach, {ITHEODOIMUONSACH} from "../Models/THEODOIMUONSACH";
 import DOCGIA from "../Models/DOCGIA";
+import Sach, {ISach} from "../Models/SACH";
+import {SachResponse} from "../DTO/Response/SachResponse";
+import {plainToInstance} from "class-transformer";
+import {TheoDoiMuonSachResponse} from "../DTO/Response/TheoDoiMuonSachResponse";
+import {AppError} from "../Middleware/ErrorHandler";
+import {TheoDoiMuonSachRequest} from "../DTO/Request/TheoDoiMuonSachRequest";
 
 class TheoDoiMuonSachService {
-    async getAllMuonSach() {
-        return await TheoDoiMuonSachRepository.findAll();
+    async getAllSachMuon(): Promise<TheoDoiMuonSachResponse[]> {
+        const sachMuons = await TheoDoiMuonSachRepository.findAll();
+        return sachMuons.map(sachMuon => this.mapToResponse(sachMuon));
     }
 
-    async getMuonSachById(id: string) {
-        const muonSach = await TheoDoiMuonSachRepository.findById(id);
-        if (!muonSach) {
-            throw new Error("Thông tin mượn sách không tồn tại");
+    async getSachMuonById(id: string): Promise<TheoDoiMuonSachResponse> {
+        const sachMuon = await TheoDoiMuonSachRepository.findById(id);
+        if (!sachMuon) {
+            throw new AppError("Sách chưa được mượn", 404);
         }
-        return muonSach;
+        return this.mapToResponse(sachMuon);
     }
 
-    async getMuonSachByDocGiaId(docGiaId: string) {
-        return await TheoDoiMuonSachRepository.findByDocGiaId(docGiaId);
+    async getMuonSachByDocGiaId(docGiaId: string): Promise<TheoDoiMuonSachResponse[]> {
+        const sachMuons = await TheoDoiMuonSachRepository.findByDocGiaId(docGiaId);
+        if (sachMuons?.length === 0 || sachMuons === null) {
+            throw new AppError("Sách chưa được mượn", 404);
+        }
+        return sachMuons.map(sachMuon => this.mapToResponse(sachMuon));
     }
 
-    async createMuonSach(muonSachData: Partial<ITHEODOIMUONSACH>) {
-        // Kiểm tra dữ liệu đầu vào
-        if (!muonSachData.MaDocGia) {
-            throw new Error("Vui lòng chọn độc giả");
-        }
-        if (!muonSachData.MaSach) {
-            throw new Error("Vui lòng chọn sách");
-        }
-        if (!muonSachData.NgayMuon) {
-            throw new Error("Vui lòng chọn ngày mượn");
-        }
-        if (!muonSachData.NgayTra) {
-            throw new Error("Vui lòng chọn ngày trả");
+    async getMuonSachByMaSach(maSach: string): Promise<TheoDoiMuonSachResponse[]> {
+        const sachMuons = await TheoDoiMuonSachRepository.findByMaSach(maSach);
+        if (sachMuons?.length === 0 || sachMuons === null) {
+            throw new AppError("Sách chưa được mượn", 404);
         }
 
-        // Kiểm tra độc giả có tồn tại không
-        const docGia = await DocGiaRepository.findByCustomId(muonSachData.MaDocGia.toString());
+        return sachMuons.map(sachMuon => this.mapToResponse(sachMuon));
+
+    }
+
+    async createMuonSach(muonSachData: TheoDoiMuonSachRequest): Promise<TheoDoiMuonSachResponse> {
+
+        await this.kiemTraDocGiaTonTai(muonSachData.MaDocGia.toString())
+
+        await this.kiemTraSachTonTai(muonSachData.MaSach.toString())
+
+        const sach = await this.kiemTraSoLuongSachHienCo(muonSachData.MaSach.toString(), muonSachData.SoQuyen)
+
+        const sachMuon = new TheoDoiMuonSach(muonSachData);
+
+        const sachMuonSaved = await TheoDoiMuonSachRepository.create(sachMuon);
+
+        await this.xuLiSoLuongSachKhiMuon(sach, muonSachData.SoQuyen)
+
+        return this.mapToResponse(sachMuonSaved);
+
+    }
+
+    async updateSachMuon(id: string, muonSachData: Partial<TheoDoiMuonSachRequest>) {
+        const sachMuon = new TheoDoiMuonSach(muonSachData);
+        const sachUpdated = await TheoDoiMuonSachRepository.update(id, sachMuon);
+        if (!sachUpdated) {
+            throw new AppError("Cập nhật sách đã mượn không thành công, vui lòng kiểm tra lại dữ liệu", 400);
+        }
+    }
+
+    async deleteSachMuon(id: string) {
+        const sachDeleted = await TheoDoiMuonSachRepository.delete(id);
+        if (!sachDeleted) {
+            throw new AppError("Xóa sách đã mượn không thành công, vui lòng kiểm tra lại mã mượn sách", 400);
+        }
+    }
+
+    // Helper method ***************************************************************** //
+
+    private mapToResponse(sachMuon: ITHEODOIMUONSACH): TheoDoiMuonSachResponse {
+        return plainToInstance(TheoDoiMuonSachResponse, sachMuon, {
+            excludeExtraneousValues: true,
+            enableImplicitConversion: true,
+            exposeUnsetFields: false
+        });
+    }
+
+    private async kiemTraDocGiaTonTai(docGiaId: string) {
+        const docGia = await DocGiaRepository.findById(docGiaId);
         if (!docGia) {
-            throw new Error("Độc giả không tồn tại");
+            throw new AppError("Độc giả không tồn tại", 404);
         }
+    }
 
-        // Kiểm tra sách có tồn tại không
-        const sach = await SachRepository.findByMaSach(muonSachData.MaSach.toString());
+    private async kiemTraSachTonTai(sachId: string) {
+        const sach = await SachRepository.findById(sachId);
         if (!sach) {
-            throw new Error("Sách không tồn tại");
+            throw new AppError("Sách không tồn tại", 404);
         }
-
-        // Kiểm tra số lượng sách còn đủ không
-        if (sach.SoQuyen <= 0) {
-            throw new Error("Sách đã hết");
-        }
-
-        // Giảm số lượng sách
-        sach.SoQuyen -= 1;
-        await sach.save();
-
-        return await TheoDoiMuonSachRepository.create(muonSachData);
     }
 
-    async updateMuonSach(id: string, muonSachData: Partial<ITHEODOIMUONSACH>) {
-        const existingMuonSach = await TheoDoiMuonSachRepository.findById(id);
-        if (!existingMuonSach) {
-            throw new Error("Thông tin mượn sách không tồn tại");
-        }
-
-        // Create compound key criteria
-        const criteria = {
-            MaDocGia: existingMuonSach.MaDocGia.toString(),
-            MaSach: existingMuonSach.MaSach.toString(),
-            NgayMuon: existingMuonSach.NgayMuon
-        };
-
-        return await TheoDoiMuonSachRepository.update(criteria, muonSachData);
+    private async xuLiSoLuongSachKhiMuon(sach: ISach, soQuyen: number) {
+        sach.SoQuyen -= soQuyen;
+        await SachRepository.update(sach._id.toString(), sach);
     }
 
-    async deleteMuonSach(id: string) {
-        const existingMuonSach = await TheoDoiMuonSachRepository.findById(id);
-        if (!existingMuonSach) {
-            throw new Error("Thông tin mượn sách không tồn tại");
+    private async kiemTraSoLuongSachHienCo(sachId: string, soQuyen: number): Promise<ISach> {
+        const sach = await SachRepository.findById(sachId);
+        if (!sach) {
+            throw new AppError("Sách không tồn tại", 404);
+        }
+        if (sach.SoQuyen < soQuyen) {
+            throw new AppError("Số lượng sách hiện có không đủ để mượn", 400);
         }
 
-        // Create compound key criteria
-        const criteria = {
-            MaDocGia: existingMuonSach.MaDocGia.toString(),
-            MaSach: existingMuonSach.MaSach.toString(),
-            NgayMuon: existingMuonSach.NgayMuon
-        };
+        return sach;
 
-        // Tăng số lượng sách khi xóa phiếu mượn
-        const sach = await SachRepository.findByMaSach(existingMuonSach.MaSach.toString());
-        if (sach) {
-            sach.SoQuyen += 1;
-            await sach.save();
-        }
-
-        return await TheoDoiMuonSachRepository.delete(criteria);
-    }
-
-    /**
-     * Lấy thông tin mượn sách theo khóa chính phức hợp
-     */
-    async getMuonSachByCompoundKey(maDocGia: string, maSach: string, ngayMuon: Date) {
-        const muonSach = await TheoDoiMuonSachRepository.findByCompoundKey(maDocGia, maSach, ngayMuon);
-        if (!muonSach) {
-            throw new Error("Thông tin mượn sách không tồn tại");
-        }
-        return muonSach;
-    }
-
-    /**
-     * Cập nhật thông tin mượn sách theo khóa chính phức hợp
-     */
-    async updateMuonSachByCompoundKey(maDocGia: string, maSach: string, ngayMuon: Date, muonSachData: Partial<ITHEODOIMUONSACH>) {
-        const existingMuonSach = await TheoDoiMuonSachRepository.findByCompoundKey(maDocGia, maSach, ngayMuon);
-        if (!existingMuonSach) {
-            throw new Error("Thông tin mượn sách không tồn tại");
-        }
-        const criteria = { MaDocGia: maDocGia, MaSach: maSach, NgayMuon: ngayMuon };
-        
-        return await TheoDoiMuonSachRepository.update(criteria,existingMuonSach);
-    }
-
-    /**
-     * Xóa thông tin mượn sách theo khóa chính phức hợp
-     */
-    async deleteMuonSachByCompoundKey(maDocGia: string, maSach: string, ngayMuon: Date) {
-        const existingMuonSach = await TheoDoiMuonSachRepository.findByCompoundKey(maDocGia, maSach, ngayMuon);
-        if (!existingMuonSach) {
-            throw new Error("Thông tin mượn sách không tồn tại");
-        }
-
-        // Tăng số lượng sách khi xóa phiếu mượn
-        const sach = await SachRepository.findById(existingMuonSach.MaSach.toString());
-        if (sach) {
-            sach.SoQuyen += 1;
-            await sach.save();
-        }
-        
-        const criteria = {MaDocGia: maDocGia, MaSach: maSach, NgayMuon: ngayMuon};
-
-        return await TheoDoiMuonSachRepository.delete(criteria);
     }
 }
 

@@ -46,8 +46,8 @@ class SachService {
             throw new AppError("Sách không tồn tại", 404);
         }
 
-        // Use MaSach to update
-        const updatedSach = await SachRepository.update(id, sachData);
+        const sach = new Sach(sachData);
+        const updatedSach = await SachRepository.update(id, sach);
 
         if (!updatedSach) {
             return null;
