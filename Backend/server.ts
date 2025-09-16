@@ -8,6 +8,7 @@ import routerSach from "./Routers/SachRouter";
 import routerNhanVien from "./Routers/NhanVienRouter";
 import routerTheoDoiMuonSach from "./Routers/TheoDoiMuonSachRouter";
 import routerDocGia from "./Routers/DocGiaRouter";
+import routerNhaXuatBan from "./Routers/NhaXuatBanRouter";
 import { errorHandler } from "./Middleware/ErrorHandler";
 import swaggerDocs from "./Utils/SwaggerConfig";
 
@@ -29,6 +30,7 @@ app.use("/api/nhanvien", routerNhanVien);
 app.use("/api/docgia", routerDocGia);
 app.use("/api/sach", routerSach);
 app.use("/api/muonsach", routerTheoDoiMuonSach);
+app.use("/api/nhaxuatban", routerNhaXuatBan);
 
 // Handle 404 routes - using a middleware without a path
 // This will only be reached if no other middleware handles the request

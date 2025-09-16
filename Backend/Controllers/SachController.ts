@@ -1,15 +1,15 @@
 import {Request, Response, NextFunction} from "express";
 import SachService from "../Services/SachService";
 import {SachRequest, ISachRequestExtended} from "../DTO/Request/SachRequest";
-import {ISachResponse} from "../DTO/Response/ISachResponse";
-import {plainToClass} from "class-transformer";
-import {APIResponse, APIResponseError} from "../DTO/Response/APIResponse";
-import {catchAsync, AppError} from "../Middleware/ErrorHandler";
+import {SachResponse} from "../DTO/Response/SachResponse";
+import {plainToInstance} from "class-transformer";
+import {APIResponse} from "../DTO/Response/APIResponse";
+import {AppError, catchAsync} from "../Middleware/ErrorHandler";
 
 // Thêm sách
-export const addSach = catchAsync(async (req: ISachRequestExtended, res: Response<APIResponse<ISachResponse>>) => {
+export const addSach = catchAsync(async (req: ISachRequestExtended, res: Response<APIResponse<SachResponse>>) => {
     const sachData = req.body;
-    const dto = plainToClass(SachRequest, sachData);
+    const dto = plainToInstance(SachRequest, sachData);
 
     const sach = await SachService.createSach(dto);
 
@@ -19,7 +19,7 @@ export const addSach = catchAsync(async (req: ISachRequestExtended, res: Respons
 // Update sách
 export const updateSach = catchAsync(async (req: ISachRequestExtended, res: Response) => {
     const sachData = req.body;
-    const dto = plainToClass(SachRequest, sachData);
+    const dto = plainToInstance(SachRequest, sachData);
     const sach = await SachService.updateSach(req.params.id, dto);
 
     if (!sach) {
@@ -31,7 +31,7 @@ export const updateSach = catchAsync(async (req: ISachRequestExtended, res: Resp
 });
 
 // Lấy sách dựa theo id
-export const getSach = catchAsync(async (req: Request, res: Response<APIResponse<ISachResponse>>) => {
+export const getSach = catchAsync(async (req: Request, res: Response<APIResponse<SachResponse>>) => {
     const sach = await SachService.getSachById(req.params.id);
 
     return res.status(200).json(new APIResponse({
@@ -48,7 +48,7 @@ export const deleteSach = catchAsync(async (req: Request, res: Response) => {
     }));
 });
 
-export const getallSach = catchAsync(async (req: Request, res: Response<APIResponse<ISachResponse[]>>) => {
+export const getallSach = catchAsync(async (req: Request, res: Response<APIResponse<SachResponse[]>>) => {
     const sachs = await SachService.getAllSach();
 
     return res.status(200).json(new APIResponse({
