@@ -1,5 +1,5 @@
 import {Request} from "express";
-import { IsNotEmpty, IsNumber, IsDateString, IsMongoId } from 'class-validator';
+import {IsNotEmpty, IsNumber, IsDateString, IsMongoId, Min} from 'class-validator';
 
 export class SachRequest {
     @IsNotEmpty({ message: "Vui lòng nhập tên sách" })
@@ -13,6 +13,7 @@ export class SachRequest {
 
     @IsNotEmpty({ message: "Vui lòng nhập số quyển" })
     @IsNumber({}, { message: "Số quyển phải là số" })
+    @Min(1, { message: "Số quyển phải lớn hơn 0" })
     SoQuyen: number;
 
     @IsNotEmpty({ message: "Vui lòng nhập năm xuất bản" })

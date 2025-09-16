@@ -20,8 +20,8 @@ class SachRepository {
         return toPlainObject(savedSach);
     }
 
-    async update(MaSach: string, sachData: Partial<SachRequest>): Promise<ISach | null> {
-        const updatedSach = await Sach.findOneAndUpdate({MaSach}, sachData, {new: true}).populate('IdNxb');
+    async update(maSach: string, sachData: Partial<ISach>): Promise<ISach | null> {
+        const updatedSach = await Sach.findByIdAndUpdate(maSach, sachData, {new: true});
         return toPlainObject(updatedSach);
     }
 

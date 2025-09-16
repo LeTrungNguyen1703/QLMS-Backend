@@ -22,7 +22,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n    \"MaDocGia\": \"{{docgia_id}}\",\n    \"MaSach\": \"{{sach_id}}\",\n    \"NgayMuon\": \"2023-09-01\",\n    \"NgayTra\": \"2023-09-15\"\n}"
+          "raw": "{\n    \"MaDocGia\": \"{{docgia_id}}\",\n    \"MaSach\": \"{{sach_id}}\",\n    \"NgayMuon\": \"2023-09-01\",\n    \"NgayTra\": \"2023-09-15\",\n    \"SoQuyen\": 1\n}"
         },
         "url": {
           "raw": "{{base_url}}/api/muonsach/add-muonsach",
@@ -36,7 +36,8 @@
           ]
         },
         "description": "Thêm thông tin mượn sách mới vào hệ thống"
-      }
+      },
+      "response": []
     },
     {
       "name": "Cập Nhật Thông Tin Mượn Sách",
@@ -54,7 +55,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n    \"NgayMuon\": \"2023-09-01\",\n    \"NgayTra\": \"2023-09-20\"\n}"
+          "raw": "{\n    \"NgayMuon\": \"2023-09-01\",\n    \"NgayTra\": \"2023-09-20\",\n    \"TrangThai\": \"DA_TRA\"\n}"
         },
         "url": {
           "raw": "{{base_url}}/api/muonsach/update-muonsach/:id",
@@ -76,7 +77,8 @@
           ]
         },
         "description": "Cập nhật thông tin mượn sách"
-      }
+      },
+      "response": []
     },
     {
       "name": "Xem Thông Tin Mượn Sách",
@@ -108,7 +110,8 @@
           ]
         },
         "description": "Lấy thông tin mượn sách theo ID"
-      }
+      },
+      "response": []
     },
     {
       "name": "Xóa Thông Tin Mượn Sách",
@@ -140,7 +143,8 @@
           ]
         },
         "description": "Xóa thông tin mượn sách khỏi hệ thống"
-      }
+      },
+      "response": []
     },
     {
       "name": "Xem Tất Cả Thông Tin Mượn Sách",
@@ -163,8 +167,9 @@
             "get-all-muonsach"
           ]
         },
-        "description": "Lấy tất cả thông tin mượn sách trong hệ thống"
-      }
+        "description": "Lấy thông tin của tất cả các sách đã được mượn trong hệ thống"
+      },
+      "response": []
     },
     {
       "name": "Xem Thông Tin Mượn Sách Theo Độc Giả",
@@ -195,46 +200,9 @@
             }
           ]
         },
-        "description": "Lấy thông tin mượn sách theo độc giả"
-      }
-    },
-    {
-      "name": "Tìm Kiếm Theo Khóa Chính (MaDocGia, MaSach, NgayMuon)",
-      "request": {
-        "method": "GET",
-        "header": [
-          {
-            "key": "Authorization",
-            "value": "Bearer {{token}}"
-          }
-        ],
-        "url": {
-          "raw": "{{base_url}}/api/muonsach/get-by-compound-key",
-          "host": [
-            "{{base_url}}"
-          ],
-          "path": [
-            "api",
-            "muonsach",
-            "get-by-compound-key"
-          ],
-          "query": [
-            {
-              "key": "maDocGia",
-              "value": "{{docgia_id}}"
-            },
-            {
-              "key": "maSach",
-              "value": "{{sach_id}}"
-            },
-            {
-              "key": "ngayMuon",
-              "value": "2023-09-01"
-            }
-          ]
-        },
-        "description": "Tìm thông tin mượn sách theo khóa chính gồm MaDocGia, MaSach, NgayMuon"
-      }
+        "description": "Lấy thông tin mượn sách theo ID độc giả"
+      },
+      "response": []
     }
   ],
   "variable": [
@@ -246,7 +214,12 @@
     {
       "key": "token",
       "value": "",
-      "description": "JWT Token xác thực"
+      "description": "JWT token xác thực"
+    },
+    {
+      "key": "muonsach_id",
+      "value": "",
+      "description": "ID của thông tin mượn sách"
     },
     {
       "key": "docgia_id",
@@ -257,12 +230,6 @@
       "key": "sach_id",
       "value": "",
       "description": "ID của sách"
-    },
-    {
-      "key": "muonsach_id",
-      "value": "",
-      "description": "ID của thông tin mượn sách"
     }
   ]
 }
-
