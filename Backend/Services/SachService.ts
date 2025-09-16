@@ -14,7 +14,7 @@ class SachService {
     }
 
     async getSachById(id: string): Promise<SachResponse> {
-        const sach = await SachRepository.findByMaSach(id);
+        const sach = await SachRepository.findById(id);
 
         if (!sach) {
             throw new AppError("Sách không tồn tại", 404);
@@ -30,12 +30,12 @@ class SachService {
             const messages = errors.map(err => Object.values(err.constraints || {}).join(", ")).join("; ");
             throw new AppError(messages, 400);
         }
-
+        
         const sach = new Sach(sachData);
-        // sach.IdNxb = 
-        // const savedSach = await SachRepository.create(populatedSach);
+        
+        const savedSach = await SachRepository.create(sach);
 
-        return this.mapToSachResponse(sach);
+        return this.mapToSachResponse(savedSach);
     }
 
     async updateSach(id: string, sachData: Partial<SachRequest>): Promise<SachResponse | null> {
@@ -75,9 +75,12 @@ class SachService {
     }
 
     private mapToSachResponse(sach: ISach): SachResponse {
-        const plainObject = sach.toObject ? sach.toObject() : sach;
-
-        return plainToInstance(SachResponse, plainObject, {excludeExtraneousValues: true});
+        // The toObject conversion is already done in the repository layer
+        return plainToInstance(SachResponse, sach, {
+            excludeExtraneousValues: true,
+            enableImplicitConversion: true,
+            exposeUnsetFields: false
+        });
     }
 }
 

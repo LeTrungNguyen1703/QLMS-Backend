@@ -1,3 +1,4 @@
+import "reflect-metadata"; // This import is required for class-transformer and class-validator decorators
 import express, {Request, Response, NextFunction} from "express";
 import helmet from "helmet";
 import cors from "cors";

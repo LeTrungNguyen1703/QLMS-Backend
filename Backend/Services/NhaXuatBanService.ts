@@ -69,8 +69,12 @@ class NhaXuatBanService {
     }
 
     private mapToNhaXuatBanResponse(nhaXuatBan: INhaxuatban): NhaXuatBanResponse {
-        const plainObject = nhaXuatBan.toObject ? nhaXuatBan.toObject() : nhaXuatBan;
-        return plainToInstance(NhaXuatBanResponse, plainObject, {excludeExtraneousValues: true});
+        // The toObject conversion is already done in the repository layer
+        return plainToInstance(NhaXuatBanResponse, nhaXuatBan, {
+            excludeExtraneousValues: true,
+            enableImplicitConversion: true,
+            exposeUnsetFields: false
+        });
     }
 }
 

@@ -1,8 +1,8 @@
 {
   "info": {
-    "_postman_id": "e4e3f73f-b1b2-4c6c-8d5a-f3a4e89d6a0e",
+    "_postman_id": "f5a3e85c-d2b4-4e7c-a9b5-f4b5e8d7c6b2",
     "name": "QLMS - Sach API",
-    "description": "API collection for Sach in the Library Management System (QLMS)",
+    "description": "API collection for Sach (Book) in the Library Management System (QLMS)",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
@@ -12,51 +12,13 @@
         "method": "POST",
         "header": [
           {
-            "key": "Authorization",
-            "value": "Bearer {{token}}"
+            "key": "Content-Type",
+            "value": "application/json"
           }
         ],
         "body": {
-          "mode": "formdata",
-          "formdata": [
-            {
-              "key": "TenSach",
-              "value": "Lập Trình Web Hiện Đại",
-              "type": "text"
-            },
-            {
-              "key": "DonGia",
-              "value": "150000",
-              "type": "text"
-            },
-            {
-              "key": "SoQuyen",
-              "value": "10",
-              "type": "text"
-            },
-            {
-              "key": "NamXuatBan",
-              "value": "2023",
-              "type": "text"
-            },
-            {
-              "key": "IdNxb",
-              "value": "61234567890abcdef1234567",
-              "type": "text",
-              "description": "ID của nhà xuất bản"
-            },
-            {
-              "key": "TacGia",
-              "value": "Nguyễn Văn A",
-              "type": "text"
-            },
-            {
-              "key": "HinhAnh",
-              "type": "file",
-              "src": "/path/to/your/image.jpg",
-              "description": "Hình ảnh của sách"
-            }
-          ]
+          "mode": "raw",
+          "raw": "{\n    \"TenSach\": \"Clean Code\",\n    \"HinhAnh\": \"clean_code.jpg\",\n    \"DonGia\": 150000,\n    \"SoQuyen\": 10,\n    \"NamXuatBan\": \"2008-08-01\",\n    \"IdNxb\": \"{{nhaxuatban_id}}\",\n    \"TacGia\": \"Robert C. Martin\"\n}"
         },
         "url": {
           "raw": "{{base_url}}/api/sach/add-sach",
@@ -78,51 +40,13 @@
         "method": "PUT",
         "header": [
           {
-            "key": "Authorization",
-            "value": "Bearer {{token}}"
+            "key": "Content-Type",
+            "value": "application/json"
           }
         ],
         "body": {
-          "mode": "formdata",
-          "formdata": [
-            {
-              "key": "TenSach",
-              "value": "Lập Trình Web Hiện Đại (Updated)",
-              "type": "text"
-            },
-            {
-              "key": "DonGia",
-              "value": "180000",
-              "type": "text"
-            },
-            {
-              "key": "SoQuyen",
-              "value": "15",
-              "type": "text"
-            },
-            {
-              "key": "NamXuatBan",
-              "value": "2023",
-              "type": "text"
-            },
-            {
-              "key": "IdNxb",
-              "value": "61234567890abcdef1234567",
-              "type": "text",
-              "description": "ID của nhà xuất bản"
-            },
-            {
-              "key": "TacGia",
-              "value": "Nguyễn Văn A",
-              "type": "text"
-            },
-            {
-              "key": "HinhAnh",
-              "type": "file",
-              "src": "/path/to/your/image.jpg",
-              "description": "Hình ảnh của sách (tùy chọn)"
-            }
-          ]
+          "mode": "raw",
+          "raw": "{\n    \"TenSach\": \"Clean Code (Updated)\",\n    \"HinhAnh\": \"clean_code_updated.jpg\",\n    \"DonGia\": 170000,\n    \"SoQuyen\": 15,\n    \"NamXuatBan\": \"2008-08-01\",\n    \"IdNxb\": \"{{nhaxuatban_id}}\",\n    \"TacGia\": \"Robert C. Martin\"\n}"
         },
         "url": {
           "raw": "{{base_url}}/api/sach/update-sach/:id",
@@ -177,12 +101,7 @@
       "name": "Xóa Sách",
       "request": {
         "method": "DELETE",
-        "header": [
-          {
-            "key": "Authorization",
-            "value": "Bearer {{token}}"
-          }
-        ],
+        "header": [],
         "url": {
           "raw": "{{base_url}}/api/sach/delete-sach/:id",
           "host": [
@@ -232,14 +151,14 @@
       "description": "URL cơ sở của API"
     },
     {
-      "key": "token",
-      "value": "",
-      "description": "JWT Token xác thực"
-    },
-    {
       "key": "sach_id",
       "value": "",
       "description": "ID của sách"
+    },
+    {
+      "key": "nhaxuatban_id",
+      "value": "",
+      "description": "ID của nhà xuất bản"
     }
   ]
 }
