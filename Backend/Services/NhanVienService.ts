@@ -69,8 +69,12 @@ class NhanVienService {
     }
 
     private mapToNhanVienResponse(nhanVien: INhanvien): NhanVienResponse {
-        const plainObject = nhanVien.toObject ? nhanVien.toObject() : nhanVien;
-        return plainToInstance(NhanVienResponse,plainObject, {excludeExtraneousValues: true});
+        // The toObject conversion is already done in the repository layer
+        return plainToInstance(NhanVienResponse, nhanVien, {
+            excludeExtraneousValues: true,
+            enableImplicitConversion: true,
+            exposeUnsetFields: false
+        });
     }
 }
 

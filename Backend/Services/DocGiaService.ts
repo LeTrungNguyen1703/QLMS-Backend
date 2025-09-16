@@ -68,8 +68,12 @@ class DocGiaService {
     }
 
     private mapToDocGiaResponse(docGia: IDocgia): DocGiaResponse {
-        const plainObject = docGia.toObject ? docGia.toObject() : docGia;
-        return plainToInstance(DocGiaResponse, plainObject, {excludeExtraneousValues: true});
+        // The toObject conversion is already done in the repository layer
+        return plainToInstance(DocGiaResponse, docGia, {
+            excludeExtraneousValues: true,
+            enableImplicitConversion: true,
+            exposeUnsetFields: false
+        });
     }
 }
 

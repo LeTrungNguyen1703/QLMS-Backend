@@ -7,6 +7,12 @@ export class DocGiaRequest {
 
     @IsNotEmpty({ message: "Vui lòng nhập tên" })
     Ten: string;
+    
+    @IsNotEmpty({message: "Vui lòng nhập tên tài khoản"})
+    TenTaiKhoan: string;
+    
+    @IsNotEmpty({message: "Vui lòng nhập mật khẩu"})
+    MatKhau: string;
 
     @IsNotEmpty({ message: "Vui lòng chọn ngày sinh" })
     NgaySinh: Date;
