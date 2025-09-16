@@ -37,7 +37,7 @@ class TheoDoiMuonSachService {
         }
 
         // Kiểm tra độc giả có tồn tại không
-        const docGia = await DocGiaRepository.findByMaDocGia(muonSachData.MaDocGia.toString());
+        const docGia = await DocGiaRepository.findByCustomId(muonSachData.MaDocGia.toString());
         if (!docGia) {
             throw new Error("Độc giả không tồn tại");
         }

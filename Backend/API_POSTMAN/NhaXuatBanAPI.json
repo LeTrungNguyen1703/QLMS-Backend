@@ -1,0 +1,192 @@
+{
+  "info": {
+    "_postman_id": "f28d3b67-c541-4726-8e3a-38b9a4e19f22",
+    "name": "QLMS - NhaXuatBan API",
+    "description": "API collection for NhaXuatBan in the Library Management System (QLMS)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Thêm Nhà Xuất Bản",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"TenNXB\": \"Nhà Xuất Bản Giáo Dục\",\n    \"DiaChi\": \"81 Trần Hưng Đạo, Hoàn Kiếm, Hà Nội\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/nhaxuatban/add-nxb",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "nhaxuatban",
+            "add-nxb"
+          ]
+        },
+        "description": "Thêm nhà xuất bản mới vào hệ thống"
+      }
+    },
+    {
+      "name": "Cập Nhật Nhà Xuất Bản",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"TenNXB\": \"Nhà Xuất Bản Giáo Dục Việt Nam\",\n    \"DiaChi\": \"81 Trần Hưng Đạo, Phường Trần Hưng Đạo, Quận Hoàn Kiếm, Hà Nội\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/nhaxuatban/update-nxb/:id",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "nhaxuatban",
+            "update-nxb",
+            ":id"
+          ],
+          "variable": [
+            {
+              "key": "id",
+              "value": "{{nhaxuatban_id}}",
+              "description": "ID của nhà xuất bản cần cập nhật"
+            }
+          ]
+        },
+        "description": "Cập nhật thông tin nhà xuất bản"
+      }
+    },
+    {
+      "name": "Xem Thông Tin Nhà Xuất Bản",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/nhaxuatban/get-nxb/:id",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "nhaxuatban",
+            "get-nxb",
+            ":id"
+          ],
+          "variable": [
+            {
+              "key": "id",
+              "value": "{{nhaxuatban_id}}",
+              "description": "ID của nhà xuất bản cần xem thông tin"
+            }
+          ]
+        },
+        "description": "Lấy thông tin của nhà xuất bản theo ID"
+      }
+    },
+    {
+      "name": "Xem Thông Tin Nhà Xuất Bản Theo Mã",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/nhaxuatban/get-nxb-by-custom-id/:id",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "nhaxuatban",
+            "get-nxb-by-custom-id",
+            ":id"
+          ],
+          "variable": [
+            {
+              "key": "id",
+              "value": "{{nhaxuatban_manxb}}",
+              "description": "Mã nhà xuất bản cần xem thông tin (MaNXB)"
+            }
+          ]
+        },
+        "description": "Lấy thông tin của nhà xuất bản theo mã (MaNXB)"
+      }
+    },
+    {
+      "name": "Xóa Nhà Xuất Bản",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/nhaxuatban/delete-nxb/:id",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "nhaxuatban",
+            "delete-nxb",
+            ":id"
+          ],
+          "variable": [
+            {
+              "key": "id",
+              "value": "{{nhaxuatban_id}}",
+              "description": "ID của nhà xuất bản cần xóa"
+            }
+          ]
+        },
+        "description": "Xóa nhà xuất bản khỏi hệ thống"
+      }
+    },
+    {
+      "name": "Xem Tất Cả Nhà Xuất Bản",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/nhaxuatban/get-all-nxb",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "nhaxuatban",
+            "get-all-nxb"
+          ]
+        },
+        "description": "Lấy thông tin của tất cả nhà xuất bản trong hệ thống"
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080",
+      "description": "URL cơ sở của API"
+    },
+    {
+      "key": "nhaxuatban_id",
+      "value": "",
+      "description": "ID của nhà xuất bản"
+    },
+    {
+      "key": "nhaxuatban_manxb",
+      "value": "",
+      "description": "Mã nhà xuất bản (MaNXB)"
+    }
+  ]
+}
+

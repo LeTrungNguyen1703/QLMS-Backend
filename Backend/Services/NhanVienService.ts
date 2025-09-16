@@ -1,85 +1,76 @@
 import NhanVienRepository from "../Repositories/NhanVienRepository";
-import NhanVien, { INhanvien } from "../Models/NHANVIEN";
-import { NhanVienRequest } from "../DTO/Request/NhanVienRequest";
-import { INhanVienResponse } from "../DTO/Response/INhanVienResponse";
-import { validate } from "class-validator";
+import NhanVien, {INhanvien} from "../Models/NHANVIEN";
+import {NhanVienRequest} from "../DTO/Request/NhanVienRequest";
+import {NhanVienResponse} from "../DTO/Response/NhanVienResponse";
+import {validate} from "class-validator";
+import {AppError} from "../Middleware/ErrorHandler";
+import DocGiaRepository from "../Repositories/DocGiaRepository";
+import {plainToInstance} from "class-transformer";
 
 class NhanVienService {
-    async getAllNhanVien(): Promise<INhanVienResponse[]> {
+    async getAllNhanVien(): Promise<NhanVienResponse[]> {
         const nhanViens = await NhanVienRepository.findAll();
-        return nhanViens.map(nhanVien => {
-            return {
-                ...nhanVien,
-                _id: nhanVien._id?.toString() || ""
-            }
-        });
+        return nhanViens.map(nhanVien => this.mapToNhanVienResponse(nhanVien));
     }
 
-    async getNhanVienById(id: string): Promise<INhanVienResponse> {
-        const nhanVien = await NhanVienRepository.findByMSNV(id);
+    async getNhanVienById(id: string): Promise<NhanVienResponse> {
+        const nhanVien = await NhanVienRepository.findById(id);
 
         if (!nhanVien) {
-            throw new Error("Nhân viên không tồn tại");
+            throw new AppError("Nhân viên không tồn tại", 404);
         }
-        
-        return {
-            ...nhanVien,
-            _id: nhanVien._id?.toString() || ""
-        };
+
+        return this.mapToNhanVienResponse(nhanVien);
     }
 
-    async createNhanVien(nhanVienData: NhanVienRequest): Promise<INhanVienResponse> {
+    async createNhanVien(nhanVienData: NhanVienRequest): Promise<NhanVienResponse> {
         const errors = await validate(nhanVienData);
-        
+
         if (errors.length > 0) {
             const messages = errors.map(err => Object.values(err.constraints || {}).join(", ")).join("; ");
-            throw new Error(messages);
+            throw new AppError(messages, 400);
         }
-        
+
         // Check if phone number is already registered
         const existingNhanVien = await NhanVienRepository.findBySoDienThoai(nhanVienData.SoDienThoai);
         if (existingNhanVien) {
-            throw new Error("Số điện thoại đã được sử dụng");
+            throw new AppError("Số điện thoại đã được sử dụng", 400);
         }
-        
-        const savedData = await NhanVienRepository.create(nhanVienData);
 
-        return {
-            ...savedData,
-            _id: savedData._id?.toString() || ""
-        };
+        const nhanVien = new NhanVien(nhanVienData);
+        const savedData = await NhanVienRepository.create(nhanVien);
+
+        return this.mapToNhanVienResponse(savedData);
     }
 
     async updateNhanVien(id: string, nhanVienData: Partial<INhanvien>) {
-        // Check if nhan vien exists with this MSNV
-        const existingNhanVien = await NhanVienRepository.findByMSNV(id);
+        const existingNhanVien = await NhanVienRepository.findById(id);
 
         if (!existingNhanVien) {
-            throw new Error("Nhân viên không tồn tại");
+            throw new AppError("Nhân viên không tồn tại", 404);
         }
 
         // If phone number is being updated, check if it's already in use
         if (nhanVienData.SoDienThoai && nhanVienData.SoDienThoai !== existingNhanVien.SoDienThoai) {
             const existingWithPhone = await NhanVienRepository.findBySoDienThoai(nhanVienData.SoDienThoai);
             if (existingWithPhone) {
-                throw new Error("Số điện thoại đã được sử dụng");
+                throw new AppError("Số điện thoại đã được sử dụng", 400);
             }
         }
 
-        // Use MSNV to update
-        return await NhanVienRepository.update(id, nhanVienData);
+        await NhanVienRepository.update(id, nhanVienData);
     }
 
     async deleteNhanVien(id: string) {
-        // Check if nhan vien exists with this MSNV
-        const existingNhanVien = await NhanVienRepository.findByMSNV(id);
-
-        if (!existingNhanVien) {
-            throw new Error("Nhân viên không tồn tại");
+        const nhanVienDeleted = await NhanVienRepository.deleteById(id);
+        if (!nhanVienDeleted) {
+            throw new AppError("Nhân viên không tồn tại", 404);
         }
+    }
 
-        // Use MSNV to delete
-        return await NhanVienRepository.delete(id);
+    private mapToNhanVienResponse(nhanVien: INhanvien): NhanVienResponse {
+        const plainObject = nhanVien.toObject ? nhanVien.toObject() : nhanVien;
+        return plainToInstance(NhanVienResponse,plainObject, {excludeExtraneousValues: true});
     }
 }
 

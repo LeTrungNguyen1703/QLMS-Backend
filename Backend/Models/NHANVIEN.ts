@@ -37,5 +37,22 @@ NHANVIEN.pre('save', async function(next) {
     }
 });
 
+// Pre-save hook để mã hóa mật khẩu
+NHANVIEN.pre('save', async function(next) {
+    // Chỉ hash mật khẩu khi nó được thay đổi (hoặc là document mới)
+    if (!this.isModified('MatKhau')) {
+        return next();
+    }
+
+    try {
+        const bcrypt = require('bcrypt');
+        const salt = await bcrypt.genSalt(10);
+        this.MatKhau = await bcrypt.hash(this.MatKhau, salt);
+        next();
+    } catch (error) {
+        next(error as Error);
+    }
+});
+
 const NhanVien = mongoose.model<INhanvien>("NHANVIEN", NHANVIEN);
 export default NhanVien;

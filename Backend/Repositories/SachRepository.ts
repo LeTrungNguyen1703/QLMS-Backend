@@ -15,11 +15,9 @@ class SachRepository {
         return toPlainObject(sach);
     }
 
-    async create(sachData: SachRequest): Promise<ISach> {
-        const sach = new Sach(sachData);
+    async create(sach: Document & ISach): Promise<ISach> {
         const savedSach = await sach.save();
-        const populatedSach = await Sach.findById(savedSach._id).populate('IdNxb');
-        return toPlainObject(populatedSach);
+        return toPlainObject(savedSach);
     }
 
     async update(MaSach: string, sachData: Partial<SachRequest>): Promise<ISach | null> {
