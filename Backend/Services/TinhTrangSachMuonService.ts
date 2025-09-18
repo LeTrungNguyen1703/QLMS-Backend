@@ -1,6 +1,7 @@
 import TheoDoiMuonSachService from "./TheoDoiMuonSachService";
 import TheoDoiMuonSachRepository from "../Repositories/TheoDoiMuonSachRepository";
 import {AppError} from "../Middleware/ErrorHandler";
+import {ITHEODOIMUONSACH} from "../Models/THEODOIMUONSACH";
 
 class TinhTrangSachMuonService {
 
@@ -42,6 +43,7 @@ class TinhTrangSachMuonService {
         if (!sachMuon) {
             throw new AppError("Sách chưa được mượn", 404);
         }
+        
     }
     
     private kiemTraTrangThaiMuonSach(TrangThai: "CHO_DUYET" | "DA_DUYET" | "DA_TRA"): void {

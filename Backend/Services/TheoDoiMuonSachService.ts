@@ -57,7 +57,6 @@ class TheoDoiMuonSachService {
         await this.xuLiSoLuongSachKhiMuon(sach, muonSachData.SoQuyen)
 
         return this.mapToResponse(sachMuonSaved);
-
     }
 
     async updateSachMuon(id: string, muonSachData: Partial<TheoDoiMuonSachRequest>) {

@@ -26,6 +26,10 @@ export class DocGiaRequest {
     @IsPhoneNumber('VN', { message: "Số điện thoại không hợp lệ" })
     @IsNotEmpty({ message: "Vui lòng nhập số điện thoại" })
     SoDienThoai: string;
+    
+    @IsEmail({}, { message: "Email không hợp lệ" })
+    @IsNotEmpty({ message: "Vui lòng nhập email" })
+    Email : string;
 }
 export interface IDocGiaRequestExtended extends Request {
     body: DocGiaRequest;

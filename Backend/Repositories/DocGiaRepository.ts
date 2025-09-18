@@ -19,7 +19,13 @@ class DocGiaRepository extends BasicCRUDRepository<IDocgia> {
         const docGia = await DOCGIA.findOne({ MaDocGia });
         return toPlainObject(docGia);
     }
+    
+    async findByTenTaiKhoan(TenTaiKhoan: string): Promise<IDocgia | null> {
+        const docGia = await DOCGIA.findOne({ TenTaiKhoan });
+        return toPlainObject(docGia);
+    }
 
+   
 }
 
 export default new DocGiaRepository();

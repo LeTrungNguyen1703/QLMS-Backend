@@ -20,4 +20,8 @@ export class DocGiaResponse {
     DiaChi: string;
     @Expose()
     SoDienThoai: string;
+    
+    @Expose()
+    Email : string;
+    
 }
