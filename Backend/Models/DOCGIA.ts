@@ -1,7 +1,8 @@
-import mongoose, { Schema, Document } from "mongoose";
+import mongoose, {Schema, Document} from "mongoose";
+import {UserRole} from "../Enums/UserRole";
 
 export interface IDocgia extends Document {
-    _id: {type: mongoose.Schema.Types.ObjectId},
+    _id: { type: mongoose.Schema.Types.ObjectId },
     MaDocGia: string,
     HoLot: string,
     Ten: string,
@@ -11,7 +12,8 @@ export interface IDocgia extends Document {
     Phai: "nam" | "nữ" | "khác",
     DiaChi: string,
     SoDienThoai: string,
-    ChucVu?:string
+    ChucVu: UserRole.DOC_GIA,
+    Email: string
 }
 
 const DOCGIA: Schema = new Schema({
@@ -19,19 +21,20 @@ const DOCGIA: Schema = new Schema({
     MaDocGia: {type: String, unique: true}, // Bỏ required để hook có thể tạo trước khi validate
     HoLot: {type: String},
     Ten: {type: String},
-    TenTaiKhoan: {type : String, unique: true},
+    TenTaiKhoan: {type: String, unique: true},
     MatKhau: {type: String, unique: true},
     NgaySinh: {type: Date},
     Phai: {type: String, enum: ["nam", "nữ", "khác"], default: "nam"},
     DiaChi: {type: String},
     SoDienThoai: {type: String, unique: true, required: true}, // Đặt unique và required
-    ChucVu: {type: String, enum: "DOC_GIA", default: "DOC_GIA"},
+    ChucVu: {type: String, enum: UserRole.DOC_GIA, default: UserRole.DOC_GIA},
+    Email: {type: String, unique: true, required: true} // Đặt unique và required
 }, {
     timestamps: true
 });
 
 // Pre-save hook để tự động tạo MaDocGia
-DOCGIA.pre('save', async function(next) {
+DOCGIA.pre('save', async function (next) {
     if (!this.isNew || this.MaDocGia) {
         return next();
     }
@@ -46,7 +49,7 @@ DOCGIA.pre('save', async function(next) {
 });
 
 // Pre-save hook để mã hóa mật khẩu
-DOCGIA.pre('save', async function(next) {
+DOCGIA.pre('save', async function (next) {
     // Chỉ hash mật khẩu khi nó được thay đổi (hoặc là document mới)
     if (!this.isModified('MatKhau')) {
         return next();

@@ -41,6 +41,7 @@ class TheoDoiMuonSachRepository {
         const sachMuonUpdated = await TheoDoiMuonSach.findByIdAndUpdate(id, sachMuon, {new: true});
         return toPlainObject(sachMuonUpdated);
     }
+    
 
     async delete(id: string): Promise<ITHEODOIMUONSACH | null> {
         const sachMuonDeleted = await TheoDoiMuonSach.findByIdAndDelete(id);

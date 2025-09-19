@@ -1,25 +1,106 @@
-import {NextFunction, Request, Response} from "express";
-import jwt, {JwtPayload} from "jsonwebtoken";
+import jwt from 'jsonwebtoken';
+import { Request, Response, NextFunction } from 'express';
+import { AppError } from './ErrorHandler';
+import {UserRole} from "../Enums/UserRole";
 
-interface AuthRequest extends Request {
-  user?: string | JwtPayload;
+// Extend Request interface để thêm user info
+declare global {
+    namespace Express {
+        interface Request {
+            user?: {
+                userId: string;
+                role: string;
+                userName: string;
+                email: string;
+            };
+        }
+    }
 }
 
-export const verifyToken = (req: AuthRequest, res: Response, next: NextFunction) => {
-  const token = req.headers["authorization"]?.split(" ")[1];
+export class TokenMiddleware {
+    
+    // Middleware xác thực token
+    static authenticate(req: Request, res: Response, next: NextFunction) {
+        try {
+            // Lấy token từ header Authorization
+            const authHeader = req.headers.authorization;
+            
+            if (!authHeader) {
+                throw new AppError('Không có token, truy cập bị từ chối', 401);
+            }
 
-  if (!token) {
-    return res.status(401).json({ message: "Không có token, từ chối truy cập" });
-  }
+            // Token format: "Bearer <token>"
+            const token = authHeader.startsWith('Bearer ') 
+                ? authHeader.slice(7) 
+                : authHeader;
 
-  try {
-    // Sử dụng KEY_SECRET thay vì JWT_SECRET để khớp với phần tạo token
-    req.user = jwt.verify(token, process.env.KEY_SECRET as string); 
-    next();
-  } catch (error) {
-    return res.status(403).json({ message: "Token không hợp lệ" });
-  }
-};
+            if (!token) {
+                throw new AppError('Token không hợp lệ', 401);
+            }
 
-// Giữ lại export default để tránh phá vỡ code hiện tại
-export default verifyToken;
+            // Verify token
+            const decoded = jwt.verify(
+                token, 
+                process.env.JWT_SECRET || 'default-secret'
+            ) as { userId: string; role: string, userName: string, email: string };
+
+            // Gắn thông tin user vào request
+            req.user = {
+                userId: decoded.userId,
+                role: decoded.role,
+                userName: decoded.userName,
+                email: decoded.email
+            };
+            next();
+        } catch (error) {
+            if (error instanceof jwt.JsonWebTokenError) {
+                next(new AppError('Token không hợp lệ', 401));
+            } else if (error instanceof jwt.TokenExpiredError) {
+                next(new AppError('Token đã hết hạn', 401));
+            } else {
+                next(error);
+            }
+        }
+    }
+
+    // Middleware phân quyền theo role
+    static authorize(...allowedRoles: string[]) {
+        return (req: Request, res: Response, next: NextFunction) => {
+            try {
+                if (!req.user) {
+                    throw new AppError('Chưa được xác thực', 401);
+                }
+
+                if (!allowedRoles.includes(req.user.role)) {
+                    throw new AppError('Không có quyền truy cập', 403);
+                }
+
+                next();
+            } catch (error) {
+                next(error);
+            }
+        };
+    }
+
+    // Middleware kiểm tra quyền truy cập tài nguyên của chính user
+    static authorizeOwner(req: Request, res: Response, next: NextFunction) {
+        try {
+            if (!req.user) {
+                throw new AppError('Chưa được xác thực', 401);
+            }
+
+            // Kiểm tra nếu user đang truy cập tài nguyên của chính mình
+            const resourceUserId = req.params.id || req.body.userId;
+            
+            if (req.user.role === UserRole.ADMIN || req.user.userId === resourceUserId) {
+                next();
+            } else {
+                throw new AppError('Chỉ có thể truy cập tài nguyên của chính mình', 403);
+            }
+        } catch (error) {
+            next(error);
+        }
+    }
+}
+
+export default  TokenMiddleware;

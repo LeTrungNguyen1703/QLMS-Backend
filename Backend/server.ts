@@ -10,6 +10,7 @@ import routerNhanVien from "./Routers/NhanVienRouter";
 import routerTheoDoiMuonSach from "./Routers/TheoDoiMuonSachRouter";
 import routerDocGia from "./Routers/DocGiaRouter";
 import routerNhaXuatBan from "./Routers/NhaXuatBanRouter";
+import AuthRouter from "./Routers/AuthRouter";
 import { errorHandler } from "./Middleware/ErrorHandler";
 import swaggerDocs from "./Utils/SwaggerConfig";
 
@@ -26,6 +27,9 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs, {
   explorer: true,
   customCss: '.swagger-ui .topbar { display: none }'
 }));
+
+// Authentication routes
+app.use("/api/auth", AuthRouter);
 
 app.use("/api/nhanvien", routerNhanVien);
 app.use("/api/docgia", routerDocGia);

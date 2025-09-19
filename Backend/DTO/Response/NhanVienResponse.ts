@@ -12,5 +12,8 @@ export class NhanVienResponse {
     DiaChi: string;
     @Expose()
     SoDienThoai: string;
+    @Expose()
+    Email : string;
+    
 }
 
