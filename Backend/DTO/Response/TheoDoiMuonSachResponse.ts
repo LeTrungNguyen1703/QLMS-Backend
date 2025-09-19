@@ -1,6 +1,5 @@
 import {Expose} from "class-transformer";
 import {SachResponse} from "./SachResponse";
-import {IsNotEmpty, IsNumber, Min} from "class-validator";
 import {DocGiaResponse} from "./DocGiaResponse";
 
 
@@ -24,4 +23,9 @@ export class TheoDoiMuonSachResponse {
     @Expose()
     SoQuyen: number;
 
+    @Expose()
+    PhatQuaHan: {
+        message: String,
+        SoTienPhat: number
+    };
 }

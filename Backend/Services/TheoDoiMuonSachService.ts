@@ -2,13 +2,12 @@ import TheoDoiMuonSachRepository from "../Repositories/TheoDoiMuonSachRepository
 import DocGiaRepository from "../Repositories/DocGiaRepository";
 import SachRepository from "../Repositories/SachRepository";
 import TheoDoiMuonSach, {ITHEODOIMUONSACH} from "../Models/THEODOIMUONSACH";
-import DOCGIA from "../Models/DOCGIA";
-import Sach, {ISach} from "../Models/SACH";
-import {SachResponse} from "../DTO/Response/SachResponse";
+import {ISach} from "../Models/SACH";
 import {plainToInstance} from "class-transformer";
 import {TheoDoiMuonSachResponse} from "../DTO/Response/TheoDoiMuonSachResponse";
 import {AppError} from "../Middleware/ErrorHandler";
 import {TheoDoiMuonSachRequest} from "../DTO/Request/TheoDoiMuonSachRequest";
+import {TrangThai} from "../Enums/TrangThai";
 
 class TheoDoiMuonSachService {
     async getAllSachMuon(): Promise<TheoDoiMuonSachResponse[]> {
@@ -68,10 +67,8 @@ class TheoDoiMuonSachService {
     }
 
     async deleteSachMuon(id: string) {
-        const sachDeleted = await TheoDoiMuonSachRepository.delete(id);
-        if (!sachDeleted) {
-            throw new AppError("Xóa sách đã mượn không thành công, vui lòng kiểm tra lại mã mượn sách", 400);
-        }
+        this.kiemTraTrangThaiSachMuon(id);
+        const sachMuonDeleted = await TheoDoiMuonSachRepository.delete(id);
     }
 
     // Helper method ***************************************************************** //
@@ -113,6 +110,18 @@ class TheoDoiMuonSachService {
         }
 
         return sach;
+
+    }
+
+    private async kiemTraTrangThaiSachMuon(id: string) {
+        const sachMuon = await TheoDoiMuonSachRepository.findById(id);
+        if (!sachMuon) {
+            throw new AppError("Sách chưa được mượn", 404);
+        }
+
+        if (sachMuon.TrangThai === TrangThai.DA_DUYET || sachMuon.TrangThai === TrangThai.DA_TRA) {
+            throw new AppError("Không thể xóa thông tin mượn sách đã được duyệt hoặc đã trả", 400);
+        }
 
     }
 }

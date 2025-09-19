@@ -1,4 +1,5 @@
 import mongoose, { Schema, Document } from "mongoose";
+import {UserRole} from "../Enums/UserRole";
 
 export interface INhanvien extends Document {
     _id: {type: mongoose.Schema.Types.ObjectId},
@@ -8,7 +9,7 @@ export interface INhanvien extends Document {
     MatKhau: string,
     DiaChi: string,
     SoDienThoai: string,
-    ChucVu: "nhân viên" | "admin",
+    ChucVu: UserRole.NHAN_VIEN | UserRole.ADMIN,
     Email: string
 }
 
@@ -20,7 +21,7 @@ const NHANVIEN: Schema = new Schema({
     MatKhau: {type: String, required: true},
     DiaChi: {type: String, required: false, default: ""},
     SoDienThoai: {type: String, required: true, unique: true},
-    ChucVu: {type: String, enum: "NHAN_VIEN", default: "NHAN_VIEN"},
+    ChucVu: {type: String, enum: [UserRole.NHAN_VIEN, UserRole.ADMIN], default: UserRole.NHAN_VIEN},
     Email: {type: String, unique: true, required: true} // Đặt unique và required
     
 }, {

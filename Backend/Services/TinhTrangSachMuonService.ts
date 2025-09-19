@@ -1,7 +1,6 @@
-import TheoDoiMuonSachService from "./TheoDoiMuonSachService";
 import TheoDoiMuonSachRepository from "../Repositories/TheoDoiMuonSachRepository";
 import {AppError} from "../Middleware/ErrorHandler";
-import {ITHEODOIMUONSACH} from "../Models/THEODOIMUONSACH";
+import {TrangThai} from "../Enums/TrangThai";
 
 class TinhTrangSachMuonService {
 
@@ -12,7 +11,7 @@ class TinhTrangSachMuonService {
         }
         this.kiemTraTrangThaiMuonSach(sachMuon.TrangThai);
 
-        await TheoDoiMuonSachRepository.update(id, {TrangThai: "DA_DUYET"});
+        await TheoDoiMuonSachRepository.update(id, {TrangThai: TrangThai.DA_DUYET});
     }
 
     async xacNhanDaTraSach(id: string): Promise<void> {
@@ -24,18 +23,8 @@ class TinhTrangSachMuonService {
         if (sachMuon.TrangThai == "CHO_DUYET") {
             throw new AppError("Sách chưa được xác nhận cho mượn", 400);
         }
-        
-        await TheoDoiMuonSachRepository.update(id, {TrangThai: "DA_TRA"});
-    }
-    
-    async huyMuonSach(id: string): Promise<void> {
-        const sachMuon = await TheoDoiMuonSachRepository.findById(id);
-        if (!sachMuon) {
-            throw new AppError("Sách chưa được mượn", 404);
-        }
-        this.kiemTraChoPhepHuyMuonSach(sachMuon.TrangThai);
-        
-        await TheoDoiMuonSachRepository.delete(id);
+
+        await TheoDoiMuonSachRepository.update(id, {TrangThai: TrangThai.DA_TRA});
     }
 
     async phatMuonSachQuaHan(id: string, soTienPhat: number): Promise<void> {
@@ -43,9 +32,18 @@ class TinhTrangSachMuonService {
         if (!sachMuon) {
             throw new AppError("Sách chưa được mượn", 404);
         }
+        const vuotThoiHanTra = this.kiemTraCoVuotThoiGianTra(sachMuon.NgayTra);
         
+        if (vuotThoiHanTra) {
+            await TheoDoiMuonSachRepository.update(id, {
+                PhatQuaHan: {
+                    message: "Độc giả đã trả sách quá hạn",
+                    SoTienPhat: soTienPhat
+                }
+            });
+        }
     }
-    
+
     private kiemTraTrangThaiMuonSach(TrangThai: "CHO_DUYET" | "DA_DUYET" | "DA_TRA"): void {
         if (TrangThai === "DA_DUYET") {
             throw new AppError("Sách đã được xác nhận cho mượn", 400);
@@ -56,9 +54,9 @@ class TinhTrangSachMuonService {
 
     }
 
-    private kiemTraChoPhepHuyMuonSach(TrangThai: "CHO_DUYET" | "DA_DUYET" | "DA_TRA") {
-        if (TrangThai === "DA_DUYET" || TrangThai === "DA_TRA") {
-            throw new AppError("Không thể hủy mượn sách đã được duyệt hoặc đã trả", 400);
-        }
+    private kiemTraCoVuotThoiGianTra(NgayTra: Date): boolean {
+        return (NgayTra.getTime() > Date.now());
     }
 }
+
+export default new TinhTrangSachMuonService();

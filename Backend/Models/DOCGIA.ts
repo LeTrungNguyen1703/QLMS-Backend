@@ -1,4 +1,5 @@
 import mongoose, {Schema, Document} from "mongoose";
+import {UserRole} from "../Enums/UserRole";
 
 export interface IDocgia extends Document {
     _id: { type: mongoose.Schema.Types.ObjectId },
@@ -11,7 +12,7 @@ export interface IDocgia extends Document {
     Phai: "nam" | "nữ" | "khác",
     DiaChi: string,
     SoDienThoai: string,
-    ChucVu: string,
+    ChucVu: UserRole.DOC_GIA,
     Email: string
 }
 
@@ -26,7 +27,7 @@ const DOCGIA: Schema = new Schema({
     Phai: {type: String, enum: ["nam", "nữ", "khác"], default: "nam"},
     DiaChi: {type: String},
     SoDienThoai: {type: String, unique: true, required: true}, // Đặt unique và required
-    ChucVu: {type: String, enum: "DOC_GIA", default: "DOC_GIA"},
+    ChucVu: {type: String, enum: UserRole.DOC_GIA, default: UserRole.DOC_GIA},
     Email: {type: String, unique: true, required: true} // Đặt unique và required
 }, {
     timestamps: true

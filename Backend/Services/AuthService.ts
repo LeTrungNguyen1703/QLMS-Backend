@@ -5,32 +5,37 @@ import DocGiaRepository from "../Repositories/DocGiaRepository";
 import {AppError} from "../Middleware/ErrorHandler";
 import {IDocgia} from "../Models/DOCGIA";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+import jwt, {SignOptions} from "jsonwebtoken";
 import NhanVienRepository from "../Repositories/NhanVienRepository";
+import Token from "../Middleware/Token";
 
 export class AuthService {
 
     async loginForDocGia(loginData: LoginRequest): Promise<TokenResponse> {
         const docGia = await this.xacThucDocGia(loginData);
-        return this.generateToken(docGia._id.toString(), docGia.ChucVu)
+        return this.generateToken(docGia._id.toString(), docGia.TenTaiKhoan, docGia.Email, docGia.ChucVu)
     }
 
     async loginForNhanVien(loginData: LoginRequest): Promise<TokenResponse> {
         const nhanVien = await this.xacThucNhanVien(loginData);
-        return this.generateToken(nhanVien._id.toString(), nhanVien.ChucVu)
+        return this.generateToken(nhanVien._id.toString(), nhanVien.TenTaiKhoan, nhanVien.Email, nhanVien.ChucVu)
     }
 
 
-    private generateToken(userId: string, role: string): TokenResponse {
+    private generateToken(userId: string, userName: string, email: string, role: string): TokenResponse {
+        const payload = {
+            userId: userId,
+            userName: userName,
+            role: role
+        };
+
         const token = jwt.sign(
-            {
-                userId: userId,
-                role: role
-            },
+            payload,
             process.env.JWT_SECRET || 'default-secret',
-            {expiresIn: '24h'}
+            {expiresIn: process.env.JWT_EXPIRES_IN || '1h'} as SignOptions
         );
-        return {Token: token};
+        
+        return new TokenResponse(token, userName, email);
     }
 
     private async xacThucDocGia(loginData: LoginRequest): Promise<IDocgia> {
