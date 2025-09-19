@@ -22,7 +22,7 @@ const THEODOIMUONSACH = new mongoose.Schema({
     MaDocGia: {type: mongoose.Schema.Types.ObjectId, ref: 'DOCGIA', required: true},
     MaSach: {type: mongoose.Schema.Types.ObjectId, ref: 'SACH', required: true},
     NgayMuon: {type: Date, required: true, default: Date.now},
-    NgayTra: {type: Date, required: true},
+    NgayTra: {type: Date},
     TrangThai: {
         type: String,
         enum: [TrangThai.CHO_DUYET, TrangThai.DA_DUYET, TrangThai.DA_TRA],

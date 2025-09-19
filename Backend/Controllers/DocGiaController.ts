@@ -23,7 +23,7 @@ export const addDG = catchAsync(async (req: IDocGiaRequestExtended, res: Respons
 export const updateDG = catchAsync(async (req: IDocGiaRequestExtended, res: Response) => {
     const plantData = req.body;
     const dto = plainToInstance(DocGiaRequest, plantData);
-    const docGia = await DocGiaService.updateDocGia(req.params.id, dto);
+    await DocGiaService.updateDocGia(req.params.id, dto);
     return res.status(200).json({
         message: "Cập nhật đọc giả thành công"
     });

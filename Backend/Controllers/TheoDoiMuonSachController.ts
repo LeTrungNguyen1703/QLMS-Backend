@@ -14,9 +14,11 @@ interface ITheoDoiMuonSachRequestExtended extends Request {
 // Thêm thông tin mượn sách
 export const addMuonSach = catchAsync(async (req: ITheoDoiMuonSachRequestExtended, res: Response<APIResponse<TheoDoiMuonSachResponse>>) => {
     const muonSachData = req.body;
+    const userId = req.user!.userId
+
     const dto = plainToInstance(TheoDoiMuonSachRequest, muonSachData);
 
-    const muonSach = await TheoDoiMuonSachService.createMuonSach(dto);
+    const muonSach = await TheoDoiMuonSachService.createMuonSach(dto, userId);
 
     return res.status(201).json({
         message: "Thêm thông tin mượn sách thành công",

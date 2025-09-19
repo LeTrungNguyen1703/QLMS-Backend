@@ -8,6 +8,7 @@ import {TheoDoiMuonSachResponse} from "../DTO/Response/TheoDoiMuonSachResponse";
 import {AppError} from "../Middleware/ErrorHandler";
 import {TheoDoiMuonSachRequest} from "../DTO/Request/TheoDoiMuonSachRequest";
 import {TrangThai} from "../Enums/TrangThai";
+import {Types} from "mongoose";
 
 class TheoDoiMuonSachService {
     async getAllSachMuon(): Promise<TheoDoiMuonSachResponse[]> {
@@ -41,15 +42,15 @@ class TheoDoiMuonSachService {
 
     }
 
-    async createMuonSach(muonSachData: TheoDoiMuonSachRequest): Promise<TheoDoiMuonSachResponse> {
+    async createMuonSach(muonSachData: TheoDoiMuonSachRequest, userId: string): Promise<TheoDoiMuonSachResponse> {
 
-        await this.kiemTraDocGiaTonTai(muonSachData.MaDocGia.toString())
-
-        await this.kiemTraSachTonTai(muonSachData.MaSach.toString())
+        await this.kiemTraDocGiaTonTai(userId);
 
         const sach = await this.kiemTraSoLuongSachHienCo(muonSachData.MaSach.toString(), muonSachData.SoQuyen)
 
         const sachMuon = new TheoDoiMuonSach(muonSachData);
+        sachMuon.NgayTra = new Date(new Date().setDate(sachMuon.NgayMuon.getDate() + 7)); // Hạn trả sách là 7 ngày kể từ ngày mượn
+        sachMuon.MaDocGia = new Types.ObjectId(userId);
 
         const sachMuonSaved = await TheoDoiMuonSachRepository.create(sachMuon);
 

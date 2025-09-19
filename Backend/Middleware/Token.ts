@@ -10,6 +10,8 @@ declare global {
             user?: {
                 userId: string;
                 role: string;
+                userName: string;
+                email: string;
             };
         }
     }
@@ -40,12 +42,14 @@ export class TokenMiddleware {
             const decoded = jwt.verify(
                 token, 
                 process.env.JWT_SECRET || 'default-secret'
-            ) as { userId: string; role: string };
+            ) as { userId: string; role: string, userName: string, email: string };
 
             // Gắn thông tin user vào request
             req.user = {
                 userId: decoded.userId,
-                role: decoded.role
+                role: decoded.role,
+                userName: decoded.userName,
+                email: decoded.email
             };
             next();
         } catch (error) {
