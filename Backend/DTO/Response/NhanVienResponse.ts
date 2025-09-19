@@ -7,6 +7,8 @@ export class NhanVienResponse {
     @Expose()
     MSNV: string;
     @Expose()
+    TenTaiKhoan: string;
+    @Expose()
     HoTenNV: string;
     @Expose()
     DiaChi: string;

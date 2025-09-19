@@ -13,6 +13,8 @@ import routerNhaXuatBan from "./Routers/NhaXuatBanRouter";
 import AuthRouter from "./Routers/AuthRouter";
 import { errorHandler } from "./Middleware/ErrorHandler";
 import swaggerDocs from "./Utils/SwaggerConfig";
+import NhanVien from "./Models/NHANVIEN";
+import { UserRole } from "./Enums/UserRole";
 
 dotenv.config();
 const app = express();
@@ -39,7 +41,7 @@ app.use("/api/nhaxuatban", routerNhaXuatBan);
 
 // Handle 404 routes - using a middleware without a path
 // This will only be reached if no other middleware handles the request
-app.use((req: Request, res: Response, next: NextFunction) => {
+app.use((req: Request, res: Response, _next: NextFunction) => {
   res.status(404).json({
     success: false,
     message: `Route ${req.originalUrl} not found`
@@ -49,10 +51,43 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 // Global error handler - must be after routes and 404 handler
 app.use(errorHandler);
 
+// Hàm tạo admin mặc định
+const createDefaultAdmin = async () => {
+    try {
+        // Kiểm tra xem đã có admin nào chưa
+        const existingAdmin = await NhanVien.findOne({ ChucVu: UserRole.ADMIN });
+
+        if (!existingAdmin) {
+            const defaultAdmin = new NhanVien({
+                TenTaiKhoan: "admin",
+                HoTenNV: "Administrator",
+                MatKhau: "admin123", // Mật khẩu sẽ được mã hóa tự động bởi pre-save hook
+                DiaChi: "Hệ thống",
+                SoDienThoai: "0000000000",
+                ChucVu: UserRole.ADMIN,
+                Email: "admin@qlms.com"
+            });
+
+            await defaultAdmin.save();
+            console.log("✅ Đã tạo admin mặc định:");
+            console.log("   - Tên tài khoản: admin");
+            console.log("   - Mật khẩu: admin123");
+            console.log("   - Email: admin@qlms.com");
+            console.log("   - MSNV:", defaultAdmin.MSNV);
+        } else {
+            console.log("ℹ️  Admin đã tồn tại trong hệ thống");
+        }
+    } catch (error) {
+        console.error("❌ Lỗi khi tạo admin mặc định:", error);
+    }
+};
+
 const database = process.env.MONGODB as string;
 mongoose.connect(database)
-.then(() => {
+.then(async () => {
     console.log("Kết nối cơ sở dữ liệu thành công");
+    // Tạo admin mặc định sau khi kết nối DB thành công
+    await createDefaultAdmin();
 })
 .catch(() => {
     console.log("Kết nối cơ sở dữ liệu không thành công");
