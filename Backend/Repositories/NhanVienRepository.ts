@@ -22,7 +22,7 @@ class NhanVienRepository extends BasicCRUDRepository<INhanvien> {
 
 
     async findByTenTaiKhoan(TenTaiKhoan: string) : Promise<INhanvien | null> {
-        const nhanVien = await this.getModel().findOne({TenTaiKhoan});
+        const nhanVien = await this.getModel().findOne({TenTaiKhoan: TenTaiKhoan});
         return toPlainObject(nhanVien);
     }
 }

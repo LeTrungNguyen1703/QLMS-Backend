@@ -1,0 +1,128 @@
+{
+  "info": {
+    "_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "name": "QLMS - Auth API",
+    "description": "API collection for Auth endpoints (login for DocGia, NhanVien and current user) in the Library Management System (QLMS)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Đăng nhập - Độc Giả",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"TenTaiKhoan\": \"{{docgia_username}}\",\n  \"MatKhau\": \"{{docgia_password}}\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/auth/login/docgia",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "login",
+            "docgia"
+          ]
+        },
+        "description": "Đăng nhập cho độc giả. Request body uses DTO LoginRequest { TenTaiKhoan, MatKhau }."
+      },
+      "response": []
+    },
+    {
+      "name": "Đăng nhập - Nhân Viên",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"TenTaiKhoan\": \"{{nhanvien_username}}\",\n  \"MatKhau\": \"{{nhanvien_password}}\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/auth/login/nhanvien",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "login",
+            "nhanvien"
+          ]
+        },
+        "description": "Đăng nhập cho nhân viên. Request body uses DTO LoginRequest { TenTaiKhoan, MatKhau }."
+      },
+      "response": []
+    },
+    {
+      "name": "Lấy Thông Tin User Hiện Tại (me)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/auth/me",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "me"
+          ]
+        },
+        "description": "Lấy thông tin user hiện tại. Yêu cầu header Authorization: Bearer {{token}} (Token lấy từ response login)."
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080",
+      "description": "URL cơ sở của API"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "description": "JWT token xác thực (điền sau khi login)"
+    },
+    {
+      "key": "docgia_username",
+      "value": "",
+      "description": "Tên tài khoản đọc giả"
+    },
+    {
+      "key": "docgia_password",
+      "value": "",
+      "description": "Mật khẩu đọc giả"
+    },
+    {
+      "key": "nhanvien_username",
+      "value": "",
+      "description": "Tên tài khoản nhân viên"
+    },
+    {
+      "key": "nhanvien_password",
+      "value": "",
+      "description": "Mật khẩu nhân viên"
+    }
+  ]
+}
+
