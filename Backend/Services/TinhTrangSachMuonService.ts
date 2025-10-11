@@ -5,10 +5,8 @@ import {TrangThai} from "../Enums/TrangThai";
 class TinhTrangSachMuonService {
 
     async xacNhanChoMuonSach(id: string): Promise<void> {
-        const sachMuon = await TheoDoiMuonSachRepository.findById(id);
-        if (!sachMuon) {
-            throw new AppError("Sách chưa được mượn", 404);
-        }
+        const sachMuon = await this.kiemTraSachDaMuon(id);
+
         this.kiemTraTrangThaiMuonSach(sachMuon.TrangThai);
 
         await TheoDoiMuonSachRepository.update(id, {TrangThai: TrangThai.DA_DUYET});
@@ -33,7 +31,7 @@ class TinhTrangSachMuonService {
             throw new AppError("Sách chưa được mượn", 404);
         }
         const vuotThoiHanTra = this.kiemTraCoVuotThoiGianTra(sachMuon.NgayTra);
-        
+
         if (vuotThoiHanTra) {
             await TheoDoiMuonSachRepository.update(id, {
                 PhatQuaHan: {
@@ -56,6 +54,14 @@ class TinhTrangSachMuonService {
 
     private kiemTraCoVuotThoiGianTra(NgayTra: Date): boolean {
         return (NgayTra.getTime() > Date.now());
+    }
+
+    private async kiemTraSachDaMuon(id: string) {
+        const sachMuon = await TheoDoiMuonSachRepository.findById(id);
+        if (!sachMuon) {
+            throw new AppError("Sách chưa được mượn", 404);
+        }
+        return sachMuon;
     }
 }
 

@@ -33,9 +33,9 @@ export class AuthService {
         const token = jwt.sign(
             payload,
             process.env.JWT_SECRET || 'default-secret',
-            {expiresIn: process.env.JWT_EXPIRES_IN || '1h'} as SignOptions
+            {expiresIn: process.env.JWT_EXPIRES} as SignOptions
         );
-        
+
         return new TokenResponse(token, userName, email);
     }
 
