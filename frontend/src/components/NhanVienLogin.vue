@@ -1,0 +1,21 @@
+<template>
+  <LoginCard
+    title="Đăng nhập - Nhân viên"
+    :userType="UserType.NHANVIEN"
+    @success="onSuccess"
+  />
+</template>
+
+<script setup lang="ts">
+import LoginCard from './LoginCard.vue';
+import { UserType } from '../types/auth';
+
+const onSuccess = (payload: any) => {
+  console.log('Nhân viên đã đăng nhập:', payload);
+  // TODO: chuyển hướng hoặc xử lý tiếp theo ở đây (ví dụ router.push)
+};
+</script>
+
+<style scoped>
+/* no additional styles - shared styles are in LoginCard */
+</style>
