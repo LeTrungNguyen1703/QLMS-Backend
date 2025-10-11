@@ -1,6 +1,6 @@
 <template>
   <LoginCard
-    title="Đăng nhập - Nhân viên"
+    title="Đăng nhập"
     :userType="UserType.NHANVIEN"
     @success="onSuccess"
   />

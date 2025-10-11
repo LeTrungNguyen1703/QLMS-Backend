@@ -61,7 +61,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { authService } from '../services/authService';
 import { UserType } from '../types/auth';
 
@@ -74,8 +74,8 @@ const emit = defineEmits<{
   (e: 'success', payload: any): void;
 }>();
 
-const title = props.title ?? 'Đăng nhập';
-const effectiveUserType = props.userType ?? UserType.DOCGIA;
+// Sử dụng computed để reactive với props.userType
+const effectiveUserType = computed(() => props.userType ?? UserType.DOCGIA);
 
 const loginForm = ref({ TenTaiKhoan: '', MatKhau: '' });
 const showPassword = ref(false);
@@ -89,7 +89,8 @@ const handleLogin = async () => {
   isLoading.value = true;
 
   try {
-    const response = await authService.login(loginForm.value, effectiveUserType as UserType);
+    console.log('Logging in as', effectiveUserType.value);
+    const response = await authService.login(loginForm.value, effectiveUserType.value as UserType);
 
     successMessage.value = `Đăng nhập thành công! Xin chào ${response.UserName}`;
 

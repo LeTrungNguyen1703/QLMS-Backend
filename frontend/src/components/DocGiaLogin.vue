@@ -1,6 +1,6 @@
 <template>
   <LoginCard
-    title="Đăng nhập - Đọc giả"
+    title="Đăng nhập"
     :userType="UserType.DOCGIA"
     @success="onSuccess"
   />

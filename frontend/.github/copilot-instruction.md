@@ -130,14 +130,74 @@ Style mẫu (copy vào phần `<style scoped>` khi cần):
 }
 ```
 
-Lưu ý thêm
-- Nếu cần icon, sử dụng `bootstrap-icons` (đã cài trong `package.json`).
-- Nếu component lớn hơn, tách style chung ra `src/styles/common.css` và import trong `main.ts`.
-- Giữ accessibility: thẻ `label` liên kết với input, đặt `aria-` khi cần.
+## App shell / Header (Giao diện chung cho toàn app)
 
-Cách dùng
-- Khi bạn yêu cầu Copilot tạo component mới, hãy nói rõ: "Tạo component X theo mẫu giao diện copilot-instruction" hoặc "dùng template login".
-- Copilot sẽ đọc file này (`.github/copilot-instruction.md`) và cố gắng áp dụng các tiêu chuẩn khi sinh code.
+Mục đích: Header (app shell) nên đồng bộ với phong cách của `LoginCard.vue` — dùng gradient chủ đạo, chữ trắng, các link/nút rõ ràng, và show brand "QLMS - Quản lý mượn sách".
+
+Nguyên tắc cho Header
+- Màu nền sử dụng cùng gradient: `linear-gradient(135deg, #667eea 0%, #764ba2 100%)` để nhất quán với login.
+- Brand hiển thị rõ ràng: `QLMS` (text lớn) và mô tả nhỏ: `Quản lý mượn sách` hoặc `Thư viện - quản lý mượn / trả sách`.
+- Các link đăng nhập/đăng ký nên là nút trắng hoặc outline-white để nổi trên nền gradient.
+- Header có thể chứa navigation nhỏ; phần nội dung chính đặt trong `<main>` và có khoảng cách phù hợp (min-height) để form/các card nằm giữa màn hình.
+- Giữ spacing/padding hài hoà với card (padding container ~ 20px, card width ~ 420px).
+
+Ví dụ ngắn (App shell / Header) — copy vào `src/App.vue` nếu cần:
+
+```vue
+<script setup lang="ts">
+import { RouterLink } from 'vue-router';
+</script>
+
+<template>
+  <header class="app-header d-flex align-items-center">
+    <div class="container d-flex justify-content-between align-items-center py-3">
+      <div class="brand d-flex align-items-center">
+        <div class="brand-logo">QLMS</div>
+        <div class="brand-text ms-3">
+          <div class="brand-title">Quản lý mượn sách</div>
+          <div class="brand-sub">Thư viện - quản lý mượn / trả sách</div>
+        </div>
+      </div>
+
+      <nav>
+        <RouterLink class="btn btn-link text-white me-2" to="/login/docgia">Đăng nhập Đọc giả</RouterLink>
+        <RouterLink class="btn btn-outline-light" to="/login/nhanvien">Đăng nhập Nhân viên</RouterLink>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <router-view />
+  </main>
+</template>
+
+<style>
+.app-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+.brand-logo {
+  font-weight: 800;
+  font-size: 1.6rem;
+  letter-spacing: 1px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.08);
+}
+
+.btn-outline-light {
+  color: #fff;
+  border-color: rgba(255,255,255,0.35);
+}
+</style>
+```
+
+Hướng dẫn sử dụng khi tạo component mới
+- Nếu component là trang chính (page), hãy sử dụng layout: header (app-header) + `<main>` + footer (tuỳ chọn).
+- Giữ class và spacing theo mẫu để mọi trang trông nhất quán.
+- Đối với component form/card, dùng `LoginCard` styles (card width ~420px, shadow, rounded corners).
 
 ---
 

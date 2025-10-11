@@ -171,8 +171,8 @@ class AuthService {
     const token = this.getToken();
     
     if (!token || this.isTokenExpired(token)) {
-      // Redirect to login or refresh token
-      window.location.href = '/login';
+      // Redirect to auth or refresh token
+      window.location.href = '/auth';
       return;
     }
     
