@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { LoginRequest, TokenResponse, APIResponse, UserType } from '../types/auth';
+import type { LoginRequest, TokenResponse, APIResponse, UserType, RegisterDocGiaRequest, RegisterNhanVienRequest } from '../types/auth';
 
 const API_BASE_URL = 'http://localhost:8080/api';
 
@@ -35,6 +35,7 @@ export const authService = {
       if (response.data.data) {
         // Save token to localStorage
         localStorage.setItem('authToken', response.data.data.Token);
+        localStorage.setItem('userId', response.data.data.UserId);
         localStorage.setItem('userName', response.data.data.UserName);
         localStorage.setItem('userEmail', response.data.data.Email);
         localStorage.setItem('userType', userType);
@@ -51,6 +52,38 @@ export const authService = {
     }
   },
 
+  async registerDocGia(data: RegisterDocGiaRequest): Promise<any> {
+    try {
+      const response = await apiClient.post<APIResponse<any>>(
+        '/docgia/add-dg',
+        data
+      );
+
+      return response.data;
+    } catch (error: any) {
+      if (error.response?.data?.message) {
+        throw new Error(error.response.data.message);
+      }
+      throw new Error('Đăng ký thất bại. Vui lòng kiểm tra lại thông tin.');
+    }
+  },
+
+  async registerNhanVien(data: RegisterNhanVienRequest): Promise<any> {
+    try {
+      const response = await apiClient.post<APIResponse<any>>(
+        '/nhanvien/add-nv',
+        data
+      );
+
+      return response.data;
+    } catch (error: any) {
+      if (error.response?.data?.message) {
+        throw new Error(error.response.data.message);
+      }
+      throw new Error('Đăng ký nhân viên thất bại. Vui lòng kiểm tra lại thông tin.');
+    }
+  },
+
   async getCurrentUser() {
     try {
       const response = await apiClient.get('/auth/me');
@@ -62,6 +95,7 @@ export const authService = {
 
   logout() {
     localStorage.removeItem('authToken');
+    localStorage.removeItem('userId');
     localStorage.removeItem('userName');
     localStorage.removeItem('userEmail');
     localStorage.removeItem('userType');
@@ -83,4 +117,3 @@ export const authService = {
     };
   }
 };
-

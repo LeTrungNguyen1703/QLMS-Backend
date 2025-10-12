@@ -5,10 +5,15 @@ import {UserRole} from "../Enums/UserRole";
 
 const routerSach = Router();
 
+// Route công khai - Đọc giả có thể tìm sách
+routerSach.get("/search-sach",
+    TokenMiddleware.authenticate,
+    getallSach);
+
 routerSach.get("/get-sach/:id",
     TokenMiddleware.authenticate,
-    TokenMiddleware.authorize(UserRole.ADMIN, UserRole.NHAN_VIEN),
     getSach);
+
 routerSach.post("/add-sach",
     TokenMiddleware.authenticate,
     TokenMiddleware.authorize(UserRole.ADMIN, UserRole.NHAN_VIEN),

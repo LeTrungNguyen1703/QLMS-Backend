@@ -5,8 +5,34 @@ export interface LoginRequest {
   MatKhau: string;
 }
 
+export interface RegisterDocGiaRequest {
+  HoLot: string;
+  Ten: string;
+  TenTaiKhoan: string;
+  MatKhau: string;
+  NgaySinh: string; // ISO date string
+  Phai: "nam" | "nữ" | "khác";
+  DiaChi: string;
+  SoDienThoai: string;
+  Email: string;
+}
+
+export interface RegisterNhanVienRequest {
+  HoLot: string;
+  Ten: string;
+  TenTaiKhoan: string;
+  MatKhau: string;
+  NgaySinh: string; // ISO date string
+  Phai: "nam" | "nữ" | "khác";
+  DiaChi: string;
+  SoDienThoai: string;
+  Email: string;
+  ChucVu: string;
+}
+
 export interface TokenResponse {
   Token: string;
+  UserId: string;
   UserName: string;
   Email: string;
 }
@@ -20,4 +46,3 @@ export enum UserType {
   DOCGIA = 'docgia',
   NHANVIEN = 'nhanvien'
 }
-

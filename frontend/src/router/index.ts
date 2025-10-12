@@ -15,6 +15,21 @@ const routes = [
     component: () => import('../views/dashboard/DocGiaDashboard.vue'),
   },
   {
+    path: '/docgia/search-books',
+    name: 'SearchBooks',
+    component: () => import('../views/docgia/SearchBooks.vue'),
+  },
+  {
+    path: '/docgia/borrowed-books',
+    name: 'BorrowedBooks',
+    component: () => import('../views/docgia/BorrowedBooks.vue'),
+  },
+  {
+    path: '/docgia/borrow-history',
+    name: 'BorrowHistory',
+    component: () => import('../views/docgia/BorrowHistory.vue'),
+  },
+  {
     path: '/nhanvien/dashboard',
     name: 'NhanVienDashboard',
     component: () => import('../views/dashboard/NhanVienDashboard.vue'),

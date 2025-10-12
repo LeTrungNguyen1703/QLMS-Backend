@@ -1,19 +1,37 @@
 <template>
   <div class="auth-root d-flex align-items-center justify-content-center">
     <div class="auth-card p-4">
-      <!-- Toggle chọn loại người dùng -->
+      <!-- Toggle chọn Đăng nhập / Đăng ký -->
       <div class="text-center mb-4">
+        <div class="btn-group w-100 mb-3" role="group">
+          <button
+            :class="['btn', authMode === 'login' ? 'btn-primary' : 'btn-outline-primary']"
+            @click="authMode = 'login'"
+          >
+            <i class="bi bi-box-arrow-in-right me-1"></i>
+            Đăng nhập
+          </button>
+          <button
+            :class="['btn', authMode === 'register' ? 'btn-primary' : 'btn-outline-primary']"
+            @click="authMode = 'register'"
+          >
+            <i class="bi bi-person-plus me-1"></i>
+            Đăng ký
+          </button>
+        </div>
+
+        <!-- Toggle chọn loại người dùng -->
         <div class="btn-group" role="group" aria-label="Loại tài khoản">
           <button
-              :class="['btn', selectedType === UserType.DOCGIA ? 'btn-primary' : 'btn-outline-primary']"
-              @click="selectedType = UserType.DOCGIA"
+            :class="['btn', selectedType === UserType.DOCGIA ? 'btn-primary' : 'btn-outline-primary']"
+            @click="selectedType = UserType.DOCGIA"
           >
             <i class="bi bi-person-circle me-1"></i>
             Đọc giả
           </button>
           <button
-              :class="['btn', selectedType === UserType.NHANVIEN ? 'btn-primary' : 'btn-outline-primary']"
-              @click="selectedType = UserType.NHANVIEN"
+            :class="['btn', selectedType === UserType.NHANVIEN ? 'btn-primary' : 'btn-outline-primary']"
+            @click="selectedType = UserType.NHANVIEN"
           >
             <i class="bi bi-briefcase me-1"></i>
             Nhân viên
@@ -21,30 +39,36 @@
         </div>
       </div>
 
-      <!-- LoginCard component với userType động -->
+      <!-- LoginCard hoặc RegisterCard component với userType động -->
       <LoginCard
-          :title="`Đăng nhập ${selectedType === UserType.DOCGIA ? 'Đọc giả' : 'Nhân viên'}`"
-          :userType="selectedType"
-          @success="onSuccess"
+        v-if="authMode === 'login'"
+        :title="`Đăng nhập ${selectedType === UserType.DOCGIA ? 'Đọc giả' : 'Nhân viên'}`"
+        :userType="selectedType"
+        @success="onLoginSuccess"
+      />
+
+      <RegisterCard
+        v-else
+        :title="`Đăng ký ${selectedType === UserType.DOCGIA ? 'Đọc giả' : 'Nhân viên'}`"
+        :userType="selectedType"
+        @success="onRegisterSuccess"
       />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import {ref, watch} from 'vue'
-import {useRouter} from 'vue-router'
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import LoginCard from '../components/LoginCard.vue'
-import {UserType} from '../types/auth'
+import RegisterCard from '../components/RegisterCard.vue'
+import { UserType } from '../types/auth'
 
 const router = useRouter()
+const authMode = ref<'login' | 'register'>('login')
 const selectedType = ref<UserType>(UserType.DOCGIA)
-// 👇 watch tự động kích hoạt khi selectedType.value thay đổi
-watch(selectedType, (newValue, oldValue) => {
-  console.log('User type changed:', oldValue, '→', newValue)
-})
 
-const onSuccess = (payload: any) => {
+const onLoginSuccess = (payload: any) => {
   console.log('Đăng nhập thành công:', payload)
   // Redirect dựa trên loại người dùng
   if (selectedType.value === UserType.DOCGIA) {
@@ -53,11 +77,19 @@ const onSuccess = (payload: any) => {
     router.push('/nhanvien/dashboard')
   }
 }
+
+const onRegisterSuccess = (payload: any) => {
+  console.log('Đăng ký thành công:', payload)
+  // Tự động chuyển sang tab đăng nhập sau khi đăng ký thành công
+  setTimeout(() => {
+    authMode.value = 'login'
+  }, 2000)
+}
 </script>
 
 <style scoped>
 .auth-root {
-  min-height: calc(100vh - 88px); /* account for header */
+  min-height: calc(100vh - 88px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -66,14 +98,15 @@ const onSuccess = (payload: any) => {
 }
 
 .auth-card {
-  width: 480px;
+  width: 520px;
+  max-width: 95vw;
   border-radius: 14px;
   background: #ffffff;
   box-shadow: 0 8px 28px rgba(102, 103, 173, 0.12);
 }
 
 .btn-group .btn {
-  min-width: 140px;
+  min-width: 120px;
   font-weight: 600;
 }
 

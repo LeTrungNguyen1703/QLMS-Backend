@@ -24,28 +24,37 @@
           <h5>Chức năng</h5>
           <div class="row g-3">
             <div class="col-md-4">
-              <div class="card">
-                <div class="card-body text-center">
-                  <i class="bi bi-book fs-1 text-primary"></i>
-                  <h6 class="mt-2">Tìm sách</h6>
+              <router-link to="/docgia/search-books" class="text-decoration-none">
+                <div class="card feature-card">
+                  <div class="card-body text-center">
+                    <i class="bi bi-book fs-1 text-primary"></i>
+                    <h6 class="mt-2">Tìm sách</h6>
+                    <p class="text-muted small mb-0">Tìm kiếm và mượn sách</p>
+                  </div>
                 </div>
-              </div>
+              </router-link>
             </div>
             <div class="col-md-4">
-              <div class="card">
-                <div class="card-body text-center">
-                  <i class="bi bi-bookmark-check fs-1 text-success"></i>
-                  <h6 class="mt-2">Sách đã mượn</h6>
+              <router-link to="/docgia/borrowed-books" class="text-decoration-none">
+                <div class="card feature-card">
+                  <div class="card-body text-center">
+                    <i class="bi bi-bookmark-check fs-1 text-success"></i>
+                    <h6 class="mt-2">Sách đã mượn</h6>
+                    <p class="text-muted small mb-0">Xem sách đang mượn</p>
+                  </div>
                 </div>
-              </div>
+              </router-link>
             </div>
             <div class="col-md-4">
-              <div class="card">
-                <div class="card-body text-center">
-                  <i class="bi bi-clock-history fs-1 text-info"></i>
-                  <h6 class="mt-2">Lịch sử</h6>
+              <router-link to="/docgia/borrow-history" class="text-decoration-none">
+                <div class="card feature-card">
+                  <div class="card-body text-center">
+                    <i class="bi bi-clock-history fs-1 text-info"></i>
+                    <h6 class="mt-2">Lịch sử</h6>
+                    <p class="text-muted small mb-0">Xem lịch sử mượn trả</p>
+                  </div>
                 </div>
-              </div>
+              </router-link>
             </div>
           </div>
         </div>
@@ -97,5 +106,17 @@ const logout = () => {
 .card {
   border: none;
   border-radius: 10px;
+}
+
+.feature-card {
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  border-color: #667eea;
 }
 </style>
