@@ -21,7 +21,7 @@ class TheoDoiMuonSachRepository {
     async findByDocGiaId(maDocGia: string): Promise<ITHEODOIMUONSACH[] | null> {
         const sachMuons = await TheoDoiMuonSach.find({MaDocGia: maDocGia})
             .populate('MaDocGia', "_id MaDocGia TenDocGia HoLot Ten")
-            .populate('MaSach', "_id TenSach HinhAnh DonGia");
+            .populate('MaSach', "_id TenSach HinhAnh DonGia TacGia");
         return sachMuons.map(muonSach => toPlainObject(muonSach));
     }
 

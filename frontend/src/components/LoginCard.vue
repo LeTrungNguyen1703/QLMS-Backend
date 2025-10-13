@@ -1,5 +1,5 @@
 <template>
-  <div class="login-container d-flex justify-content-center align-items-center">
+  <div class="login-card-wrapper">
     <div class="card p-4 shadow" style="width: 420px;">
       <div class="card-body">
         <h3 class="card-title text-center mb-3">{{ title }}</h3>
@@ -108,12 +108,8 @@ const handleLogin = async () => {
 </script>
 
 <style scoped>
-.login-container {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 20px;
+.login-card-wrapper {
+  /* Removed fixed positioning and full-screen styles */
 }
 
 .card {

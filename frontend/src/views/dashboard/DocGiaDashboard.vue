@@ -1,5 +1,5 @@
 <template>
-  <div class="container mt-5">
+  <div class="container-fluid px-4 mt-5">
     <div class="card shadow">
       <div class="card-header bg-primary text-white">
         <h4 class="mb-0">

@@ -1,87 +1,66 @@
 <template>
-  <div class="container mt-4">
-    <div class="card shadow">
-      <div class="card-header bg-primary text-white">
-        <h4 class="mb-0">
-          <i class="bi bi-book me-2"></i>
-          Tìm sách
-        </h4>
+  <div class="search-books-page">
+    <!-- Loading state -->
+    <div v-if="isLoading" class="text-center py-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Đang tải...</span>
       </div>
-      <div class="card-body">
-        <!-- Search bar -->
-        <div class="mb-4">
-          <div class="input-group">
-            <input
-              v-model="searchQuery"
-              type="text"
-              class="form-control"
-              placeholder="Tìm kiếm theo tên sách, tác giả..."
-              @input="filterBooks"
-            />
-            <button class="btn btn-primary" type="button">
-              <i class="bi bi-search"></i>
-            </button>
-          </div>
-        </div>
+      <p class="mt-2">Đang tải danh sách sách...</p>
+    </div>
 
-        <!-- Loading state -->
-        <div v-if="isLoading" class="text-center py-5">
-          <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Đang tải...</span>
-          </div>
-          <p class="mt-2">Đang tải danh sách sách...</p>
-        </div>
+    <!-- Error message -->
+    <div v-else-if="errorMessage" class="container mt-4">
+      <div class="alert alert-danger">
+        <i class="bi bi-exclamation-triangle me-2"></i>
+        {{ errorMessage }}
+      </div>
+    </div>
 
-        <!-- Error message -->
-        <div v-else-if="errorMessage" class="alert alert-danger">
-          <i class="bi bi-exclamation-triangle me-2"></i>
-          {{ errorMessage }}
-        </div>
-
-        <!-- Books grid -->
-        <div v-else-if="filteredBooks.length > 0" class="row g-4">
-          <div v-for="book in filteredBooks" :key="book._id" class="col-md-4">
-            <div class="card h-100 book-card">
+    <!-- Books grid - Full width -->
+    <div v-else-if="filteredBooks.length > 0" class="container-fluid px-4 py-4">
+      <div class="row g-4 row-cols-2 row-cols-md-3 row-cols-lg-3 row-cols-xl-3">
+        <div v-for="book in filteredBooks" :key="book._id">
+          <div class="card h-100 book-card">
+            <div class="book-image-wrapper">
               <img
                 :src="book.HinhAnh || '/placeholder-book.jpg'"
                 class="card-img-top"
                 :alt="book.TenSach"
-                style="height: 250px; object-fit: cover;"
               />
-              <div class="card-body d-flex flex-column">
-                <h5 class="card-title">{{ book.TenSach }}</h5>
-                <p class="card-text text-muted small mb-2">
-                  <i class="bi bi-person me-1"></i>{{ book.TacGia }}
-                </p>
-                <p class="card-text small">
-                  <i class="bi bi-calendar me-1"></i>
-                  {{ new Date(book.NamXuatBan).getFullYear() }}
-                </p>
-                <div class="mt-auto">
-                  <div class="d-flex justify-content-between align-items-center mb-2">
-                    <span class="badge bg-success">Còn {{ book.SoQuyen }} quyển</span>
-                    <span class="text-primary fw-bold">{{ formatPrice(book.DonGia) }}</span>
-                  </div>
-                  <button
-                    class="btn btn-primary w-100"
-                    @click="openBorrowModal(book)"
-                    :disabled="book.SoQuyen === 0"
-                  >
-                    <i class="bi bi-bookmark-plus me-1"></i>
-                    {{ book.SoQuyen === 0 ? 'Hết sách' : 'Mượn sách' }}
-                  </button>
+            </div>
+            <div class="card-body d-flex flex-column p-3">
+              <h6 class="card-title text-truncate" :title="book.TenSach">{{ book.TenSach }}</h6>
+              <p class="card-text text-muted small mb-1 text-truncate">
+                <i class="bi bi-person me-1"></i>{{ book.TacGia }}
+              </p>
+              <p class="card-text small mb-2">
+                <i class="bi bi-calendar me-1"></i>
+                {{ new Date(book.NamXuatBan).getFullYear() }}
+              </p>
+              <div class="mt-auto">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                  <span class="badge bg-success small">{{ book.SoQuyen }} quyển</span>
+                  <span class="text-primary fw-bold small">{{ formatPrice(book.DonGia) }}</span>
                 </div>
+                <button
+                  class="btn btn-primary btn-sm w-100"
+                  @click="openBorrowModal(book)"
+                  :disabled="book.SoQuyen === 0"
+                >
+                  <i class="bi bi-bookmark-plus me-1"></i>
+                  {{ book.SoQuyen === 0 ? 'Hết' : 'Mượn' }}
+                </button>
               </div>
             </div>
           </div>
         </div>
-
-        <!-- No results -->
-        <div v-else class="text-center py-5">
-          <i class="bi bi-inbox fs-1 text-muted"></i>
-          <p class="text-muted mt-2">Không tìm thấy sách nào</p>
-        </div>
       </div>
+    </div>
+
+    <!-- No results -->
+    <div v-else class="container text-center py-5">
+      <i class="bi bi-inbox fs-1 text-muted"></i>
+      <p class="text-muted mt-2">Không tìm thấy sách nào</p>
     </div>
 
     <!-- Borrow Modal -->
@@ -137,12 +116,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, inject, Ref } from 'vue'
 import { bookService } from '../../services/bookService'
 import type { Sach } from '../../types/book'
 
 const books = ref<Sach[]>([])
-const searchQuery = ref('')
+// Inject searchQuery từ App.vue
+const searchQuery = inject<Ref<string>>('searchQuery', ref(''))
 const isLoading = ref(false)
 const errorMessage = ref('')
 
@@ -233,22 +213,68 @@ const confirmBorrow = async () => {
 onMounted(() => {
   loadBooks()
 })
+
+// Export để App.vue có thể gọi filterBooks từ search bar
+defineExpose({
+  searchQuery
+})
 </script>
 
 <style scoped>
+.search-books-page {
+  min-height: calc(100vh - 88px);
+  background: #f5f7fb;
+}
+
+.card {
+  border: none;
+  border-radius: 12px;
+}
+
+.book-image-wrapper {
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  border-radius: 12px 12px 0 0;
+  background: #f8f9fa;
+}
+
+.book-image-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 .book-card {
   transition: transform 0.2s, box-shadow 0.2s;
   border: none;
-  border-radius: 10px;
+  border-radius: 12px;
+  overflow: hidden;
 }
 
 .book-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  transform: translateY(-8px);
+  box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+}
+
+.book-card .card-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  line-height: 1.3;
+}
+
+.book-card .card-body {
+  padding: 0.75rem;
 }
 
 .modal.show {
   display: block;
 }
-</style>
 
+@media (max-width: 768px) {
+  .book-image-wrapper {
+    height: 180px;
+  }
+}
+</style>

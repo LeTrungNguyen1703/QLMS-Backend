@@ -1,10 +1,26 @@
 <script setup lang="ts">
-import { RouterLink } from 'vue-router';
+import { RouterLink, useRoute } from 'vue-router';
+import { ref, watch, provide } from 'vue';
+
+const route = useRoute();
+const searchQuery = ref('');
+const showSearch = ref(false);
+
+// Provide searchQuery để child components có thể inject
+provide('searchQuery', searchQuery);
+
+// Chỉ hiển thị search bar khi ở trang search-books
+watch(() => route.path, (newPath) => {
+  showSearch.value = newPath === '/docgia/search-books';
+  if (!showSearch.value) {
+    searchQuery.value = '';
+  }
+}, { immediate: true });
 </script>
 
 <template>
   <header class="app-header d-flex align-items-center">
-    <div class="container d-flex justify-content-between align-items-center py-3">
+    <div class="container-fluid d-flex justify-content-between align-items-center py-3 px-4">
       <div class="brand d-flex align-items-center">
         <div class="brand-logo">QLMS</div>
         <div class="brand-text ms-3">
@@ -13,7 +29,22 @@ import { RouterLink } from 'vue-router';
         </div>
       </div>
 
-      <nav>
+      <nav class="d-flex align-items-center gap-3">
+        <!-- Search bar - chỉ hiện khi ở trang tìm sách -->
+        <div v-if="showSearch" class="search-bar">
+          <div class="input-group">
+            <input
+              v-model="searchQuery"
+              type="text"
+              class="form-control"
+              placeholder="Tìm sách theo tên, tác giả..."
+            />
+            <button class="btn btn-light" type="button">
+              <i class="bi bi-search"></i>
+            </button>
+          </div>
+        </div>
+
         <RouterLink class="btn btn-outline-light" to="/auth/login">
           <i class="bi bi-box-arrow-in-right me-1"></i>
           Đăng nhập
@@ -22,7 +53,7 @@ import { RouterLink } from 'vue-router';
     </div>
   </header>
 
-  <main>
+  <main >
     <router-view />
   </main>
 </template>
@@ -38,6 +69,10 @@ import { RouterLink } from 'vue-router';
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   background: #f5f7fb;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 .app-header {
@@ -65,6 +100,37 @@ body {
   opacity: 0.9;
 }
 
+.search-bar {
+  width: 400px;
+}
+
+.search-bar .input-group {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.search-bar .form-control {
+  border: none;
+  border-radius: 8px 0 0 8px;
+  background: rgba(255,255,255,0.95);
+}
+
+.search-bar .form-control:focus {
+  background: #fff;
+  box-shadow: none;
+}
+
+.search-bar .btn-light {
+  border: none;
+  border-radius: 0 8px 8px 0;
+  background: rgba(255,255,255,0.95);
+  color: #667eea;
+}
+
+.search-bar .btn-light:hover {
+  background: #fff;
+  color: #5568d3;
+}
+
 .btn-outline-light {
   color: #fff;
   border-color: rgba(255,255,255,0.35);
@@ -84,6 +150,26 @@ body {
 }
 
 main {
-  min-height: calc(100vh - 88px); /* leave space for header */
+  min-height: calc(100vh - 88px);
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+/* Đảm bảo container-fluid thực sự full width */
+.container-fluid {
+  max-width: 100%;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (max-width: 768px) {
+  .search-bar {
+    width: 250px;
+  }
+
+  .brand-text {
+    display: none;
+  }
 }
 </style>

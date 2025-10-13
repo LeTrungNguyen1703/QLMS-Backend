@@ -1,5 +1,5 @@
 <template>
-  <div class="container mt-4">
+  <div class="container-fluid px-4 mt-4">
     <div class="card shadow">
       <div class="card-header bg-info text-white">
         <h4 class="mb-0">
@@ -268,4 +268,3 @@ onMounted(() => {
   border-radius: 8px;
 }
 </style>
-

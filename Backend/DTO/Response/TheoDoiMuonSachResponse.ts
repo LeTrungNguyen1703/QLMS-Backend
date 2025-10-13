@@ -24,6 +24,9 @@ export class TheoDoiMuonSachResponse {
     SoQuyen: number;
 
     @Expose()
+    TrangThai: String;
+
+    @Expose()
     PhatQuaHan: {
         message: String,
         SoTienPhat: number

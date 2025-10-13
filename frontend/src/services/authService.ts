@@ -1,14 +1,5 @@
-import axios from 'axios';
 import type { LoginRequest, TokenResponse, APIResponse, UserType, RegisterDocGiaRequest, RegisterNhanVienRequest } from '../types/auth';
-
-const API_BASE_URL = 'http://localhost:8080/api';
-
-const apiClient = axios.create({
-  baseURL: API_BASE_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
+import {apiClient} from "./base-url.ts";
 
 // Add request interceptor to include token in requests
 apiClient.interceptors.request.use(

@@ -90,7 +90,7 @@ export class TokenMiddleware {
             }
 
             // Kiểm tra nếu user đang truy cập tài nguyên của chính mình
-            const resourceUserId = req.params.id || req.body.userId;
+            const resourceUserId =req.user.userId;
             
             if (req.user.role === UserRole.ADMIN || req.user.userId === resourceUserId) {
                 next();
