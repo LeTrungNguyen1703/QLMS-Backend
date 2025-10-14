@@ -20,57 +20,90 @@
           <li><strong>Loại:</strong> Nhân viên</li>
         </ul>
 
-        <div class="mt-4">
-          <h5>Chức năng quản lý</h5>
-          <div class="row g-3">
-            <div class="col-md-4">
-              <div class="card feature-card">
-                <div class="card-body text-center">
-                  <i class="bi bi-people fs-1 text-primary"></i>
-                  <h6 class="mt-2">Quản lý đọc giả</h6>
+        <!-- Tab Navigation -->
+        <ul class="nav nav-tabs mt-4" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button
+              :class="['nav-link', activeTab === 'functions' ? 'active' : '']"
+              @click="activeTab = 'functions'"
+              type="button"
+            >
+              <i class="bi bi-grid-3x3-gap me-1"></i>
+              Chức năng
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button
+              :class="['nav-link', activeTab === 'muon-tra' ? 'active' : '']"
+              @click="activeTab = 'muon-tra'"
+              type="button"
+            >
+              <i class="bi bi-arrow-left-right me-1"></i>
+              Quản lý mượn/trả sách
+            </button>
+          </li>
+        </ul>
+
+        <!-- Tab Content -->
+        <div class="tab-content mt-4">
+          <!-- Functions Tab -->
+          <div v-show="activeTab === 'functions'">
+            <h5>Chức năng quản lý</h5>
+            <div class="row g-3">
+              <div class="col-md-4">
+                <div class="card feature-card">
+                  <div class="card-body text-center">
+                    <i class="bi bi-people fs-1 text-primary"></i>
+                    <h6 class="mt-2">Quản lý đọc giả</h6>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="card feature-card">
+                  <div class="card-body text-center">
+                    <i class="bi bi-book-half fs-1 text-success"></i>
+                    <h6 class="mt-2">Quản lý sách</h6>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="card feature-card" @click="activeTab = 'muon-tra'">
+                  <div class="card-body text-center">
+                    <i class="bi bi-arrow-left-right fs-1 text-warning"></i>
+                    <h6 class="mt-2">Mượn/Trả sách</h6>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="card feature-card">
+                  <div class="card-body text-center">
+                    <i class="bi bi-building fs-1 text-info"></i>
+                    <h6 class="mt-2">Nhà xuất bản</h6>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="card feature-card">
+                  <div class="card-body text-center">
+                    <i class="bi bi-graph-up fs-1 text-danger"></i>
+                    <h6 class="mt-2">Thống kê</h6>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="card feature-card">
+                  <div class="card-body text-center">
+                    <i class="bi bi-gear fs-1 text-secondary"></i>
+                    <h6 class="mt-2">Cài đặt</h6>
+                  </div>
                 </div>
               </div>
             </div>
-            <div class="col-md-4">
-              <div class="card feature-card">
-                <div class="card-body text-center">
-                  <i class="bi bi-book-half fs-1 text-success"></i>
-                  <h6 class="mt-2">Quản lý sách</h6>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="card feature-card">
-                <div class="card-body text-center">
-                  <i class="bi bi-arrow-left-right fs-1 text-warning"></i>
-                  <h6 class="mt-2">Mượn/Trả sách</h6>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="card feature-card">
-                <div class="card-body text-center">
-                  <i class="bi bi-building fs-1 text-info"></i>
-                  <h6 class="mt-2">Nhà xuất bản</h6>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="card feature-card">
-                <div class="card-body text-center">
-                  <i class="bi bi-graph-up fs-1 text-danger"></i>
-                  <h6 class="mt-2">Thống kê</h6>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="card feature-card">
-                <div class="card-body text-center">
-                  <i class="bi bi-gear fs-1 text-secondary"></i>
-                  <h6 class="mt-2">Cài đặt</h6>
-                </div>
-              </div>
-            </div>
+          </div>
+
+          <!-- Quản lý mượn trả sách Tab -->
+          <div v-show="activeTab === 'muon-tra'">
+            <QuanLySachMuon />
           </div>
         </div>
 
@@ -89,8 +122,10 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { authService } from '../../services/authService'
+import QuanLySachMuon from '../../components/QuanLySachMuon.vue'
 
 const router = useRouter()
+const activeTab = ref<'functions' | 'muon-tra'>('functions')
 const userInfo = ref({
   userName: '',
   email: '',
@@ -131,5 +166,28 @@ const logout = () => {
 .feature-card:hover {
   transform: translateY(-3px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.nav-tabs {
+  border-bottom: 2px solid #e9ecef;
+}
+
+.nav-tabs .nav-link {
+  border: none;
+  color: #6c757d;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  transition: all 0.2s;
+}
+
+.nav-tabs .nav-link:hover {
+  color: #667eea;
+  border-color: transparent;
+}
+
+.nav-tabs .nav-link.active {
+  color: #667eea;
+  border-bottom: 3px solid #667eea;
+  background: transparent;
 }
 </style>

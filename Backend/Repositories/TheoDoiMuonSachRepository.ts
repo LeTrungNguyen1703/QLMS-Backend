@@ -48,6 +48,13 @@ class TheoDoiMuonSachRepository {
         return toPlainObject(sachMuonDeleted);
     }
 
+    async findByCondition(param: { TrangThai: "CHO_DUYET" | "DA_DUYET" | "DA_TRA" }): Promise<ITHEODOIMUONSACH[]> {
+        const sachMuons = await TheoDoiMuonSach.find(param)
+            .populate('MaDocGia', "_id MaDocGia TenDocGia HoLot Ten")
+            .populate('MaSach', "_id TenSach HinhAnh DonGia TacGia")
+            .sort({ NgayMuon: -1 }); // Sắp xếp theo ngày mượn mới nhất
+        return sachMuons.map(muonSach => toPlainObject(muonSach));
+    }
 }
 
 export default new TheoDoiMuonSachRepository();

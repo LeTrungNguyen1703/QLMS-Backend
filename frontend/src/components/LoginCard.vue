@@ -1,6 +1,6 @@
 <template>
   <div class="login-card-wrapper">
-    <div class="card p-4 shadow" style="width: 420px;">
+    <div class="card p-4 shadow" style="width: 420px; margin-left: auto; margin-right: auto;">
       <div class="card-body">
         <h3 class="card-title text-center mb-3">{{ title }}</h3>
 
