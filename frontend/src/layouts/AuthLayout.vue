@@ -3,7 +3,8 @@
     <div class="auth-card p-4">
       <!-- Toggle chọn Đăng nhập / Đăng ký -->
       <div class="text-center mb-4">
-        <div class="btn-group w-100 mb-3" role="group">
+        <!-- Chỉ hiển thị toggle Đăng nhập/Đăng ký cho Đọc giả -->
+        <div v-if="selectedType === UserType.DOCGIA" class="btn-group w-100 mb-3" role="group">
           <button
             :class="['btn', authMode === 'login' ? 'btn-primary' : 'btn-outline-primary']"
             @click="authMode = 'login'"
@@ -20,18 +21,30 @@
           </button>
         </div>
 
+        <!-- Tiêu đề cho Nhân viên (chỉ đăng nhập) -->
+        <div v-else class="mb-3">
+          <h4 class="text-center mb-2">
+            <i class="bi bi-box-arrow-in-right me-2"></i>
+            Đăng nhập Nhân viên
+          </h4>
+          <p class="text-muted small mb-0">
+            <i class="bi bi-info-circle me-1"></i>
+            Đăng ký tài khoản nhân viên được thực hiện bởi Admin
+          </p>
+        </div>
+
         <!-- Toggle chọn loại người dùng -->
         <div class="btn-group" role="group" aria-label="Loại tài khoản">
           <button
             :class="['btn', selectedType === UserType.DOCGIA ? 'btn-primary' : 'btn-outline-primary']"
-            @click="selectedType = UserType.DOCGIA"
+            @click="handleUserTypeChange(UserType.DOCGIA)"
           >
             <i class="bi bi-person-circle me-1"></i>
             Đọc giả
           </button>
           <button
             :class="['btn', selectedType === UserType.NHANVIEN ? 'btn-primary' : 'btn-outline-primary']"
-            @click="selectedType = UserType.NHANVIEN"
+            @click="handleUserTypeChange(UserType.NHANVIEN)"
           >
             <i class="bi bi-briefcase me-1"></i>
             Nhân viên
@@ -39,20 +52,29 @@
         </div>
       </div>
 
-      <!-- LoginCard hoặc RegisterCard component với userType động -->
+      <!-- LoginCard cho cả Đọc giả và Nhân viên -->
       <LoginCard
-        v-if="authMode === 'login'"
+        v-if="authMode === 'login' || selectedType === UserType.NHANVIEN"
         :title="`Đăng nhập ${selectedType === UserType.DOCGIA ? 'Đọc giả' : 'Nhân viên'}`"
         :userType="selectedType"
         @success="onLoginSuccess"
       />
 
+      <!-- RegisterCard chỉ cho Đọc giả -->
       <RegisterCard
-        v-else
-        :title="`Đăng ký ${selectedType === UserType.DOCGIA ? 'Đọc giả' : 'Nhân viên'}`"
-        :userType="selectedType"
+        v-else-if="authMode === 'register' && selectedType === UserType.DOCGIA"
+        title="Đăng ký Đọc giả"
+        :userType="UserType.DOCGIA"
         @success="onRegisterSuccess"
       />
+
+      <!-- Link to Admin Login -->
+      <div class="text-center mt-4">
+        <router-link to="/auth/admin" class="admin-link">
+          <i class="bi bi-shield-lock-fill me-1"></i>
+          Đăng nhập với quyền Quản trị viên
+        </router-link>
+      </div>
     </div>
   </div>
 </template>
@@ -67,6 +89,14 @@ import { UserType } from '../types/auth'
 const router = useRouter()
 const authMode = ref<'login' | 'register'>('login')
 const selectedType = ref<UserType>(UserType.DOCGIA)
+
+const handleUserTypeChange = (type: UserType) => {
+  selectedType.value = type
+  // Khi chuyển sang Nhân viên, luôn hiển thị form đăng nhập
+  if (type === UserType.NHANVIEN) {
+    authMode.value = 'login'
+  }
+}
 
 const onLoginSuccess = (payload: any) => {
   console.log('Đăng nhập thành công:', payload)
@@ -121,5 +151,22 @@ const onRegisterSuccess = (payload: any) => {
 
 .btn-primary:hover {
   background: linear-gradient(135deg, #5568d3 0%, #6a3f8f 100%);
+}
+
+.admin-link {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  color: #dc2626;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.admin-link:hover {
+  color: #991b1b;
+  background: #fee2e2;
 }
 </style>

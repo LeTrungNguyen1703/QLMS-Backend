@@ -36,7 +36,7 @@ export class AuthService {
             {expiresIn: process.env.JWT_EXPIRES} as SignOptions
         );
 
-        return new TokenResponse(token, userId, userName, email);
+        return new TokenResponse(token, userId, userName, email, role);
     }
 
     private async xacThucDocGia(loginData: LoginRequest): Promise<IDocgia> {

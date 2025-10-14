@@ -29,6 +29,7 @@ export const authService = {
         localStorage.setItem('userId', response.data.data.UserId);
         localStorage.setItem('userName', response.data.data.UserName);
         localStorage.setItem('userEmail', response.data.data.Email);
+        localStorage.setItem('role', response.data.data.Role);
         localStorage.setItem('userType', userType);
 
         return response.data.data;

@@ -1,48 +1,48 @@
 // Authentication types based on backend interfaces
 
 export interface LoginRequest {
-  TenTaiKhoan: string;
-  MatKhau: string;
+    TenTaiKhoan: string;
+    MatKhau: string;
 }
 
 export interface RegisterDocGiaRequest {
-  HoLot: string;
-  Ten: string;
-  TenTaiKhoan: string;
-  MatKhau: string;
-  NgaySinh: string; // ISO date string
-  Phai: "nam" | "nữ" | "khác";
-  DiaChi: string;
-  SoDienThoai: string;
-  Email: string;
+    HoLot: string;
+    Ten: string;
+    TenTaiKhoan: string;
+    MatKhau: string;
+    NgaySinh: string; // ISO date string
+    Phai: "nam" | "nữ" | "khác";
+    DiaChi: string;
+    SoDienThoai: string;
+    Email: string;
 }
 
 export interface RegisterNhanVienRequest {
-  HoLot: string;
-  Ten: string;
-  TenTaiKhoan: string;
-  MatKhau: string;
-  NgaySinh: string; // ISO date string
-  Phai: "nam" | "nữ" | "khác";
-  DiaChi: string;
-  SoDienThoai: string;
-  Email: string;
-  ChucVu: string;
+    HoTenNV: string;
+    TenTaiKhoan: string;
+    MatKhau: string;
+    NgaySinh: string; // ISO date string
+    Phai: "nam" | "nữ" | "khác";
+    DiaChi: string;
+    SoDienThoai: string;
+    Email: string;
+    ChucVu: string;
 }
 
 export interface TokenResponse {
-  Token: string;
-  UserId: string;
-  UserName: string;
-  Email: string;
+    Token: string;
+    UserId: string;
+    UserName: string;
+    Email: string;
+    Role: string;
 }
 
 export interface APIResponse<T> {
-  message: string;
-  data?: T;
+    message: string;
+    data?: T;
 }
 
 export enum UserType {
-  DOCGIA = 'docgia',
-  NHANVIEN = 'nhanvien'
+    DOCGIA = 'docgia',
+    NHANVIEN = 'nhanvien'
 }

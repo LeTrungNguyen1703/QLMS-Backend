@@ -8,6 +8,11 @@ const routes = [
     name: 'Login',
     component: AuthLayout,
   },
+  {
+    path: '/auth/admin',
+    name: 'AdminLogin',
+    component: () => import('../views/auth/AdminLogin.vue'),
+  },
   // Placeholder dashboard routes
   {
     path: '/docgia/dashboard',
@@ -33,6 +38,11 @@ const routes = [
     path: '/nhanvien/dashboard',
     name: 'NhanVienDashboard',
     component: () => import('../views/dashboard/NhanVienDashboard.vue'),
+  },
+  {
+    path: '/admin/dashboard',
+    name: 'AdminDashboard',
+    component: () => import('../views/dashboard/AdminDashboard.vue'),
   },
 ];
 

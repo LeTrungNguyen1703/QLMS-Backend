@@ -15,11 +15,14 @@ export class TokenResponse {
     @Expose()
     Email: string;
 
+    @Expose()
+    Role: string;
 
-    constructor(Token: string, UserId: string, UserName: string, Email: string) {
+    constructor(Token: string, UserId: string, UserName: string, Email: string, Role: string) {
         this.Token = Token;
         this.UserId = UserId;
         this.UserName = UserName;
         this.Email = Email;
+        this.Role = Role
     }
 }

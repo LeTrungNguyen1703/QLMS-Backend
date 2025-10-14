@@ -24,7 +24,7 @@
           <h5>Chức năng quản lý</h5>
           <div class="row g-3">
             <div class="col-md-4">
-              <div class="card">
+              <div class="card feature-card">
                 <div class="card-body text-center">
                   <i class="bi bi-people fs-1 text-primary"></i>
                   <h6 class="mt-2">Quản lý đọc giả</h6>
@@ -32,7 +32,7 @@
               </div>
             </div>
             <div class="col-md-4">
-              <div class="card">
+              <div class="card feature-card">
                 <div class="card-body text-center">
                   <i class="bi bi-book-half fs-1 text-success"></i>
                   <h6 class="mt-2">Quản lý sách</h6>
@@ -40,7 +40,7 @@
               </div>
             </div>
             <div class="col-md-4">
-              <div class="card">
+              <div class="card feature-card">
                 <div class="card-body text-center">
                   <i class="bi bi-arrow-left-right fs-1 text-warning"></i>
                   <h6 class="mt-2">Mượn/Trả sách</h6>
@@ -48,7 +48,7 @@
               </div>
             </div>
             <div class="col-md-4">
-              <div class="card">
+              <div class="card feature-card">
                 <div class="card-body text-center">
                   <i class="bi bi-building fs-1 text-info"></i>
                   <h6 class="mt-2">Nhà xuất bản</h6>
@@ -56,7 +56,7 @@
               </div>
             </div>
             <div class="col-md-4">
-              <div class="card">
+              <div class="card feature-card">
                 <div class="card-body text-center">
                   <i class="bi bi-graph-up fs-1 text-danger"></i>
                   <h6 class="mt-2">Thống kê</h6>
@@ -64,7 +64,7 @@
               </div>
             </div>
             <div class="col-md-4">
-              <div class="card">
+              <div class="card feature-card">
                 <div class="card-body text-center">
                   <i class="bi bi-gear fs-1 text-secondary"></i>
                   <h6 class="mt-2">Cài đặt</h6>
@@ -121,5 +121,15 @@ const logout = () => {
 .card {
   border: none;
   border-radius: 10px;
+}
+
+.feature-card {
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.feature-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 </style>
