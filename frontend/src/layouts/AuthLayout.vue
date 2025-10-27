@@ -6,15 +6,15 @@
         <!-- Chỉ hiển thị toggle Đăng nhập/Đăng ký cho Đọc giả -->
         <div v-if="selectedType === UserType.DOCGIA" class="btn-group w-100 mb-3" role="group">
           <button
-            :class="['btn', authMode === 'login' ? 'btn-primary' : 'btn-outline-primary']"
-            @click="authMode = 'login'"
+              :class="['btn', authMode === 'login' ? 'btn-primary' : 'btn-outline-primary']"
+              @click="authMode = 'login'"
           >
             <i class="bi bi-box-arrow-in-right me-1"></i>
             Đăng nhập
           </button>
           <button
-            :class="['btn', authMode === 'register' ? 'btn-primary' : 'btn-outline-primary']"
-            @click="authMode = 'register'"
+              :class="['btn', authMode === 'register' ? 'btn-primary' : 'btn-outline-primary']"
+              @click="authMode = 'register'"
           >
             <i class="bi bi-person-plus me-1"></i>
             Đăng ký
@@ -36,15 +36,15 @@
         <!-- Toggle chọn loại người dùng -->
         <div class="btn-group" role="group" aria-label="Loại tài khoản">
           <button
-            :class="['btn', selectedType === UserType.DOCGIA ? 'btn-primary' : 'btn-outline-primary']"
-            @click="handleUserTypeChange(UserType.DOCGIA)"
+              :class="['btn', selectedType === UserType.DOCGIA ? 'btn-primary' : 'btn-outline-primary']"
+              @click="handleUserTypeChange(UserType.DOCGIA)"
           >
             <i class="bi bi-person-circle me-1"></i>
             Đọc giả
           </button>
           <button
-            :class="['btn', selectedType === UserType.NHANVIEN ? 'btn-primary' : 'btn-outline-primary']"
-            @click="handleUserTypeChange(UserType.NHANVIEN)"
+              :class="['btn', selectedType === UserType.NHANVIEN ? 'btn-primary' : 'btn-outline-primary']"
+              @click="handleUserTypeChange(UserType.NHANVIEN)"
           >
             <i class="bi bi-briefcase me-1"></i>
             Nhân viên
@@ -54,18 +54,18 @@
 
       <!-- LoginCard cho cả Đọc giả và Nhân viên -->
       <LoginCard
-        v-if="authMode === 'login' || selectedType === UserType.NHANVIEN"
-        :title="`Đăng nhập ${selectedType === UserType.DOCGIA ? 'Đọc giả' : 'Nhân viên'}`"
-        :userType="selectedType"
-        @success="onLoginSuccess"
+          v-if="authMode === 'login' || selectedType === UserType.NHANVIEN"
+          :title="`Đăng nhập ${selectedType === UserType.DOCGIA ? 'Đọc giả' : 'Nhân viên'}`"
+          :userType="selectedType"
+          @success="onLoginSuccess"
       />
 
       <!-- RegisterCard chỉ cho Đọc giả -->
       <RegisterCard
-        v-else-if="authMode === 'register' && selectedType === UserType.DOCGIA"
-        title="Đăng ký Đọc giả"
-        :userType="UserType.DOCGIA"
-        @success="onRegisterSuccess"
+          v-else-if="authMode === 'register' && selectedType === UserType.DOCGIA"
+          title="Đăng ký Đọc giả"
+          :userType="UserType.DOCGIA"
+          @success="onRegisterSuccess"
       />
 
       <!-- Link to Admin Login -->
@@ -80,11 +80,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import {ref} from 'vue'
+import {useRouter} from 'vue-router'
 import LoginCard from '../components/LoginCard.vue'
 import RegisterCard from '../components/RegisterCard.vue'
-import { UserType } from '../types/auth'
+import {UserType} from '../types/auth'
 
 const router = useRouter()
 const authMode = ref<'login' | 'register'>('login')
@@ -102,7 +102,7 @@ const onLoginSuccess = (payload: any) => {
   console.log('Đăng nhập thành công:', payload)
   // Redirect dựa trên loại người dùng
   if (selectedType.value === UserType.DOCGIA) {
-    router.push('/docgia/dashboard')
+    router.push('/docgia/search-books')
   } else {
     router.push('/nhanvien/dashboard')
   }

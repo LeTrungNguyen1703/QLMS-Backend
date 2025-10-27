@@ -1,6 +1,9 @@
 <script setup lang="ts">
-import { RouterLink, useRoute } from 'vue-router';
-import { ref, watch, provide } from 'vue';
+import {RouterLink, useRoute} from 'vue-router';
+import {ref, watch, provide} from 'vue';
+import {Cloudinary} from '@cloudinary/url-gen';
+import {authService} from "./services/authService.ts";
+import router from "./router";
 
 const route = useRoute();
 const searchQuery = ref('');
@@ -15,8 +18,25 @@ watch(() => route.path, (newPath) => {
   if (!showSearch.value) {
     searchQuery.value = '';
   }
-}, { immediate: true });
+}, {immediate: true});
+
+const handleLogout = async () => {
+  try {
+    authService.logout() // xóa token / gọi API
+    await router.push('/auth/login') // điều hướng sau khi logout xong
+  } catch (error) {
+    console.error('Logout thất bại', error)
+  }
+}
+
+// Create a Cloudinary instance and set your cloud name.
+const cld = new Cloudinary({
+  cloud: {
+    cloudName: 'demo',
+  },
+});
 </script>
+
 
 <template>
   <header class="app-header d-flex align-items-center">
@@ -34,10 +54,10 @@ watch(() => route.path, (newPath) => {
         <div v-if="showSearch" class="search-bar">
           <div class="input-group">
             <input
-              v-model="searchQuery"
-              type="text"
-              class="form-control"
-              placeholder="Tìm sách theo tên, tác giả..."
+                v-model="searchQuery"
+                type="text"
+                class="form-control"
+                placeholder="Tìm sách theo tên, tác giả..."
             />
             <button class="btn btn-light" type="button">
               <i class="bi bi-search"></i>
@@ -45,16 +65,20 @@ watch(() => route.path, (newPath) => {
           </div>
         </div>
 
-        <RouterLink class="btn btn-outline-light" to="/auth/login">
+        <button @click="handleLogout" class="btn btn-outline-light">
           <i class="bi bi-box-arrow-in-right me-1"></i>
-          Đăng nhập
+        </button>
+        <RouterLink class="btn btn-outline-light" to="/docgia/dashboard" aria-label="Dashboard">
+          <i class="bi bi-speedometer2 me-1"></i>
         </RouterLink>
+
+
       </nav>
     </div>
   </header>
 
-  <main >
-    <router-view />
+  <main>
+    <router-view/>
   </main>
 </template>
 
@@ -78,7 +102,7 @@ body {
 .app-header {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: #fff;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
 .brand-logo {
@@ -87,7 +111,7 @@ body {
   letter-spacing: 1px;
   padding: 8px 12px;
   border-radius: 8px;
-  background: rgba(255,255,255,0.08);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .brand-title {
@@ -105,13 +129,13 @@ body {
 }
 
 .search-bar .input-group {
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .search-bar .form-control {
   border: none;
   border-radius: 8px 0 0 8px;
-  background: rgba(255,255,255,0.95);
+  background: rgba(255, 255, 255, 0.95);
 }
 
 .search-bar .form-control:focus {
@@ -122,7 +146,7 @@ body {
 .search-bar .btn-light {
   border: none;
   border-radius: 0 8px 8px 0;
-  background: rgba(255,255,255,0.95);
+  background: rgba(255, 255, 255, 0.95);
   color: #667eea;
 }
 
@@ -133,13 +157,13 @@ body {
 
 .btn-outline-light {
   color: #fff;
-  border-color: rgba(255,255,255,0.35);
+  border-color: rgba(255, 255, 255, 0.35);
   border-width: 1px;
   background: transparent;
 }
 
 .btn-outline-light:hover {
-  background: rgba(255,255,255,0.08);
+  background: rgba(255, 255, 255, 0.08);
   color: #fff;
 }
 

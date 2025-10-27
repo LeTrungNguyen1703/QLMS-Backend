@@ -8,6 +8,9 @@
       <p class="mt-2">Đang tải danh sách sách...</p>
     </div>
 
+    <!--Carousel component-->
+    <CarouselComponent v-else-if="!isLoading && !errorMessage && books.length === 0"/>
+
     <!-- Error message -->
     <div v-else-if="errorMessage" class="container mt-4">
       <div class="alert alert-danger">
@@ -18,14 +21,14 @@
 
     <!-- Books grid - Full width -->
     <div v-else-if="filteredBooks.length > 0" class="container-fluid px-4 py-4">
-      <div class="row g-4 row-cols-2 row-cols-md-3 row-cols-lg-3 row-cols-xl-3">
+      <div class="row g-4 row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-6">
         <div v-for="book in filteredBooks" :key="book._id">
           <div class="card h-100 book-card">
             <div class="book-image-wrapper">
               <img
-                :src="book.HinhAnh || '/placeholder-book.jpg'"
-                class="card-img-top"
-                :alt="book.TenSach"
+                  :src="book.HinhAnh || '/placeholder-book.jpg'"
+                  class="card-img-top"
+                  :alt="book.TenSach"
               />
             </div>
             <div class="card-body d-flex flex-column p-3">
@@ -43,9 +46,9 @@
                   <span class="text-primary fw-bold small">{{ formatPrice(book.DonGia) }}</span>
                 </div>
                 <button
-                  class="btn btn-primary btn-sm w-100"
-                  @click="openBorrowModal(book)"
-                  :disabled="book.SoQuyen === 0"
+                    class="btn btn-primary btn-sm w-100"
+                    @click="openBorrowModal(book)"
+                    :disabled="book.SoQuyen === 0"
                 >
                   <i class="bi bi-bookmark-plus me-1"></i>
                   {{ book.SoQuyen === 0 ? 'Hết' : 'Mượn' }}
@@ -79,11 +82,11 @@
               <div class="mb-3">
                 <label class="form-label">Số lượng mượn</label>
                 <input
-                  v-model.number="borrowQuantity"
-                  type="number"
-                  class="form-control"
-                  min="1"
-                  :max="selectedBook.SoQuyen"
+                    v-model.number="borrowQuantity"
+                    type="number"
+                    class="form-control"
+                    min="1"
+                    :max="selectedBook.SoQuyen"
                 />
                 <small class="text-muted">Còn lại: {{ selectedBook.SoQuyen }} quyển</small>
               </div>
@@ -100,10 +103,10 @@
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" @click="closeBorrowModal">Hủy</button>
             <button
-              type="button"
-              class="btn btn-primary"
-              @click="confirmBorrow"
-              :disabled="isBorrowing"
+                type="button"
+                class="btn btn-primary"
+                @click="confirmBorrow"
+                :disabled="isBorrowing"
             >
               <span v-if="isBorrowing">Đang xử lý...</span>
               <span v-else>Xác nhận mượn</span>
@@ -116,9 +119,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed, inject, Ref } from 'vue'
-import { bookService } from '../../services/bookService'
-import type { Sach } from '../../types/book'
+import {ref, onMounted, computed, inject, Ref} from 'vue'
+import {bookService} from '../../services/bookService'
+import type {Sach} from '../../types/book'
+import CarouselComponent from "./CarouselComponent.vue";
 
 const books = ref<Sach[]>([])
 // Inject searchQuery từ App.vue
@@ -138,8 +142,8 @@ const filteredBooks = computed(() => {
 
   const query = searchQuery.value.toLowerCase()
   return books.value.filter(book =>
-    book.TenSach.toLowerCase().includes(query) ||
-    book.TacGia.toLowerCase().includes(query)
+      book.TenSach.toLowerCase().includes(query) ||
+      book.TacGia.toLowerCase().includes(query)
   )
 })
 
@@ -155,12 +159,8 @@ const loadBooks = async () => {
   }
 }
 
-const filterBooks = () => {
-  // Reactive computed sẽ tự động filter
-}
-
 const formatPrice = (price: number) => {
-  return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price)
+  return new Intl.NumberFormat('vi-VN', {style: 'currency', currency: 'VND'}).format(price)
 }
 
 const openBorrowModal = (book: Sach) => {
@@ -254,7 +254,7 @@ defineExpose({
 
 .book-card:hover {
   transform: translateY(-8px);
-  box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
 }
 
 .book-card .card-title {

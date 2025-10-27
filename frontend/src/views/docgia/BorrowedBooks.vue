@@ -27,41 +27,41 @@
           <div class="table-responsive">
             <table class="table table-hover">
               <thead>
-                <tr>
-                  <th>Tên sách</th>
-                  <th>Tác giả</th>
-                  <th>Số lượng</th>
-                  <th>Ngày mượn</th>
-                  <th>Hạn trả</th>
-                  <th>Trạng thái</th>
-                  <th>Phạt</th>
-                </tr>
+              <tr>
+                <th>Tên sách</th>
+                <th>Tác giả</th>
+                <th>Số lượng</th>
+                <th>Ngày mượn</th>
+                <th>Hạn trả</th>
+                <th>Trạng thái</th>
+                <th>Phạt</th>
+              </tr>
               </thead>
               <tbody>
-                <tr v-for="borrow in activeBorrows" :key="borrow._id">
-                  <td>
-                    <strong>{{ getBookTitle(borrow.MaSach) }}</strong>
-                  </td>
-                  <td>{{ getBookAuthor(borrow.MaSach) }}</td>
-                  <td>{{ borrow.SoQuyen }}</td>
-                  <td>{{ formatDate(borrow.NgayMuon) }}</td>
-                  <td>
+              <tr v-for="borrow in activeBorrows" :key="borrow._id">
+                <td>
+                  <strong>{{ getBookTitle(borrow.MaSach) }}</strong>
+                </td>
+                <td>{{ getBookAuthor(borrow.MaSach) }}</td>
+                <td>{{ borrow.SoQuyen }}</td>
+                <td>{{ formatDate(borrow.NgayMuon) }}</td>
+                <td>
                     <span :class="isOverdue(borrow.NgayTra) ? 'text-danger fw-bold' : ''">
                       {{ formatDate(borrow.NgayTra) }}
                     </span>
-                  </td>
-                  <td>
+                </td>
+                <td>
                     <span :class="getStatusClass(borrow.TrangThai)">
                       {{ borrow.TrangThai }}
                     </span>
-                  </td>
-                  <td>
+                </td>
+                <td>
                     <span v-if="borrow.PhatQuaHan.SoTienPhat > 0" class="text-danger">
                       {{ formatPrice(borrow.PhatQuaHan.SoTienPhat) }}
                     </span>
-                    <span v-else class="text-muted">-</span>
-                  </td>
-                </tr>
+                  <span v-else class="text-muted">-</span>
+                </td>
+              </tr>
               </tbody>
             </table>
           </div>
@@ -89,10 +89,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
-import { bookService } from '../../services/bookService'
-import type { TheoDoiMuonSach, Sach } from '../../types/book'
-import { TrangThaiMuonSach } from '../../types/book'
+import {ref, onMounted, computed} from 'vue'
+import {bookService} from '../../services/bookService'
+import type {TheoDoiMuonSach, Sach} from '../../types/book'
+import {TrangThaiMuonSach} from '../../types/book'
 
 const borrows = ref<TheoDoiMuonSach[]>([])
 const isLoading = ref(false)
@@ -123,6 +123,8 @@ const loadBorrowedBooks = async () => {
 
   try {
     borrows.value = await bookService.getMyBorrowedBooks(userIdFromStorage)
+
+    borrows.value = borrows.value.sort((a, b) => a.TrangThai.localeCompare(b.TrangThai))
   } catch (error: any) {
     errorMessage.value = error.message || 'Bạn chưa mượn sách nào'
   } finally {
@@ -149,7 +151,7 @@ const formatDate = (date: string): string => {
 }
 
 const formatPrice = (price: number): string => {
-  return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price)
+  return new Intl.NumberFormat('vi-VN', {style: 'currency', currency: 'VND'}).format(price)
 }
 
 const isOverdue = (ngayTra: string): boolean => {

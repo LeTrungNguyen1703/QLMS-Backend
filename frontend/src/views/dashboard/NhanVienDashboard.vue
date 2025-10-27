@@ -24,9 +24,9 @@
         <ul class="nav nav-tabs mt-4" role="tablist">
           <li class="nav-item" role="presentation">
             <button
-              :class="['nav-link', activeTab === 'functions' ? 'active' : '']"
-              @click="activeTab = 'functions'"
-              type="button"
+                :class="['nav-link', activeTab === 'functions' ? 'active' : '']"
+                @click="activeTab = 'functions'"
+                type="button"
             >
               <i class="bi bi-grid-3x3-gap me-1"></i>
               Chức năng
@@ -34,9 +34,9 @@
           </li>
           <li class="nav-item" role="presentation">
             <button
-              :class="['nav-link', activeTab === 'muon-tra' ? 'active' : '']"
-              @click="activeTab = 'muon-tra'"
-              type="button"
+                :class="['nav-link', activeTab === 'muon-tra' ? 'active' : '']"
+                @click="activeTab = 'muon-tra'"
+                type="button"
             >
               <i class="bi bi-arrow-left-right me-1"></i>
               Quản lý mượn/trả sách
@@ -103,7 +103,7 @@
 
           <!-- Quản lý mượn trả sách Tab -->
           <div v-show="activeTab === 'muon-tra'">
-            <QuanLySachMuon />
+            <QuanLySachMuon/>
           </div>
         </div>
 
@@ -119,9 +119,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import { authService } from '../../services/authService'
+import {ref, onMounted} from 'vue'
+import {useRouter} from 'vue-router'
+import {authService} from '../../services/authService'
 import QuanLySachMuon from '../../components/QuanLySachMuon.vue'
 
 const router = useRouter()
@@ -132,16 +132,21 @@ const userInfo = ref({
   userType: ''
 })
 
-onMounted(() => {
-  const info = authService.getUserInfo()
-  if (info.userName && info.email) {
-    userInfo.value = {
-      userName: info.userName,
-      email: info.email,
-      userType: info.userType || ''
+onMounted(async () => {
+  try {
+    const info = await authService.getCurrentUser()
+    if (info && info.email) {
+      userInfo.value = {
+        userName: info.userName,
+        email: info.email,
+        userType: info.role || ''
+      }
+    } else {
+      // Nếu chưa đăng nhập, redirect về login
+      router.push('/auth/login')
     }
-  } else {
-    // Nếu chưa đăng nhập, redirect về login
+  } catch (error) {
+    console.error('Error fetching user info:', error)
     router.push('/auth/login')
   }
 })

@@ -76,10 +76,10 @@ export const authService = {
     }
   },
 
-  async getCurrentUser() {
+  async getCurrentUser():Promise<{userId: string; userName: string; email: string; role: string}> {
     try {
       const response = await apiClient.get('/auth/me');
-      return response.data;
+      return response.data.data;
     } catch (error) {
       throw new Error('Không thể lấy thông tin người dùng');
     }
@@ -109,3 +109,4 @@ export const authService = {
     };
   }
 };
+

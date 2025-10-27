@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid px-4 mt-5">
+  <div class="container px-4 mt-5">
     <div class="card shadow">
       <div class="card-header bg-primary text-white">
         <h4 class="mb-0">
@@ -8,16 +8,12 @@
         </h4>
       </div>
       <div class="card-body">
-        <div class="alert alert-success">
-          <i class="bi bi-check-circle me-2"></i>
-          Chào mừng bạn đã đăng nhập thành công với tư cách <strong>Đọc giả</strong>!
-        </div>
 
         <h5>Thông tin tài khoản</h5>
         <ul class="list-unstyled">
           <li><strong>Tên:</strong> {{ userInfo.userName }}</li>
           <li><strong>Email:</strong> {{ userInfo.email }}</li>
-          <li><strong>Loại:</strong> Đọc giả</li>
+          <li><strong>Loại:</strong> {{ userInfo.userType }}</li>
         </ul>
 
         <div class="mt-4">
@@ -71,9 +67,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import { authService } from '../../services/authService'
+import {ref, onMounted} from 'vue'
+import {useRouter} from 'vue-router'
+import {authService} from '../../services/authService'
 
 const router = useRouter()
 const userInfo = ref({
@@ -82,16 +78,21 @@ const userInfo = ref({
   userType: ''
 })
 
-onMounted(() => {
-  const info = authService.getUserInfo()
-  if (info.userName && info.email) {
-    userInfo.value = {
-      userName: info.userName,
-      email: info.email,
-      userType: info.userType || ''
+onMounted(async () => {
+  try {
+    const info = await authService.getCurrentUser()
+    if (info && info.email) {
+      userInfo.value = {
+        userName: info.userName,
+        email: info.email,
+        userType: info.role || ''
+      }
+    } else {
+      // Nếu chưa đăng nhập, redirect về login
+      router.push('/auth/login')
     }
-  } else {
-    // Nếu chưa đăng nhập, redirect về login
+  } catch (error) {
+    console.error('Error fetching user info:', error)
     router.push('/auth/login')
   }
 })
@@ -116,7 +117,7 @@ const logout = () => {
 
 .feature-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
   border-color: #667eea;
 }
 </style>
