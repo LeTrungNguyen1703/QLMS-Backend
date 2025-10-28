@@ -75,6 +75,40 @@ export const bookService = {
             }
             return [];
         }
+    },
+
+    // Tạo sách mới
+    async createBook(formData: FormData): Promise<Sach> {
+        try {
+            const response = await apiClient.post<APIResponse<Sach>>(
+                '/sach/add-sach',
+                formData,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                }
+            );
+            return response.data.data!;
+        } catch (error: any) {
+            if (error.response?.data?.message) {
+                throw new Error(error.response.data.message);
+            }
+            throw new Error('Không thể thêm sách. Vui lòng thử lại.');
+        }
+    },
+
+    // Lấy tất cả sách (cho quản lý)
+    async getAllBooks(): Promise<Sach[]> {
+        try {
+            const response = await apiClient.get<APIResponse<Sach[]>>('/sach/get-all-sach');
+            return response.data.data || [];
+        } catch (error: any) {
+            if (error.response?.data?.message) {
+                throw new Error(error.response.data.message);
+            }
+            throw new Error('Không thể tải danh sách sách');
+        }
     }
 };
 

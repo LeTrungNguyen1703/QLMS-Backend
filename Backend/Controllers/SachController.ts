@@ -9,7 +9,15 @@ import {AppError, catchAsync} from "../Middleware/ErrorHandler";
 // Thêm sách
 export const addSach = catchAsync(async (req: ISachRequestExtended, res: Response<APIResponse<SachResponse>>) => {
     const sachData = req.body;
-    const dto = plainToInstance(SachRequest, sachData);
+
+    // Xử lý file upload nếu có
+    if (req.file) {
+        sachData.HinhAnh = req.file.filename;
+    }
+
+    const dto = plainToInstance(SachRequest, sachData, {
+        enableImplicitConversion: true
+    });
 
     const sach = await SachService.createSach(dto);
 
@@ -22,7 +30,15 @@ export const addSach = catchAsync(async (req: ISachRequestExtended, res: Respons
 // Update sách
 export const updateSach = catchAsync(async (req: ISachRequestExtended, res: Response) => {
     const sachData = req.body;
-    const dto = plainToInstance(SachRequest, sachData);
+
+    // Xử lý file upload nếu có
+    if (req.file) {
+        sachData.HinhAnh = req.file.filename;
+    }
+
+    const dto = plainToInstance(SachRequest, sachData, {
+        enableImplicitConversion: true
+    });
     const sach = await SachService.updateSach(req.params.id, dto);
 
     if (!sach) {

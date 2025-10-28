@@ -117,7 +117,7 @@
           <table class="table table-hover">
             <thead>
               <tr>
-                <th>Mã sách</th>
+                <th>Tên Sách</th>
                 <th>Mã đọc giả</th>
                 <th>Ngày mượn</th>
                 <th>Ngày trả dự kiến</th>
@@ -127,8 +127,8 @@
             </thead>
             <tbody>
               <tr v-for="item in danhSachDangMuon" :key="item._id">
-                <td><strong>{{ item.MaSach }}</strong></td>
-                <td>{{ item.MSDG }}</td>
+                <td><strong>{{ item.MaSach.TenSach }}</strong></td>
+                <td>{{ item.MaDocGia.TenDocGia }}</td>
                 <td>{{ formatDate(item.NgayMuon) }}</td>
                 <td>{{ formatDate(item.NgayTra) }}</td>
                 <td>
@@ -318,7 +318,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { Modal } from 'bootstrap';
-import {type SachMuonItem, tinhTrangSachMuonService} from "../services/tinhTrangSachMuonService.ts";
+import {type SachMuonItem, tinhTrangSachMuonService} from "../../services/tinhTrangSachMuonService.ts";
 
 const activeTab = ref<'cho-duyet' | 'dang-muon' | 'qua-han' | 'da-tra'>('cho-duyet');
 const isLoading = ref(false);

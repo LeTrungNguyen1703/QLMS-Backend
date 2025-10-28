@@ -2,7 +2,20 @@ import { apiClient } from "./base-url";
 
 export interface SachMuonItem {
   _id: string;
-  MaSach: string;
+  MaSach: {
+    _id: string;
+    TenSach: string;
+    HinhAnh?: string;
+    DonGia: number;
+    TacGia: string;
+  };
+  MaDocGia: {
+    _id: string;
+    MaDocGia: string;
+    TenDocGia: string;
+    HoLot: string;
+    Ten: string;
+  };
   MSDG: string;
   NgayMuon: string;
   NgayTra: string;

@@ -32,16 +32,6 @@
               Chức năng
             </button>
           </li>
-          <li class="nav-item" role="presentation">
-            <button
-                :class="['nav-link', activeTab === 'muon-tra' ? 'active' : '']"
-                @click="activeTab = 'muon-tra'"
-                type="button"
-            >
-              <i class="bi bi-arrow-left-right me-1"></i>
-              Quản lý mượn/trả sách
-            </button>
-          </li>
         </ul>
 
         <!-- Tab Content -->
@@ -59,7 +49,7 @@
                 </div>
               </div>
               <div class="col-md-4">
-                <div class="card feature-card">
+                <div class="card feature-card" @click="activeTab = 'them-sach'">
                   <div class="card-body text-center">
                     <i class="bi bi-book-half fs-1 text-success"></i>
                     <h6 class="mt-2">Quản lý sách</h6>
@@ -101,17 +91,16 @@
             </div>
           </div>
 
+          <!-- Quản lý sách Tab -->
+          <div v-show="activeTab === 'them-sach'">
+            <QuanLyThemSach/>
+          </div>
+
           <!-- Quản lý mượn trả sách Tab -->
           <div v-show="activeTab === 'muon-tra'">
             <QuanLySachMuon/>
           </div>
-        </div>
 
-        <div class="mt-4">
-          <button @click="logout" class="btn btn-outline-danger">
-            <i class="bi bi-box-arrow-right me-1"></i>
-            Đăng xuất
-          </button>
         </div>
       </div>
     </div>
@@ -122,10 +111,11 @@
 import {ref, onMounted} from 'vue'
 import {useRouter} from 'vue-router'
 import {authService} from '../../services/authService'
-import QuanLySachMuon from '../../components/QuanLySachMuon.vue'
+import QuanLyThemSach from "../../components/QuanLyThemSach.vue";
+import QuanLySachMuon from "../../components/QuanLySachMuon/QuanLySachMuon.vue";
 
 const router = useRouter()
-const activeTab = ref<'functions' | 'muon-tra'>('functions')
+const activeTab = ref<'functions' | 'muon-tra' | 'them-sach'>('functions')
 const userInfo = ref({
   userName: '',
   email: '',
@@ -150,11 +140,6 @@ onMounted(async () => {
     router.push('/auth/login')
   }
 })
-
-const logout = () => {
-  authService.logout()
-  router.push('/auth/login')
-}
 </script>
 
 <style scoped>

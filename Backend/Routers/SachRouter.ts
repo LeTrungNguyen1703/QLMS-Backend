@@ -2,6 +2,7 @@ import {Router} from "express";
 import {addSach, updateSach, getSach, deleteSach, getallSach} from "../Controllers/SachController";
 import TokenMiddleware from "../Middleware/Token";
 import {UserRole} from "../Enums/UserRole";
+import upload from "../Middleware/Multer";
 
 const routerSach = Router();
 
@@ -17,10 +18,12 @@ routerSach.get("/get-sach/:id",
 routerSach.post("/add-sach",
     TokenMiddleware.authenticate,
     TokenMiddleware.authorize(UserRole.ADMIN, UserRole.NHAN_VIEN),
+    upload.single('HinhAnh'),
     addSach);
 routerSach.put("/update-sach/:id",
     TokenMiddleware.authenticate,
     TokenMiddleware.authorize(UserRole.ADMIN, UserRole.NHAN_VIEN),
+    upload.single('HinhAnh'),
     updateSach);
 routerSach.delete("/delete-sach/:id",
     TokenMiddleware.authenticate,
