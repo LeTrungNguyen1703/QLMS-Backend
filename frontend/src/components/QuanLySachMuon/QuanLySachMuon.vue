@@ -68,43 +68,12 @@
           <i class="bi bi-info-circle me-2"></i>
           Không có yêu cầu mượn sách nào đang chờ duyệt
         </div>
-        <div v-else class="table-responsive">
-          <table class="table table-hover">
-            <thead>
-              <tr>
-                <th>Mã sách</th>
-                <th>Mã đọc giả</th>
-                <th>Ngày mượn</th>
-                <th>Ngày trả dự kiến</th>
-                <th>Thao tác</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="item in danhSachChoDuyet" :key="item._id">
-                <td><strong>{{ item.MaSach }}</strong></td>
-                <td>{{ item.MSDG }}</td>
-                <td>{{ formatDate(item.NgayMuon) }}</td>
-                <td>{{ formatDate(item.NgayTra) }}</td>
-                <td>
-                  <button
-                    class="btn btn-sm btn-success me-2"
-                    @click="xacNhanChoMuon(item._id)"
-                    title="Duyệt cho mượn"
-                  >
-                    <i class="bi bi-check-lg"></i>
-                  </button>
-                  <button
-                    class="btn btn-sm btn-danger"
-                    @click="tuChoiChoMuon(item._id)"
-                    title="Từ chối"
-                  >
-                    <i class="bi bi-x-lg"></i>
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        <ChoDuyetTable
+          v-else
+          :danh-sach="danhSachChoDuyet"
+          @xac-nhan="xacNhanChoMuon"
+          @tu-choi="tuChoiChoMuon"
+        />
       </div>
 
       <!-- Đang mượn -->
@@ -113,48 +82,11 @@
           <i class="bi bi-info-circle me-2"></i>
           Không có sách nào đang được mượn
         </div>
-        <div v-else class="table-responsive">
-          <table class="table table-hover">
-            <thead>
-              <tr>
-                <th>Tên Sách</th>
-                <th>Mã đọc giả</th>
-                <th>Ngày mượn</th>
-                <th>Ngày trả dự kiến</th>
-                <th>Trạng thái</th>
-                <th>Thao tác</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="item in danhSachDangMuon" :key="item._id">
-                <td><strong>{{ item.MaSach.TenSach }}</strong></td>
-                <td>{{ item.MaDocGia.TenDocGia }}</td>
-                <td>{{ formatDate(item.NgayMuon) }}</td>
-                <td>{{ formatDate(item.NgayTra) }}</td>
-                <td>
-                  <span
-                    :class="[
-                      'badge',
-                      isOverdue(item.NgayTra) ? 'bg-danger' : 'bg-success',
-                    ]"
-                  >
-                    {{ isOverdue(item.NgayTra) ? 'Quá hạn' : 'Đúng hạn' }}
-                  </span>
-                </td>
-                <td>
-                  <button
-                    class="btn btn-sm btn-primary"
-                    @click="xacNhanDaTra(item._id)"
-                    title="Xác nhận đã trả"
-                  >
-                    <i class="bi bi-check-circle me-1"></i>
-                    Đã trả
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        <DangMuonTable
+          v-else
+          :danh-sach="danhSachDangMuon"
+          @xac-nhan-tra="xacNhanDaTra"
+        />
       </div>
 
       <!-- Quá hạn -->
@@ -163,57 +95,12 @@
           <i class="bi bi-check-circle me-2"></i>
           Không có sách nào quá hạn
         </div>
-        <div v-else class="table-responsive">
-          <table class="table table-hover">
-            <thead>
-              <tr>
-                <th>Mã sách</th>
-                <th>Mã đọc giả</th>
-                <th>Ngày mượn</th>
-                <th>Ngày trả dự kiến</th>
-                <th>Số ngày quá hạn</th>
-                <th>Phạt</th>
-                <th>Thao tác</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="item in danhSachQuaHan" :key="item._id">
-                <td><strong>{{ item.MaSach }}</strong></td>
-                <td>{{ item.MSDG }}</td>
-                <td>{{ formatDate(item.NgayMuon) }}</td>
-                <td>{{ formatDate(item.NgayTra) }}</td>
-                <td>
-                  <span class="badge bg-danger">
-                    {{ calculateOverdueDays(item.NgayTra) }} ngày
-                  </span>
-                </td>
-                <td>
-                  <span v-if="item.PhatQuaHan" class="text-danger fw-bold">
-                    {{ formatCurrency(item.PhatQuaHan.SoTienPhat) }}
-                  </span>
-                  <span v-else class="text-muted">Chưa phạt</span>
-                </td>
-                <td>
-                  <button
-                    v-if="!item.PhatQuaHan"
-                    class="btn btn-sm btn-warning me-2"
-                    @click="showPhatModal(item)"
-                    title="Phạt quá hạn"
-                  >
-                    <i class="bi bi-currency-dollar"></i>
-                  </button>
-                  <button
-                    class="btn btn-sm btn-primary"
-                    @click="xacNhanDaTra(item._id)"
-                    title="Xác nhận đã trả"
-                  >
-                    <i class="bi bi-check-circle"></i>
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        <QuaHanTable
+          v-else
+          :danh-sach="danhSachQuaHan"
+          @show-phat-modal="showPhatModal"
+          @xac-nhan-tra="xacNhanDaTra"
+        />
       </div>
 
       <!-- Đã trả -->
@@ -222,35 +109,10 @@
           <i class="bi bi-info-circle me-2"></i>
           Chưa có sách nào được trả
         </div>
-        <div v-else class="table-responsive">
-          <table class="table table-hover">
-            <thead>
-              <tr>
-                <th>Mã sách</th>
-                <th>Mã đọc giả</th>
-                <th>Ngày mượn</th>
-                <th>Ngày trả</th>
-                <th>Phạt</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="item in danhSachDaTra" :key="item._id">
-                <td><strong>{{ item.MaSach }}</strong></td>
-                <td>{{ item.MSDG }}</td>
-                <td>{{ formatDate(item.NgayMuon) }}</td>
-                <td>{{ formatDate(item.NgayTra) }}</td>
-                <td>
-                  <span v-if="item.PhatQuaHan" class="text-danger fw-bold">
-                    {{ formatCurrency(item.PhatQuaHan.SoTienPhat) }}
-                  </span>
-                  <span v-else class="text-success">
-                    <i class="bi bi-check-circle"></i> Không phạt
-                  </span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        <DaTraTable
+          v-else
+          :danh-sach="danhSachDaTra"
+        />
       </div>
     </div>
 
@@ -319,6 +181,10 @@
 import { ref, onMounted } from 'vue';
 import { Modal } from 'bootstrap';
 import {type SachMuonItem, tinhTrangSachMuonService} from "../../services/tinhTrangSachMuonService.ts";
+import ChoDuyetTable from './ChoDuyetTable.vue';
+import DangMuonTable from './DangMuonTable.vue';
+import QuaHanTable from './QuaHanTable.vue';
+import DaTraTable from './DaTraTable.vue';
 
 const activeTab = ref<'cho-duyet' | 'dang-muon' | 'qua-han' | 'da-tra'>('cho-duyet');
 const isLoading = ref(false);
@@ -447,27 +313,11 @@ const apDungPhat = async () => {
   }
 };
 
-const formatDate = (dateString: string): string => {
-  const date = new Date(dateString);
-  return date.toLocaleDateString('vi-VN');
-};
-
-const isOverdue = (ngayTra: string): boolean => {
-  return new Date(ngayTra).getTime() < Date.now();
-};
-
 const calculateOverdueDays = (ngayTra: string): number => {
   const dueDate = new Date(ngayTra);
   const now = new Date();
   const diff = now.getTime() - dueDate.getTime();
   return Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)));
-};
-
-const formatCurrency = (amount: number): string => {
-  return new Intl.NumberFormat('vi-VN', {
-    style: 'currency',
-    currency: 'VND',
-  }).format(amount);
 };
 </script>
 
