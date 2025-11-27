@@ -20,13 +20,23 @@ class SachRepository {
         return toPlainObject(savedSach);
     }
 
-    async update(maSach: string, sachData: Partial<ISach>): Promise<ISach | null> {
-        const updatedSach = await Sach.findByIdAndUpdate(maSach, sachData, {new: true});
+    async update(id: string, sachData: Partial<ISach>): Promise<ISach | null> {
+        // Use $set to only update provided fields, and populate IdNxb
+        const updatedSach = await Sach.findByIdAndUpdate(
+            id,
+            { $set: sachData },
+            { new: true, runValidators: true }
+        ).populate('IdNxb');
         return toPlainObject(updatedSach);
     }
 
     async delete(MaSach: string): Promise<ISach | null> {
         const deletedSach = await Sach.findOneAndDelete({MaSach});
+        return toPlainObject(deletedSach);
+    }
+
+    async deleteById(id: string): Promise<ISach | null> {
+        const deletedSach = await Sach.findByIdAndDelete(id);
         return toPlainObject(deletedSach);
     }
 

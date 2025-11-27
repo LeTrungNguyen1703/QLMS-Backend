@@ -109,6 +109,38 @@ export const bookService = {
             }
             throw new Error('Không thể tải danh sách sách');
         }
+    },
+
+    // Cập nhật thông tin sách
+    async updateBook(id: string, formData: FormData): Promise<void> {
+        try {
+            await apiClient.put(
+                `/sach/update-sach/${id}`,
+                formData,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                }
+            );
+        } catch (error: any) {
+            if (error.response?.data?.message) {
+                throw new Error(error.response.data.message);
+            }
+            throw new Error('Không thể cập nhật sách. Vui lòng thử lại.');
+        }
+    },
+
+    // Xóa sách
+    async deleteBook(id: string): Promise<void> {
+        try {
+            await apiClient.delete(`/sach/delete-sach/${id}`);
+        } catch (error: any) {
+            if (error.response?.data?.message) {
+                throw new Error(error.response.data.message);
+            }
+            throw new Error('Không thể xóa sách. Vui lòng thử lại.');
+        }
     }
 };
 

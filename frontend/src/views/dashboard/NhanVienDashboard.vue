@@ -89,7 +89,7 @@
 
           <!-- Quản lý sách Tab -->
           <div v-show="activeTab === 'them-sach'">
-            <QuanLyThemSach/>
+            <QuanLySach/>
           </div>
 
           <!-- Quản lý mượn trả sách Tab -->
@@ -107,7 +107,7 @@
 import {ref, onMounted} from 'vue'
 import {useRouter} from 'vue-router'
 import {authService} from '../../services/authService'
-import QuanLyThemSach from "../../components/QuanLyThemSach.vue";
+import QuanLySach from "../../components/QuanLySach/QuanLySach.vue";
 import QuanLySachMuon from "../../components/QuanLySachMuon/QuanLySachMuon.vue";
 
 const router = useRouter()

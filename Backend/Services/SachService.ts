@@ -39,36 +39,37 @@ class SachService {
     }
 
     async updateSach(id: string, sachData: Partial<SachRequest>): Promise<SachResponse | null> {
-        // Check if sach exists with this MaSach
-        const existingSach = await SachRepository.findByMaSach(id);
+        // Check if sach exists with this _id (MongoDB ObjectId)
+        const existingSach = await SachRepository.findById(id);
 
         if (!existingSach) {
             throw new AppError("Sách không tồn tại", 404);
         }
 
-        const sach = new Sach(sachData);
-        const updatedSach = await SachRepository.update(id, sach);
+        // Use the _id to update (not MaSach)
+        // Cast to any to allow partial updates with mixed types
+        const updatedSach = await SachRepository.update(id, sachData as any);
 
         if (!updatedSach) {
-            return null;
+            throw new AppError("Cập nhật sách không thành công", 400);
         }
 
         return this.mapToSachResponse(updatedSach);
     }
 
     async deleteSach(id: string): Promise<SachResponse | null> {
-        // Check if sach exists with this MaSach
-        const existingSach = await SachRepository.findByMaSach(id);
+        // Check if sach exists with this _id (MongoDB ObjectId)
+        const existingSach = await SachRepository.findById(id);
 
         if (!existingSach) {
             throw new AppError("Sách không tồn tại", 404);
         }
 
-        // Use MaSach to delete
-        const deletedSach = await SachRepository.delete(id);
+        // Delete by _id
+        const deletedSach = await SachRepository.deleteById(id);
 
         if (!deletedSach) {
-            return null;
+            throw new AppError("Xóa sách không thành công", 400);
         }
 
         return this.mapToSachResponse(deletedSach);

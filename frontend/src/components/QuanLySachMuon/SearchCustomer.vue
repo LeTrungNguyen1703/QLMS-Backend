@@ -139,9 +139,8 @@
                 v-for="loan in filteredBooks"
                 :key="loan._id"
                 class="book-loan-card"
-                @click="showBookDetail(loan)"
               >
-                <div class="book-image-container">
+                <div class="book-image-container" @click="showBookDetail(loan)">
                   <img
                     :src="loan.MaSach.HinhAnh || '/placeholder-book.jpg'"
                     :alt="loan.MaSach.TenSach"
@@ -152,7 +151,7 @@
                   </span>
                 </div>
                 <div class="book-loan-info">
-                  <h6 class="book-title">{{ loan.MaSach.TenSach }}</h6>
+                  <h6 class="book-title" @click="showBookDetail(loan)">{{ loan.MaSach.TenSach }}</h6>
                   <p class="book-author">
                     <i class="bi bi-person-fill me-1"></i>
                     {{ loan.MaSach.TacGia }}
@@ -174,6 +173,18 @@
                   <div v-if="loan.PhatQuaHan" class="fine-info">
                     <i class="bi bi-cash-stack me-1"></i>
                     Phạt: {{ formatPrice(loan.PhatQuaHan.SoTienPhat) }}
+                  </div>
+
+                  <!-- Action Button -->
+                  <div class="book-actions">
+                    <button
+                      class="btn btn-sm btn-outline-primary w-100"
+                      @click.stop="showBookDetail(loan)"
+                      title="Xem chi tiết"
+                    >
+                      <i class="bi bi-eye"></i>
+                      Xem chi tiết
+                    </button>
                   </div>
                 </div>
               </div>
@@ -664,6 +675,55 @@ const closeBookDetail = () => {
   margin-top: 0.5rem;
   display: flex;
   align-items: center;
+}
+
+.book-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+.book-actions .btn {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 6px;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  cursor: pointer;
+}
+
+.btn-outline-primary {
+  border: 1px solid #3b82f6;
+  color: #3b82f6;
+  background: white;
+}
+
+.btn-outline-primary:hover {
+  background: #3b82f6;
+  color: white;
+}
+
+.w-100 {
+  width: 100%;
+}
+
+.book-title {
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.book-title:hover {
+  color: #3b82f6;
+}
+
+.book-image-container {
+  cursor: pointer;
 }
 
 /* Responsive */
