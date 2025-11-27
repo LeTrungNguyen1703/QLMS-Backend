@@ -4,6 +4,16 @@
     <ul class="nav nav-pills mb-4" role="tablist">
       <li class="nav-item" role="presentation">
         <button
+            :class="['nav-link', activeTab === 'tim-kiem' ? 'active' : '']"
+            @click="activeTab = 'tim-kiem'"
+            type="button"
+        >
+          <i class="bi bi-search me-1"></i>
+          Tìm kiếm
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button
             :class="['nav-link', activeTab === 'cho-duyet' ? 'active' : '']"
             @click="activeTab = 'cho-duyet'"
             type="button"
@@ -62,6 +72,11 @@
 
     <!-- Tab Content -->
     <div v-else class="tab-content">
+      <!-- Tìm kiếm -->
+      <div v-show="activeTab === 'tim-kiem'">
+        <SearchCustomer />
+      </div>
+
       <!-- Chờ duyệt -->
       <div v-show="activeTab === 'cho-duyet'">
         <div v-if="danhSachChoDuyet.length === 0" class="alert alert-info">
@@ -197,8 +212,9 @@ import DangMuonTable from './DangMuonTable.vue';
 import QuaHanTable from './QuaHanTable.vue';
 import DaTraTable from './DaTraTable.vue';
 import BookDetailModal from './BookDetailModal.vue';
+import SearchCustomer from './SearchCustomer.vue';
 
-const activeTab = ref<'cho-duyet' | 'dang-muon' | 'qua-han' | 'da-tra'>('cho-duyet');
+const activeTab = ref<'tim-kiem' | 'cho-duyet' | 'dang-muon' | 'qua-han' | 'da-tra'>('tim-kiem');
 const isLoading = ref(false);
 
 const danhSachChoDuyet = ref<SachMuonItem[]>([]);

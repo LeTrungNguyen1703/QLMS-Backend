@@ -78,8 +78,15 @@ export const tinhTrangSachMuonService = {
   // Từ chối cho mượn sách
   async tuChoiChoMuon(id: string, lyDo?: string): Promise<void> {
     await apiClient.delete(`/tinhtrangsachmuon/tu-choi-cho-muon-sach/${id}`, {
-      data: { lyDo },
+      data: {lyDo},
     });
   },
-};
 
+  // Search books by customer ID or name
+  async searchByCustomer(query: string): Promise<any> {
+    const response = await apiClient.get(`/tinhtrangsachmuon/search-by-customer`, {
+      params: {query}
+    });
+    return response.data.data;
+  },
+}

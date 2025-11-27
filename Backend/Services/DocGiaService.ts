@@ -32,6 +32,14 @@ class DocGiaService {
         return this.mapToDocGiaResponse(docGia);
     }
 
+    async searchDocGia(searchQuery: string): Promise<DocGiaResponse> {
+        const docGia = await DocGiaRepository.searchDocGia(searchQuery);
+        if (!docGia) {
+            throw new AppError("Không tìm thấy độc giả với thông tin: " + searchQuery, 404);
+        }
+        return this.mapToDocGiaResponse(docGia);
+    }
+
     async createDocGia(docGiaData: DocGiaRequest): Promise<DocGiaResponse> {
         const error = await validate(docGiaData);
         

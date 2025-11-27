@@ -41,7 +41,7 @@ router.get("/get-all-muonsach",
 // Lấy thông tin mượn sách theo độc giả
 router.get("/get-by-docgia/:docgiaId", 
     TokenMiddleware.authenticate,
-    TokenMiddleware.authorizeOwner
+    TokenMiddleware.authorize(UserRole.ADMIN, UserRole.NHAN_VIEN, UserRole.DOC_GIA)
     ,getMuonSachByDocGiaId);
 
 router.get("/get-by/:sachId",

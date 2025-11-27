@@ -62,3 +62,19 @@ export const getallDG = catchAsync(async (req: Request, res: Response<APIRespons
         data: docGias
     });
 });
+
+// Tìm kiếm đọc giả theo mã hoặc tên
+export const searchDocGia = catchAsync(async (req: Request, res: Response<APIResponse<DocGiaResponse>>) => {
+    const { query } = req.query;
+
+    if (!query || typeof query !== 'string') {
+        throw new AppError("Vui lòng nhập thông tin tìm kiếm", 400);
+    }
+
+    const docGia = await DocGiaService.searchDocGia(query);
+    return res.status(200).json({
+        message: "Tìm kiếm đọc giả thành công",
+        data: docGia
+    });
+});
+

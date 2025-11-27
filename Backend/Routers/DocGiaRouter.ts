@@ -1,5 +1,5 @@
 import { Router } from "express";
-import {addDG, updateDG, getDocGiaByCustomId, deleteDG, getallDG, getDocGiaById} from "../Controllers/DocGiaController";
+import {addDG, updateDG, getDocGiaByCustomId, deleteDG, getallDG, getDocGiaById, searchDocGia} from "../Controllers/DocGiaController";
 import TokenMiddleware from "../Middleware/Token";
 import {UserRole} from "../Enums/UserRole";
 
@@ -9,7 +9,13 @@ const routerDocGia = Router();
 routerDocGia.post("/add-dg", addDG);
 
 // Routes cần xác thực - chỉ Admin hoặc Nhân viên mới được truy cập
-routerDocGia.get("/get-all-dg", 
+routerDocGia.get("/search",
+    TokenMiddleware.authenticate,
+    TokenMiddleware.authorize(UserRole.ADMIN, UserRole.NHAN_VIEN),
+    searchDocGia
+);
+
+routerDocGia.get("/get-all-dg",
     TokenMiddleware.authenticate, 
     TokenMiddleware.authorize(UserRole.ADMIN, UserRole.NHAN_VIEN), 
     getallDG

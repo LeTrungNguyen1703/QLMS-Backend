@@ -25,7 +25,18 @@ class DocGiaRepository extends BasicCRUDRepository<IDocgia> {
         return toPlainObject(docGia);
     }
 
-   
+    async searchDocGia(searchQuery: string): Promise<IDocgia | null> {
+        // Search by MaDocGia (exact match) or by name (partial match)
+        const docGia = await DOCGIA.findOne({
+            $or: [
+                { MaDocGia: searchQuery },
+                { HoLot: { $regex: searchQuery, $options: 'i' } },
+                { Ten: { $regex: searchQuery, $options: 'i' } }
+            ]
+        });
+        return toPlainObject(docGia);
+    }
+
 }
 
 export default new DocGiaRepository();
