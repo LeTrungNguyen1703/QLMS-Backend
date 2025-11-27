@@ -28,7 +28,11 @@
     <div class="tab-content">
       <!-- Danh sách sách -->
       <div v-show="activeTab === 'danh-sach'">
-        <DanhSachSach @edit="handleEdit" @refresh="loadBooks" />
+        <DanhSachSach
+          :key="refreshKey"
+          @edit="handleEdit"
+          @refresh="refreshBookList"
+        />
       </div>
 
       <!-- Thêm sách mới -->
@@ -56,6 +60,7 @@ import EditBookModal from './EditBookModal.vue';
 const activeTab = ref<'danh-sach' | 'them-sach'>('danh-sach');
 const showEditModal = ref(false);
 const selectedBook = ref<any>(null);
+const refreshKey = ref(0); // Key to force refresh DanhSachSach component
 
 const handleEdit = (book: any) => {
   console.log('QuanLySach.handleEdit - Received book:', book);
@@ -72,18 +77,16 @@ const closeEditModal = () => {
 
 const handleAddSuccess = () => {
   activeTab.value = 'danh-sach';
-  loadBooks();
+  refreshBookList();
 };
 
 const handleUpdateSuccess = () => {
-  loadBooks();
+  refreshBookList();
 };
 
-const loadBooks = () => {
-  // This will trigger refresh in DanhSachSach component
-  if (activeTab.value === 'danh-sach') {
-    window.location.reload(); // Simple refresh, or use a more elegant state management
-  }
+const refreshBookList = () => {
+  // Force refresh DanhSachSach component by changing key
+  refreshKey.value++;
 };
 </script>
 
