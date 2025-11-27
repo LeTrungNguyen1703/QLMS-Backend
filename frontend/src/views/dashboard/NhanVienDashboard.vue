@@ -1,17 +1,13 @@
 <template>
   <div class="container mt-5">
     <div class="card shadow">
-      <div class="card-header bg-primary text-white">
+      <div class="card-header bg-info text-white">
         <h4 class="mb-0">
           <i class="bi bi-briefcase me-2"></i>
           Dashboard Nhân viên
         </h4>
       </div>
       <div class="card-body">
-        <div class="alert alert-success">
-          <i class="bi bi-check-circle me-2"></i>
-          Chào mừng bạn đã đăng nhập thành công với tư cách <strong>Nhân viên</strong>!
-        </div>
 
         <h5>Thông tin tài khoản</h5>
         <ul class="list-unstyled">

@@ -1,7 +1,6 @@
 import "reflect-metadata"; // This import is required for class-transformer and class-validator decorators
 import express, {Request, Response, NextFunction} from "express";
 import helmet from "helmet";
-import cors from "cors";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import morgan from "morgan";
@@ -22,7 +21,6 @@ dotenv.config();
 const app = express();
 
 app.use(helmet());
-app.use(cors());
 app.use(morgan('combined')); // HTTP request logger
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));

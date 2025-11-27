@@ -4,9 +4,9 @@
     <ul class="nav nav-pills mb-4" role="tablist">
       <li class="nav-item" role="presentation">
         <button
-          :class="['nav-link', activeTab === 'cho-duyet' ? 'active' : '']"
-          @click="activeTab = 'cho-duyet'"
-          type="button"
+            :class="['nav-link', activeTab === 'cho-duyet' ? 'active' : '']"
+            @click="activeTab = 'cho-duyet'"
+            type="button"
         >
           <i class="bi bi-clock-history me-1"></i>
           Chờ duyệt
@@ -17,9 +17,9 @@
       </li>
       <li class="nav-item" role="presentation">
         <button
-          :class="['nav-link', activeTab === 'dang-muon' ? 'active' : '']"
-          @click="activeTab = 'dang-muon'"
-          type="button"
+            :class="['nav-link', activeTab === 'dang-muon' ? 'active' : '']"
+            @click="activeTab = 'dang-muon'"
+            type="button"
         >
           <i class="bi bi-book me-1"></i>
           Đang mượn
@@ -30,9 +30,9 @@
       </li>
       <li class="nav-item" role="presentation">
         <button
-          :class="['nav-link', activeTab === 'qua-han' ? 'active' : '']"
-          @click="activeTab = 'qua-han'"
-          type="button"
+            :class="['nav-link', activeTab === 'qua-han' ? 'active' : '']"
+            @click="activeTab = 'qua-han'"
+            type="button"
         >
           <i class="bi bi-exclamation-triangle me-1"></i>
           Quá hạn
@@ -43,9 +43,9 @@
       </li>
       <li class="nav-item" role="presentation">
         <button
-          :class="['nav-link', activeTab === 'da-tra' ? 'active' : '']"
-          @click="activeTab = 'da-tra'"
-          type="button"
+            :class="['nav-link', activeTab === 'da-tra' ? 'active' : '']"
+            @click="activeTab = 'da-tra'"
+            type="button"
         >
           <i class="bi bi-check-circle me-1"></i>
           Đã trả
@@ -69,10 +69,10 @@
           Không có yêu cầu mượn sách nào đang chờ duyệt
         </div>
         <ChoDuyetTable
-          v-else
-          :danh-sach="danhSachChoDuyet"
-          @xac-nhan="xacNhanChoMuon"
-          @tu-choi="tuChoiChoMuon"
+            v-else
+            :danh-sach="danhSachChoDuyet"
+            @xac-nhan="xacNhanChoMuon"
+            @tu-choi="tuChoiChoMuon"
         />
       </div>
 
@@ -83,9 +83,9 @@
           Không có sách nào đang được mượn
         </div>
         <DangMuonTable
-          v-else
-          :danh-sach="danhSachDangMuon"
-          @xac-nhan-tra="xacNhanDaTra"
+            v-else
+            :danh-sach="danhSachDangMuon"
+            @xac-nhan-tra="xacNhanDaTra"
         />
       </div>
 
@@ -96,10 +96,10 @@
           Không có sách nào quá hạn
         </div>
         <QuaHanTable
-          v-else
-          :danh-sach="danhSachQuaHan"
-          @show-phat-modal="showPhatModal"
-          @xac-nhan-tra="xacNhanDaTra"
+            v-else
+            :danh-sach="danhSachQuaHan"
+            @show-phat-modal="showPhatModal"
+            @xac-nhan-tra="xacNhanDaTra"
         />
       </div>
 
@@ -110,19 +110,19 @@
           Chưa có sách nào được trả
         </div>
         <DaTraTable
-          v-else
-          :danh-sach="danhSachDaTra"
+            v-else
+            :danh-sach="danhSachDaTra"
         />
       </div>
     </div>
 
     <!-- Modal phạt quá hạn -->
     <div
-      class="modal fade"
-      id="phatModal"
-      tabindex="-1"
-      aria-labelledby="phatModalLabel"
-      aria-hidden="true"
+        class="modal fade"
+        id="phatModal"
+        tabindex="-1"
+        aria-labelledby="phatModalLabel"
+        aria-hidden="true"
     >
       <div class="modal-dialog">
         <div class="modal-content">
@@ -132,15 +132,15 @@
               Phạt mượn sách quá hạn
             </h5>
             <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
             ></button>
           </div>
           <div class="modal-body">
             <p>
-              <strong>Mã sách:</strong> {{ selectedItem?.MaSach }}<br />
+              <strong>Mã sách:</strong> {{ selectedItem?.MaSach }}<br/>
               <strong>Số ngày quá hạn:</strong>
               <span class="text-danger">
                 {{ selectedItem ? calculateOverdueDays(selectedItem.NgayTra) : 0 }} ngày
@@ -149,11 +149,11 @@
             <div class="mb-3">
               <label class="form-label">Số tiền phạt (VNĐ)</label>
               <input
-                v-model.number="soTienPhat"
-                type="number"
-                class="form-control"
-                placeholder="Nhập số tiền phạt"
-                min="0"
+                  v-model.number="soTienPhat"
+                  type="number"
+                  class="form-control"
+                  placeholder="Nhập số tiền phạt"
+                  min="0"
               />
             </div>
           </div>
@@ -162,10 +162,10 @@
               Hủy
             </button>
             <button
-              type="button"
-              class="btn btn-warning"
-              @click="apDungPhat"
-              :disabled="!soTienPhat || soTienPhat <= 0"
+                type="button"
+                class="btn btn-warning"
+                @click="apDungPhat"
+                :disabled="!soTienPhat || soTienPhat <= 0"
             >
               <i class="bi bi-check-lg me-1"></i>
               Áp dụng phạt
@@ -178,8 +178,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import { Modal } from 'bootstrap';
+import {ref, onMounted} from 'vue';
+import {Modal} from 'bootstrap';
 import {type SachMuonItem, tinhTrangSachMuonService} from "../../services/tinhTrangSachMuonService.ts";
 import ChoDuyetTable from './ChoDuyetTable.vue';
 import DangMuonTable from './DangMuonTable.vue';
@@ -333,7 +333,7 @@ const calculateOverdueDays = (ngayTra: string): number => {
 }
 
 .nav-pills .nav-link.active {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #667eea 0%, #f8f8f8 100%);
 }
 
 .table-responsive {

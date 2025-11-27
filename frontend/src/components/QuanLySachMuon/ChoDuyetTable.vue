@@ -12,10 +12,7 @@
       </thead>
       <tbody>
         <tr v-for="item in danhSach" :key="item._id">
-          <td><strong>{{ item.MaSach }}</strong></td>
-          <td>{{ item.MSDG }}</td>
-          <td>{{ formatDate(item.NgayMuon) }}</td>
-          <td>{{ formatDate(item.NgayTra) }}</td>
+          <SachItemInDanhSachSach :item="item"/>
           <td>
             <button
               class="btn btn-sm btn-success me-2"
@@ -40,6 +37,7 @@
 
 <script setup lang="ts">
 import type { SachMuonItem } from '../../services/tinhTrangSachMuonService';
+import SachItemInDanhSachSach from "./SachItemInDanhSachSach.vue";
 
 defineProps<{
   danhSach: SachMuonItem[];
