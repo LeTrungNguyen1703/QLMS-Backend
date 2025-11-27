@@ -8,6 +8,7 @@
           <th>Ngày mượn</th>
           <th>Ngày trả</th>
           <th>Phạt</th>
+          <th>Chi tiết</th>
         </tr>
       </thead>
       <tbody>
@@ -21,6 +22,15 @@
               <i class="bi bi-check-circle"></i> Không phạt
             </span>
           </td>
+          <td>
+            <button
+              class="btn btn-sm btn-info"
+              @click="$emit('show-detail', item)"
+              title="Xem chi tiết"
+            >
+              <i class="bi bi-eye"></i>
+            </button>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -33,6 +43,10 @@ import SachItemInDanhSachSach from "./SachItemInDanhSachSach.vue";
 
 defineProps<{
   danhSach: SachMuonItem[];
+}>();
+
+defineEmits<{
+  (e: 'show-detail', item: SachMuonItem): void;
 }>();
 
 const formatCurrency = (amount: number): string => {

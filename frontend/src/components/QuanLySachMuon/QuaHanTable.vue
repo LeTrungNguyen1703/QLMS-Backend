@@ -9,6 +9,7 @@
           <th>Ngày trả dự kiến</th>
           <th>Số ngày quá hạn</th>
           <th>Phạt</th>
+          <th>Chi tiết</th>
           <th>Thao tác</th>
         </tr>
       </thead>
@@ -25,6 +26,15 @@
               {{ formatCurrency(item.PhatQuaHan.SoTienPhat) }}
             </span>
             <span v-else class="text-muted">Chưa phạt</span>
+          </td>
+          <td>
+            <button
+              class="btn btn-sm btn-info"
+              @click="$emit('show-detail', item)"
+              title="Xem chi tiết"
+            >
+              <i class="bi bi-eye"></i>
+            </button>
           </td>
           <td>
             <button
@@ -60,6 +70,7 @@ defineProps<{
 defineEmits<{
   (e: 'show-phat-modal', item: SachMuonItem): void;
   (e: 'xac-nhan-tra', id: string): void;
+  (e: 'show-detail', item: SachMuonItem): void;
 }>();
 
 const calculateOverdueDays = (ngayTra: string): number => {

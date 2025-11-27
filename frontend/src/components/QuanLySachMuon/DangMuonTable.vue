@@ -9,6 +9,7 @@
         <th>Ngày mượn</th>
         <th>Ngày trả dự kiến</th>
         <th>Trạng thái</th>
+        <th>Chi tiết</th>
         <th>Thao tác</th>
       </tr>
       </thead>
@@ -24,6 +25,15 @@
             >
               {{ isOverdue(item.NgayTra) ? 'Quá hạn' : 'Đúng hạn' }}
             </span>
+        </td>
+        <td>
+          <button
+            class="btn btn-sm btn-info"
+            @click="$emit('show-detail', item)"
+            title="Xem chi tiết"
+          >
+            <i class="bi bi-eye"></i>
+          </button>
         </td>
         <td>
           <button
@@ -51,6 +61,7 @@ defineProps<{
 
 defineEmits<{
   (e: 'xac-nhan-tra', id: string): void;
+  (e: 'show-detail', item: SachMuonItem): void;
 }>();
 
 const isOverdue = (ngayTra: string): boolean => {

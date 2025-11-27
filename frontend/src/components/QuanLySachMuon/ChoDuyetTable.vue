@@ -7,12 +7,22 @@
           <th>Mã đọc giả</th>
           <th>Ngày mượn</th>
           <th>Ngày trả dự kiến</th>
+          <th>Chi tiết</th>
           <th>Thao tác</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="item in danhSach" :key="item._id">
           <SachItemInDanhSachSach :item="item"/>
+          <td>
+            <button
+              class="btn btn-sm btn-info"
+              @click="$emit('show-detail', item)"
+              title="Xem chi tiết"
+            >
+              <i class="bi bi-eye"></i>
+            </button>
+          </td>
           <td>
             <button
               class="btn btn-sm btn-success me-2"
@@ -46,12 +56,8 @@ defineProps<{
 defineEmits<{
   (e: 'xac-nhan', id: string): void;
   (e: 'tu-choi', id: string): void;
+  (e: 'show-detail', item: SachMuonItem): void;
 }>();
-
-const formatDate = (dateString: string): string => {
-  const date = new Date(dateString);
-  return date.toLocaleDateString('vi-VN');
-};
 </script>
 
 <style scoped>

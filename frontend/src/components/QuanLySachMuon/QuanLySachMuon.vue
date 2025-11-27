@@ -73,6 +73,7 @@
             :danh-sach="danhSachChoDuyet"
             @xac-nhan="xacNhanChoMuon"
             @tu-choi="tuChoiChoMuon"
+            @show-detail="showBookDetail"
         />
       </div>
 
@@ -86,6 +87,7 @@
             v-else
             :danh-sach="danhSachDangMuon"
             @xac-nhan-tra="xacNhanDaTra"
+            @show-detail="showBookDetail"
         />
       </div>
 
@@ -100,6 +102,7 @@
             :danh-sach="danhSachQuaHan"
             @show-phat-modal="showPhatModal"
             @xac-nhan-tra="xacNhanDaTra"
+            @show-detail="showBookDetail"
         />
       </div>
 
@@ -112,9 +115,17 @@
         <DaTraTable
             v-else
             :danh-sach="danhSachDaTra"
+            @show-detail="showBookDetail"
         />
       </div>
     </div>
+
+    <!-- Book Detail Modal -->
+    <BookDetailModal
+      :show="showBookDetailModal"
+      :book="selectedBookDetail"
+      @close="closeBookDetail"
+    />
 
     <!-- Modal phạt quá hạn -->
     <div
@@ -185,6 +196,7 @@ import ChoDuyetTable from './ChoDuyetTable.vue';
 import DangMuonTable from './DangMuonTable.vue';
 import QuaHanTable from './QuaHanTable.vue';
 import DaTraTable from './DaTraTable.vue';
+import BookDetailModal from './BookDetailModal.vue';
 
 const activeTab = ref<'cho-duyet' | 'dang-muon' | 'qua-han' | 'da-tra'>('cho-duyet');
 const isLoading = ref(false);
@@ -196,6 +208,9 @@ const danhSachDaTra = ref<SachMuonItem[]>([]);
 
 const selectedItem = ref<SachMuonItem | null>(null);
 const soTienPhat = ref<number>(0);
+
+const showBookDetailModal = ref(false);
+const selectedBookDetail = ref<SachMuonItem | null>(null);
 
 let phatModalInstance: Modal | null = null;
 
@@ -318,6 +333,16 @@ const calculateOverdueDays = (ngayTra: string): number => {
   const now = new Date();
   const diff = now.getTime() - dueDate.getTime();
   return Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)));
+};
+
+const showBookDetail = (item: SachMuonItem) => {
+  selectedBookDetail.value = item;
+  showBookDetailModal.value = true;
+};
+
+const closeBookDetail = () => {
+  showBookDetailModal.value = false;
+  selectedBookDetail.value = null;
 };
 </script>
 
