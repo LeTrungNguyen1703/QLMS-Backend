@@ -17,6 +17,13 @@
 
             <!-- Body -->
             <div class="modal-body-custom">
+              <!-- Info Alert -->
+              <div class="alert alert-info mb-3">
+                <i class="bi bi-info-circle me-2"></i>
+                <strong>Gợi ý:</strong> Chỉ cần thay đổi những thông tin bạn muốn cập nhật.
+                Các thông tin khác sẽ giữ nguyên.
+              </div>
+
               <form @submit.prevent="handleSubmit">
                 <!-- Book Image Preview -->
                 <div class="form-group mb-3">
@@ -39,28 +46,26 @@
                 <!-- Book Name -->
                 <div class="form-group mb-3">
                   <label class="form-label">
-                    Tên sách <span class="text-danger">*</span>
+                    Tên sách
                   </label>
                   <input
                     v-model="formData.TenSach"
                     type="text"
                     class="form-control"
                     placeholder="Nhập tên sách"
-                    required
                   />
                 </div>
 
                 <!-- Author -->
                 <div class="form-group mb-3">
                   <label class="form-label">
-                    Tác giả <span class="text-danger">*</span>
+                    Tác giả
                   </label>
                   <input
                     v-model="formData.TacGia"
                     type="text"
                     class="form-control"
                     placeholder="Nhập tên tác giả"
-                    required
                   />
                 </div>
 
@@ -68,7 +73,7 @@
                 <div class="row mb-3">
                   <div class="col-md-6">
                     <label class="form-label">
-                      Đơn giá (VNĐ) <span class="text-danger">*</span>
+                      Đơn giá (VNĐ)
                     </label>
                     <input
                       v-model.number="formData.DonGia"
@@ -76,12 +81,11 @@
                       class="form-control"
                       placeholder="Nhập đơn giá"
                       min="0"
-                      required
                     />
                   </div>
                   <div class="col-md-6">
                     <label class="form-label">
-                      Số lượng <span class="text-danger">*</span>
+                      Số lượng
                     </label>
                     <input
                       v-model.number="formData.SoQuyen"
@@ -89,7 +93,6 @@
                       class="form-control"
                       placeholder="Nhập số lượng"
                       min="0"
-                      required
                     />
                   </div>
                 </div>
@@ -97,25 +100,23 @@
                 <!-- Publication Year -->
                 <div class="form-group mb-3">
                   <label class="form-label">
-                    Năm xuất bản <span class="text-danger">*</span>
+                    Năm xuất bản
                   </label>
                   <input
                     v-model="formData.NamXuatBan"
                     type="date"
                     class="form-control"
-                    required
                   />
                 </div>
 
                 <!-- Publisher -->
                 <div class="form-group mb-3">
                   <label class="form-label">
-                    Nhà xuất bản <span class="text-danger">*</span>
+                    Nhà xuất bản
                   </label>
                   <select
                     v-model="formData.IdNxb"
                     class="form-control"
-                    required
                   >
                     <option value="">-- Chọn nhà xuất bản --</option>
                     <option v-for="nxb in publishers" :key="nxb._id" :value="nxb._id">

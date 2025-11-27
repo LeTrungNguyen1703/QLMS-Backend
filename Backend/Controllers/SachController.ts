@@ -36,16 +36,16 @@ export const updateSach = catchAsync(async (req: ISachRequestExtended, res: Resp
         sachData.HinhAnh = req.file.filename;
     }
 
-    const dto = plainToInstance(SachRequest, sachData, {
-        enableImplicitConversion: true
-    });
-    const sach = await SachService.updateSach(req.params.id, dto);
+    // For update, we don't use DTO validation (allow partial updates)
+    // Just pass the raw data - only fields that are provided will be updated
+    const sach = await SachService.updateSach(req.params.id, sachData);
 
     if (!sach) {
         throw new AppError("Không tìm thấy sách", 404);
     }
     return res.status(200).json({
-        message: "Cập nhật sách thành công"
+        message: "Cập nhật sách thành công",
+        data: sach
     });
 });
 
