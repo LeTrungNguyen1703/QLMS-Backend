@@ -33,7 +33,7 @@ export class AuthService {
         const token = jwt.sign(
             payload,
             process.env.JWT_SECRET || 'default-secret',
-            {expiresIn: process.env.JWT_EXPIRES} as SignOptions
+            {expiresIn: process.env.JWT_EXPIRES_IN} as SignOptions
         );
 
         return new TokenResponse(token, userId, userName, email, role);

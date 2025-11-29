@@ -12,7 +12,7 @@ export const addSach = catchAsync(async (req: ISachRequestExtended, res: Respons
 
     // Xử lý file upload nếu có
     if (req.file) {
-        sachData.HinhAnh = req.file.filename;
+        sachData.HinhAnh = req.file.path;
     }
 
     const dto = plainToInstance(SachRequest, sachData, {
@@ -33,7 +33,7 @@ export const updateSach = catchAsync(async (req: ISachRequestExtended, res: Resp
 
     // Xử lý file upload nếu có
     if (req.file) {
-        sachData.HinhAnh = req.file.filename;
+        sachData.HinhAnh = req.file.path;
     }
 
     // For update, we don't use DTO validation (allow partial updates)
