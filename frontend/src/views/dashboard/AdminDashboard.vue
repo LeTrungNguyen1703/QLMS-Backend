@@ -162,13 +162,7 @@
 
           <!-- Manage Users Tab -->
           <div v-show="activeTab === 'manage-users'">
-            <div class="card border-0 bg-light">
-              <div class="card-body text-center py-5">
-                <i class="bi bi-people fs-1 text-muted mb-3"></i>
-                <h5 class="text-muted">Chức năng quản lý người dùng</h5>
-                <p class="text-muted">Sẽ được phát triển trong phiên bản tiếp theo</p>
-              </div>
-            </div>
+            <StaffManagement />
           </div>
 
           <!-- System Tab -->
@@ -199,6 +193,7 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { authService } from '../../services/authService'
 import AdminRegisterNhanVien from '../../components/AdminRegisterNhanVien.vue'
+import StaffManagement from '../../components/StaffManagement.vue'
 
 const router = useRouter()
 const activeTab = ref<'overview' | 'register-nhanvien' | 'manage-users' | 'system'>('overview')

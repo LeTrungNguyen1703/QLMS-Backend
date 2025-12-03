@@ -42,7 +42,7 @@ const cld = new Cloudinary({
   <header class="app-header d-flex align-items-center">
     <div class="container-fluid d-flex justify-content-between align-items-center py-3 px-4">
       <div class="brand d-flex align-items-center">
-        <div class="brand-logo">QLMS</div>
+        <div class="brand-logo"><i class="bi bi-book-half"></i></div>
         <div class="brand-text ms-3">
           <div class="brand-title">Quản lý mượn sách</div>
           <div class="brand-sub">Thư viện - quản lý mượn / trả sách</div>
