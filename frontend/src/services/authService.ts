@@ -91,6 +91,7 @@ export const authService = {
     localStorage.removeItem('userName');
     localStorage.removeItem('userEmail');
     localStorage.removeItem('userType');
+    localStorage.removeItem('role');
   },
 
   isAuthenticated(): boolean {

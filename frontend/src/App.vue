@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {RouterLink, useRoute} from 'vue-router';
-import {ref, watch, provide, computed} from 'vue';
+import {ref, watch, provide, onMounted} from 'vue';
 import {Cloudinary} from '@cloudinary/url-gen';
 import {authService} from "./services/authService.ts";
 import router from "./router";
@@ -12,24 +12,34 @@ const showSearch = ref(false);
 // Provide searchQuery để child components có thể inject
 provide('searchQuery', searchQuery);
 
-// Check authentication status
-const isAuthenticated = computed(() => authService.isAuthenticated());
+// Check authentication status - use ref for reactivity
+const isAuthenticated = ref(authService.isAuthenticated());
 
-// Chỉ hiển thị search bar khi ở trang search-books
+// Watch for route changes and update auth status
 watch(() => route.path, (newPath) => {
+  isAuthenticated.value = authService.isAuthenticated(); // Update on route change
   showSearch.value = newPath === '/docgia/search-books';
   if (!showSearch.value) {
     searchQuery.value = '';
   }
 }, {immediate: true});
 
-const handleLogout = async () => {
-  try {
-    authService.logout() // xóa token / gọi API
-    await router.push('/auth/login') // điều hướng sau khi logout xong
-  } catch (error) {
-    console.error('Logout thất bại', error)
-  }
+// Update auth status on mount and add storage event listener
+onMounted(() => {
+  isAuthenticated.value = authService.isAuthenticated();
+
+  // Listen for storage changes (useful for multi-tab scenarios)
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'authToken') {
+      isAuthenticated.value = authService.isAuthenticated();
+    }
+  });
+});
+
+const handleLogout = () => {
+  authService.logout(); // Clear all localStorage items
+  isAuthenticated.value = false; // Force reactive update
+  router.push('/docgia/search-books'); // Redirect to search page
 }
 
 const handleLogin = () => {
