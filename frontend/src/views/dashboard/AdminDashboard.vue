@@ -57,6 +57,16 @@
           </li>
           <li class="nav-item" role="presentation">
             <button
+              :class="['nav-link', activeTab === 'statistics' ? 'active' : '']"
+              @click="activeTab = 'statistics'"
+              type="button"
+            >
+              <i class="bi bi-graph-up me-1"></i>
+              Thống kê doanh thu
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button
               :class="['nav-link', activeTab === 'system' ? 'active' : '']"
               @click="activeTab = 'system'"
               type="button"
@@ -165,6 +175,11 @@
             <StaffManagement />
           </div>
 
+          <!-- Statistics Tab -->
+          <div v-show="activeTab === 'statistics'">
+            <RevenueStatistics />
+          </div>
+
           <!-- System Tab -->
           <div v-show="activeTab === 'system'">
             <div class="card border-0 bg-light">
@@ -194,9 +209,10 @@ import { useRouter } from 'vue-router'
 import { authService } from '../../services/authService'
 import AdminRegisterNhanVien from '../../components/AdminRegisterNhanVien.vue'
 import StaffManagement from '../../components/StaffManagement.vue'
+import RevenueStatistics from '../../components/RevenueStatistics.vue'
 
 const router = useRouter()
-const activeTab = ref<'overview' | 'register-nhanvien' | 'manage-users' | 'system'>('overview')
+const activeTab = ref<'overview' | 'register-nhanvien' | 'manage-users' | 'statistics' | 'system'>('overview')
 const userInfo = ref({
   userName: '',
   email: '',

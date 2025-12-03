@@ -12,6 +12,7 @@ import routerDocGia from "./Routers/DocGiaRouter";
 import routerNhaXuatBan from "./Routers/NhaXuatBanRouter";
 import AuthRouter from "./Routers/AuthRouter";
 import TinhTrangSachMuonRouter from "./Routers/TinhTrangSachMuonRouter";
+import routerStatistics from "./Routers/StatisticsRouter";
 import { errorHandler } from "./Middleware/ErrorHandler";
 import swaggerDocs from "./Utils/SwaggerConfig";
 import NhanVien from "./Models/NHANVIEN";
@@ -40,6 +41,7 @@ app.use("/api/sach", routerSach);
 app.use("/api/muonsach", routerTheoDoiMuonSach);
 app.use("/api/nhaxuatban", routerNhaXuatBan);
 app.use("/api/tinhtrangsachmuon", TinhTrangSachMuonRouter);
+app.use("/api/statistics", routerStatistics);
 
 // Handle 404 routes - using a middleware without a path
 // This will only be reached if no other middleware handles the request
