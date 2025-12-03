@@ -3,7 +3,7 @@
     <table class="table table-hover">
       <thead>
         <tr>
-          <th>Mã sách</th>
+          <th>Tên sách</th>
           <th>Mã đọc giả</th>
           <th>Ngày mượn</th>
           <th>Ngày trả dự kiến</th>
@@ -13,7 +13,10 @@
       </thead>
       <tbody>
         <tr v-for="item in danhSach" :key="item._id">
-          <SachItemInDanhSachSach :item="item"/>
+          <td>{{ item.MaSach?.TenSach || 'N/A' }}</td>
+          <td>{{ item.MaDocGia?.MaDocGia || 'N/A' }}</td>
+          <td>{{ formatDate(item.NgayMuon) }}</td>
+          <td>{{ formatDate(item.NgayTra) }}</td>
           <td>
             <button
               class="btn btn-sm btn-info"
@@ -47,7 +50,6 @@
 
 <script setup lang="ts">
 import type { SachMuonItem } from '../../services/tinhTrangSachMuonService';
-import SachItemInDanhSachSach from "./SachItemInDanhSachSach.vue";
 
 defineProps<{
   danhSach: SachMuonItem[];
@@ -58,6 +60,11 @@ defineEmits<{
   (e: 'tu-choi', id: string): void;
   (e: 'show-detail', item: SachMuonItem): void;
 }>();
+
+const formatDate = (date: string | Date): string => {
+  if (!date) return 'N/A';
+  return new Date(date).toLocaleDateString('vi-VN');
+};
 </script>
 
 <style scoped>
