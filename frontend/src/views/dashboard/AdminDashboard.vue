@@ -1,12 +1,6 @@
 <template>
   <div class="container mt-5">
     <div class="card shadow-lg">
-      <div class="card-header bg-gradient-admin text-white">
-        <h4 class="mb-0">
-          <i class="bi bi-shield-lock-fill me-2"></i>
-          Dashboard Quản trị viên
-        </h4>
-      </div>
       <div class="card-body">
         <div class="alert alert-info border-0">
           <i class="bi bi-info-circle-fill me-2"></i>
@@ -23,59 +17,19 @@
           <li class="mb-2"><strong>Vai trò:</strong> <span class="badge bg-danger">Admin</span></li>
         </ul>
 
-        <!-- Tab Navigation -->
-        <ul class="nav nav-tabs mt-4" role="tablist">
-          <li class="nav-item" role="presentation">
-            <button
-              :class="['nav-link', activeTab === 'overview' ? 'active' : '']"
-              @click="activeTab = 'overview'"
-              type="button"
-            >
-              <i class="bi bi-grid-3x3-gap me-1"></i>
-              Tổng quan
-            </button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button
-              :class="['nav-link', activeTab === 'register-nhanvien' ? 'active' : '']"
-              @click="activeTab = 'register-nhanvien'"
-              type="button"
-            >
-              <i class="bi bi-person-plus-fill me-1"></i>
-              Đăng ký nhân viên
-            </button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button
-              :class="['nav-link', activeTab === 'manage-users' ? 'active' : '']"
-              @click="activeTab = 'manage-users'"
-              type="button"
-            >
-              <i class="bi bi-people-fill me-1"></i>
-              Quản lý người dùng
-            </button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button
-              :class="['nav-link', activeTab === 'statistics' ? 'active' : '']"
-              @click="activeTab = 'statistics'"
-              type="button"
-            >
-              <i class="bi bi-graph-up me-1"></i>
-              Thống kê doanh thu
-            </button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button
-              :class="['nav-link', activeTab === 'system' ? 'active' : '']"
-              @click="activeTab = 'system'"
-              type="button"
-            >
-              <i class="bi bi-gear-fill me-1"></i>
-              Cấu hình hệ thống
-            </button>
-          </li>
-        </ul>
+        <!-- Breadcrumb Navigation -->
+        <nav aria-label="breadcrumb" class="mt-4" v-if="activeTab !== 'overview'">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+              <a href="#" @click.prevent="activeTab = 'overview'" class="text-decoration-none">
+                <i class="bi bi-house-door me-1"></i>Tổng quan
+              </a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">
+              {{ getTabTitle(activeTab) }}
+            </li>
+          </ol>
+        </nav>
 
         <!-- Tab Content -->
         <div class="tab-content mt-4">
@@ -85,76 +39,36 @@
               <i class="bi bi-speedometer2 me-2"></i>
               Chức năng quản trị
             </h5>
-            <div class="row g-4">
-              <div class="col-md-4 col-lg-3">
+            <div class="row row-cols-2 row-cols-md-3 g-4">
+              <!-- Manage Users Card - Clickable -->
+              <div class="col" @click="activeTab = 'manage-users'">
                 <div class="card feature-card h-100 border-primary">
                   <div class="card-body text-center">
                     <i class="bi bi-people-fill fs-1 text-primary mb-3"></i>
-                    <h6 class="fw-bold">Quản lý đọc giả</h6>
-                    <p class="text-muted small mb-0">Thêm, sửa, xóa đọc giả</p>
+                    <h6 class="fw-bold">Quản lý người dùng</h6>
+                    <p class="text-muted small mb-0">Quản lý nhân viên, phân quyền</p>
                   </div>
                 </div>
               </div>
-              <div class="col-md-4 col-lg-3">
-                <div class="card feature-card h-100 border-success">
-                  <div class="card-body text-center">
-                    <i class="bi bi-book-half fs-1 text-success mb-3"></i>
-                    <h6 class="fw-bold">Quản lý sách</h6>
-                    <p class="text-muted small mb-0">Quản lý kho sách</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-4 col-lg-3">
+
+              <!-- Register Staff Card - Clickable -->
+              <div class="col" @click="activeTab = 'register-nhanvien'">
                 <div class="card feature-card h-100 border-warning">
                   <div class="card-body text-center">
-                    <i class="bi bi-briefcase-fill fs-1 text-warning mb-3"></i>
-                    <h6 class="fw-bold">Quản lý nhân viên</h6>
-                    <p class="text-muted small mb-0">Phân quyền, đăng ký NV</p>
+                    <i class="bi bi-person-plus-fill fs-1 text-warning mb-3"></i>
+                    <h6 class="fw-bold">Đăng ký nhân viên</h6>
+                    <p class="text-muted small mb-0">Tạo tài khoản nhân viên mới</p>
                   </div>
                 </div>
               </div>
-              <div class="col-md-4 col-lg-3">
-                <div class="card feature-card h-100 border-info">
-                  <div class="card-body text-center">
-                    <i class="bi bi-arrow-left-right fs-1 text-info mb-3"></i>
-                    <h6 class="fw-bold">Mượn/Trả sách</h6>
-                    <p class="text-muted small mb-0">Quản lý mượn trả</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-4 col-lg-3">
-                <div class="card feature-card h-100 border-secondary">
-                  <div class="card-body text-center">
-                    <i class="bi bi-building fs-1 text-secondary mb-3"></i>
-                    <h6 class="fw-bold">Nhà xuất bản</h6>
-                    <p class="text-muted small mb-0">Quản lý NXB</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-4 col-lg-3">
+
+              <!-- Statistics Card - Clickable -->
+              <div class="col" @click="activeTab = 'statistics'">
                 <div class="card feature-card h-100 border-danger">
                   <div class="card-body text-center">
                     <i class="bi bi-graph-up fs-1 text-danger mb-3"></i>
-                    <h6 class="fw-bold">Thống kê</h6>
-                    <p class="text-muted small mb-0">Báo cáo, phân tích</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-4 col-lg-3">
-                <div class="card feature-card h-100 border-dark">
-                  <div class="card-body text-center">
-                    <i class="bi bi-shield-check fs-1 text-dark mb-3"></i>
-                    <h6 class="fw-bold">Bảo mật</h6>
-                    <p class="text-muted small mb-0">Quản lý quyền truy cập</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-4 col-lg-3">
-                <div class="card feature-card h-100 border-info">
-                  <div class="card-body text-center">
-                    <i class="bi bi-gear-fill fs-1 text-info mb-3"></i>
-                    <h6 class="fw-bold">Cài đặt</h6>
-                    <p class="text-muted small mb-0">Cấu hình hệ thống</p>
+                    <h6 class="fw-bold">Thống kê doanh thu</h6>
+                    <p class="text-muted small mb-0">Báo cáo, phân tích doanh thu</p>
                   </div>
                 </div>
               </div>
@@ -190,13 +104,6 @@
               </div>
             </div>
           </div>
-        </div>
-
-        <div class="mt-4 d-flex gap-2">
-          <button @click="logout" class="btn btn-outline-danger">
-            <i class="bi bi-box-arrow-right me-1"></i>
-            Đăng xuất
-          </button>
         </div>
       </div>
     </div>
@@ -243,10 +150,17 @@ const handleRegisterSuccess = (payload: any) => {
   // Có thể thêm thông báo toast hoặc refresh danh sách
 }
 
-const logout = () => {
-  authService.logout()
-  router.push('/auth/login')
+const getTabTitle = (tab: string): string => {
+  const titles: Record<string, string> = {
+    'overview': 'Tổng quan',
+    'register-nhanvien': 'Đăng ký nhân viên',
+    'manage-users': 'Quản lý người dùng',
+    'statistics': 'Thống kê doanh thu',
+    'system': 'Cấu hình hệ thống'
+  }
+  return titles[tab] || 'Tổng quan'
 }
+
 </script>
 
 <style scoped>
@@ -270,28 +184,25 @@ const logout = () => {
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
-.nav-tabs {
-  border-bottom: 2px solid #e9ecef;
+.breadcrumb {
+  background-color: #f8f9fa;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  margin-bottom: 0;
 }
 
-.nav-tabs .nav-link {
-  border: none;
+.breadcrumb-item a {
+  color: #dc2626;
+  transition: all 0.2s;
+}
+
+.breadcrumb-item a:hover {
+  color: #991b1b;
+}
+
+.breadcrumb-item.active {
   color: #6c757d;
   font-weight: 600;
-  padding: 0.75rem 1.5rem;
-  transition: all 0.2s;
-  position: relative;
-}
-
-.nav-tabs .nav-link:hover {
-  color: #dc2626;
-  border-color: transparent;
-}
-
-.nav-tabs .nav-link.active {
-  color: #dc2626;
-  border-bottom: 3px solid #dc2626;
-  background: transparent;
 }
 
 .alert-info {
