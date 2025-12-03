@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {RouterLink, useRoute} from 'vue-router';
-import {ref, watch, provide} from 'vue';
+import {ref, watch, provide, computed} from 'vue';
 import {Cloudinary} from '@cloudinary/url-gen';
 import {authService} from "./services/authService.ts";
 import router from "./router";
@@ -11,6 +11,9 @@ const showSearch = ref(false);
 
 // Provide searchQuery để child components có thể inject
 provide('searchQuery', searchQuery);
+
+// Check authentication status
+const isAuthenticated = computed(() => authService.isAuthenticated());
 
 // Chỉ hiển thị search bar khi ở trang search-books
 watch(() => route.path, (newPath) => {
@@ -27,6 +30,10 @@ const handleLogout = async () => {
   } catch (error) {
     console.error('Logout thất bại', error)
   }
+}
+
+const handleLogin = () => {
+  router.push('/auth/login');
 }
 
 // Create a Cloudinary instance and set your cloud name.
@@ -65,14 +72,25 @@ const cld = new Cloudinary({
           </div>
         </div>
 
-        <button @click="handleLogout" class="btn btn-outline-light">
-          <i class="bi bi-box-arrow-in-right me-1"></i>
-        </button>
-        <RouterLink class="btn btn-outline-light" to="/docgia/dashboard" aria-label="Dashboard">
-          <i class="bi bi-speedometer2 me-1"></i>
-        </RouterLink>
+        <!-- Navigation buttons for authenticated users -->
+        <template v-if="isAuthenticated">
+          <button @click="handleLogout" class="btn btn-outline-light">
+            <i class="bi bi-box-arrow-right me-1"></i>
+            Đăng xuất
+          </button>
+          <RouterLink class="btn btn-outline-light" to="/docgia/dashboard" aria-label="Dashboard">
+            <i class="bi bi-speedometer2 me-1"></i>
+            Dashboard
+          </RouterLink>
+        </template>
 
-
+        <!-- Login button for anonymous users -->
+        <template v-else>
+          <button @click="handleLogin" class="btn btn-light">
+            <i class="bi bi-box-arrow-in-right me-1"></i>
+            Đăng nhập
+          </button>
+        </template>
       </nav>
     </div>
   </header>

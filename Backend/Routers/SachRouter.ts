@@ -6,15 +6,12 @@ import upload from "../Middleware/Multer";
 
 const routerSach = Router();
 
-// Route công khai - Đọc giả có thể tìm sách
-routerSach.get("/search-sach",
-    TokenMiddleware.authenticate,
-    getallSach);
+// Route công khai - Không cần đăng nhập để xem sách
+routerSach.get("/search-sach", getallSach);
 
-routerSach.get("/get-sach/:id",
-    TokenMiddleware.authenticate,
-    getSach);
+routerSach.get("/get-sach/:id", getSach);
 
+// Route cần xác thực
 routerSach.post("/add-sach",
     TokenMiddleware.authenticate,
     TokenMiddleware.authorize(UserRole.ADMIN, UserRole.NHAN_VIEN),

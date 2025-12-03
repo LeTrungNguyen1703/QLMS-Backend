@@ -16,6 +16,7 @@ apiClient.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+    // Don't add Authorization header if no token (allows anonymous requests)
     return config;
   },
   (error) => {

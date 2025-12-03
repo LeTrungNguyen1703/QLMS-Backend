@@ -47,7 +47,7 @@
                 </div>
                 <button
                     class="btn btn-primary btn-sm w-100"
-                    @click="openBorrowModal(book)"
+                    @click="handleBorrowClick(book)"
                     :disabled="book.SoQuyen === 0"
                 >
                   <i class="bi bi-bookmark-plus me-1"></i>
@@ -65,6 +65,42 @@
       <i class="bi bi-inbox fs-1 text-muted"></i>
       <p class="text-muted mt-2">Không tìm thấy sách nào</p>
     </div>
+
+    <!-- Login Prompt Modal -->
+    <Transition name="modal-fade">
+      <div v-if="showLoginPrompt" class="modal-backdrop" @click="closeLoginPrompt">
+        <Transition name="modal-slide">
+          <div v-if="showLoginPrompt" class="modal-dialog-wrapper-small" @click.stop>
+            <div class="modal-content-custom">
+              <button type="button" class="btn-close-custom" @click="closeLoginPrompt">
+                <i class="bi bi-x-lg"></i>
+              </button>
+
+              <div class="login-prompt-content">
+                <div class="login-prompt-icon">
+                  <i class="bi bi-lock-fill"></i>
+                </div>
+                <h4 class="login-prompt-title">Yêu cầu đăng nhập</h4>
+                <p class="login-prompt-message">
+                  Bạn cần đăng nhập để mượn sách. Vui lòng đăng nhập hoặc tạo tài khoản mới.
+                </p>
+
+                <div class="login-prompt-actions">
+                  <button type="button" class="btn btn-secondary" @click="closeLoginPrompt">
+                    <i class="bi bi-x-circle me-1"></i>
+                    Tiếp tục xem sách
+                  </button>
+                  <button type="button" class="btn btn-primary" @click="redirectToLogin">
+                    <i class="bi bi-box-arrow-in-right me-1"></i>
+                    Đăng nhập
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Transition>
+      </div>
+    </Transition>
 
     <!-- Borrow Modal -->
     <Transition name="modal-fade">
@@ -173,7 +209,9 @@
 <script setup lang="ts">
 import {ref, onMounted, computed, inject} from 'vue'
 import type {Ref} from 'vue'
+import { useRouter } from 'vue-router'
 import {bookService} from '../../services/bookService'
+import {authService} from '../../services/authService'
 import type {Sach} from '../../types/book'
 import CarouselComponent from "./CarouselComponent.vue";
 
@@ -182,8 +220,10 @@ const books = ref<Sach[]>([])
 const searchQuery = inject<Ref<string>>('searchQuery', ref(''))
 const isLoading = ref(false)
 const errorMessage = ref('')
+const router = useRouter()
 
 const showBorrowModal = ref(false)
+const showLoginPrompt = ref(false)
 const selectedBook = ref<Sach | null>(null)
 const borrowQuantity = ref(1)
 const isBorrowing = ref(false)
@@ -216,6 +256,18 @@ const formatPrice = (price: number) => {
   return new Intl.NumberFormat('vi-VN', {style: 'currency', currency: 'VND'}).format(price)
 }
 
+const handleBorrowClick = (book: Sach) => {
+  // Check if user is logged in
+  if (!authService.isAuthenticated()) {
+    selectedBook.value = book
+    showLoginPrompt.value = true
+    return
+  }
+
+  // User is logged in, open borrow modal
+  openBorrowModal(book)
+}
+
 const openBorrowModal = (book: Sach) => {
   selectedBook.value = book
   borrowQuantity.value = 1
@@ -229,6 +281,15 @@ const closeBorrowModal = () => {
   selectedBook.value = null
   borrowError.value = ''
   borrowSuccess.value = ''
+}
+
+const closeLoginPrompt = () => {
+  showLoginPrompt.value = false
+}
+
+const redirectToLogin = () => {
+  showLoginPrompt.value = false
+  router.push('/auth/login')
 }
 
 const confirmBorrow = async () => {
@@ -343,6 +404,11 @@ defineExpose({
   width: 100%;
   max-height: 90vh;
   overflow-y: auto;
+}
+
+.modal-dialog-wrapper-small {
+  max-width: 450px;
+  width: 100%;
 }
 
 /* Modal Content */
@@ -550,12 +616,110 @@ defineExpose({
   margin-bottom: 1rem;
 }
 
+/* Login Prompt Modal Styles */
+.login-prompt-content {
+  padding: 3rem 2rem;
+  text-align: center;
+}
+
+.login-prompt-icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 1.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+}
+
+.login-prompt-icon i {
+  font-size: 2.5rem;
+  color: white;
+}
+
+.login-prompt-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #2d3748;
+  margin-bottom: 1rem;
+}
+
+.login-prompt-message {
+  color: #4a5568;
+  font-size: 1.05rem;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.login-prompt-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.login-prompt-actions .btn {
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  border-radius: 8px;
+  transition: all 0.3s;
+}
+
+.login-prompt-actions .btn-secondary {
+  background: #e2e8f0;
+  border: none;
+  color: #4a5568;
+}
+
+.login-prompt-actions .btn-secondary:hover {
+  background: #cbd5e0;
+  transform: translateY(-2px);
+}
+
+.login-prompt-actions .btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+}
+
+.login-prompt-actions .btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+/* Modal Transitions */
+.modal-fade-enter-active,
+.modal-fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.modal-fade-enter-from,
+.modal-fade-leave-to {
+  opacity: 0;
+}
+
+.modal-slide-enter-active,
+.modal-slide-leave-active {
+  transition: all 0.3s ease;
+}
+
+.modal-slide-enter-from {
+  transform: translateY(-50px);
+  opacity: 0;
+}
+
+.modal-slide-leave-to {
+  transform: translateY(50px);
+  opacity: 0;
+}
+
 @media (max-width: 768px) {
   .book-image-wrapper {
     height: 180px;
   }
 
-  .modal-dialog-wrapper {
+  .modal-dialog-wrapper,
+  .modal-dialog-wrapper-small {
     max-width: 95%;
   }
 
@@ -576,8 +740,21 @@ defineExpose({
     font-size: 0.9rem;
   }
 
-  .modal-actions {
+  .modal-actions,
+  .login-prompt-actions {
     flex-direction: column;
+  }
+
+  .login-prompt-content {
+    padding: 2rem 1.5rem;
+  }
+
+  .login-prompt-title {
+    font-size: 1.5rem;
+  }
+
+  .login-prompt-message {
+    font-size: 1rem;
   }
 }
 </style>
