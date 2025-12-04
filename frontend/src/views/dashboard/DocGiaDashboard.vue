@@ -1,7 +1,7 @@
 <template>
   <div class="container px-4 mt-5">
     <div class="card shadow">
-      <div class="card-header bg-primary text-white">
+      <div class="card-header btn-gradient text-white">
         <h4 class="mb-0">
           <i class="bi bi-person-circle me-2"></i>
           Dashboard Đọc giả
@@ -13,7 +13,6 @@
         <ul class="list-unstyled">
           <li><strong>Tên:</strong> {{ userInfo.userName }}</li>
           <li><strong>Email:</strong> {{ userInfo.email }}</li>
-          <li><strong>Loại:</strong> {{ userInfo.userType }}</li>
         </ul>
 
         <div class="mt-4">
@@ -54,13 +53,6 @@
             </div>
           </div>
         </div>
-
-        <div class="mt-4">
-          <button @click="logout" class="btn btn-outline-danger">
-            <i class="bi bi-box-arrow-right me-1"></i>
-            Đăng xuất
-          </button>
-        </div>
       </div>
     </div>
   </div>
@@ -96,11 +88,6 @@ onMounted(async () => {
     router.push('/auth/login')
   }
 })
-
-const logout = () => {
-  authService.logout()
-  router.push('/auth/login')
-}
 </script>
 
 <style scoped>
@@ -119,5 +106,17 @@ const logout = () => {
   transform: translateY(-5px);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
   border-color: #667eea;
+}
+
+.btn-gradient {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  color: white;
+  transition: all 0.3s;
+}
+
+.btn-gradient:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 }
 </style>

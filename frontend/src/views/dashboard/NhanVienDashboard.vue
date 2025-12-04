@@ -1,7 +1,7 @@
 <template>
   <div class="container mt-5">
     <div class="card shadow">
-      <div class="card-header bg-info text-white">
+      <div class="card-header btn-gradient text-white">
         <h4 class="mb-0">
           <i class="bi bi-briefcase me-2"></i>
           Dashboard Nhân viên
@@ -13,7 +13,6 @@
         <ul class="list-unstyled">
           <li><strong>Tên:</strong> {{ userInfo.userName }}</li>
           <li><strong>Email:</strong> {{ userInfo.email }}</li>
-          <li><strong>Loại:</strong> Nhân viên</li>
         </ul>
 
         <!-- Tab Navigation -->
@@ -37,14 +36,6 @@
             <h5>Chức năng quản lý</h5>
             <div class="row g-3">
               <div class="col-md-4">
-                <div class="card feature-card">
-                  <div class="card-body text-center">
-                    <i class="bi bi-people fs-1 text-primary"></i>
-                    <h6 class="mt-2">Quản lý đọc giả</h6>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-4">
                 <div class="card feature-card" @click="activeTab = 'them-sach'">
                   <div class="card-body text-center">
                     <i class="bi bi-book-half fs-1 text-success"></i>
@@ -57,30 +48,6 @@
                   <div class="card-body text-center">
                     <i class="bi bi-arrow-left-right fs-1 text-warning"></i>
                     <h6 class="mt-2">Mượn/Trả sách</h6>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="card feature-card">
-                  <div class="card-body text-center">
-                    <i class="bi bi-building fs-1 text-info"></i>
-                    <h6 class="mt-2">Nhà xuất bản</h6>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="card feature-card">
-                  <div class="card-body text-center">
-                    <i class="bi bi-graph-up fs-1 text-danger"></i>
-                    <h6 class="mt-2">Thống kê</h6>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="card feature-card">
-                  <div class="card-body text-center">
-                    <i class="bi bi-gear fs-1 text-secondary"></i>
-                    <h6 class="mt-2">Cài đặt</h6>
                   </div>
                 </div>
               </div>
@@ -175,5 +142,17 @@ onMounted(async () => {
   color: #667eea;
   border-bottom: 3px solid #667eea;
   background: transparent;
+}
+
+.btn-gradient {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  color: white;
+  transition: all 0.3s;
+}
+
+.btn-gradient:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 }
 </style>

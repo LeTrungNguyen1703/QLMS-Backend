@@ -42,11 +42,10 @@
               </p>
               <div class="mt-auto">
                 <div class="d-flex justify-content-between align-items-center mb-2">
-                  <span class="badge bg-success small">{{ book.SoQuyen }} quyển</span>
                   <span class="text-primary fw-bold small">{{ formatPrice(book.DonGia) }}</span>
                 </div>
                 <button
-                    class="btn btn-primary btn-sm w-100"
+                    class="btn btn-gradient btn-sm w-100"
                     @click="handleBorrowClick(book)"
                     :disabled="book.SoQuyen === 0"
                 >
@@ -577,6 +576,18 @@ defineExpose({
 .modal-actions .btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+.btn-gradient {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  color: white;
+  transition: all 0.3s;
+}
+
+.btn-gradient:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 }
 
 /* Modal Animations - Slide from Top */

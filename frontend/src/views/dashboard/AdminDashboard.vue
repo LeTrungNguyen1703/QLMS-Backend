@@ -14,7 +14,6 @@
         <ul class="list-unstyled ms-3">
           <li class="mb-2"><strong>Tên:</strong> {{ userInfo.userName }}</li>
           <li class="mb-2"><strong>Email:</strong> {{ userInfo.email }}</li>
-          <li class="mb-2"><strong>Vai trò:</strong> <span class="badge bg-danger">Admin</span></li>
         </ul>
 
         <!-- Breadcrumb Navigation -->
