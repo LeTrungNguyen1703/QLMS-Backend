@@ -51,6 +51,14 @@
                   </div>
                 </div>
               </div>
+              <div class="col-md-4">
+                <div class="card feature-card" @click="activeTab = 'nha-xuat-ban'">
+                  <div class="card-body text-center">
+                    <i class="bi bi-building fs-1 text-info"></i>
+                    <h6 class="mt-2">Quản lý Nhà xuất bản</h6>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -62,6 +70,11 @@
           <!-- Quản lý mượn trả sách Tab -->
           <div v-show="activeTab === 'muon-tra'">
             <QuanLySachMuon/>
+          </div>
+
+          <!-- Quản lý nhà xuất bản Tab -->
+          <div v-show="activeTab === 'nha-xuat-ban'">
+            <QuanLyNhaXuatBan/>
           </div>
 
         </div>
@@ -76,9 +89,10 @@ import {useRouter} from 'vue-router'
 import {authService} from '../../services/authService'
 import QuanLySach from "../../components/QuanLySach/QuanLySach.vue";
 import QuanLySachMuon from "../../components/QuanLySachMuon/QuanLySachMuon.vue";
+import QuanLyNhaXuatBan from "../../components/QuanLyNhaXuatBan/QuanLyNhaXuatBan.vue";
 
 const router = useRouter()
-const activeTab = ref<'functions' | 'muon-tra' | 'them-sach'>('functions')
+const activeTab = ref<'functions' | 'muon-tra' | 'them-sach' | 'nha-xuat-ban'>('functions')
 const userInfo = ref({
   userName: '',
   email: '',

@@ -6,7 +6,7 @@
         <i class="bi bi-people-fill me-2"></i>
         Danh sách nhân viên
       </h5>
-      <button class="btn btn-primary" @click="showCreateModal = true">
+      <button class="btn btn-gradient" @click="showCreateModal = true">
         <i class="bi bi-person-plus-fill me-1"></i>
         Thêm nhân viên mới
       </button>
@@ -78,7 +78,7 @@
               </tr>
               <tr v-for="staff in filteredStaff" :key="staff._id">
                 <td class="px-4">
-                  <span class="badge bg-primary">{{ staff.MSNV }}</span>
+                  <span class="badge btn-gradient">{{ staff.MSNV }}</span>
                 </td>
                 <td>
                   <div class="fw-bold">{{ staff.HoTenNV }}</div>
@@ -331,7 +331,7 @@
     >
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-          <div class="modal-header bg-info text-white">
+          <div class="modal-header btn-gradient text-white">
             <h5 class="modal-title">
               <i class="bi bi-person-circle me-2"></i>
               Chi tiết nhân viên
@@ -767,6 +767,18 @@ onMounted(() => {
 
 .shadow-sm {
   box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.08) !important;
+}
+
+.btn-gradient {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  color: white;
+  transition: all 0.3s;
+}
+
+.btn-gradient:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 }
 </style>
 

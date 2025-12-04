@@ -76,10 +76,6 @@
 
           <!-- Register NhanVien Tab -->
           <div v-show="activeTab === 'register-nhanvien'">
-            <div class="alert alert-warning border-0">
-              <i class="bi bi-exclamation-triangle-fill me-2"></i>
-              <strong>Lưu ý:</strong> Chỉ Admin mới có quyền đăng ký tài khoản nhân viên mới.
-            </div>
             <AdminRegisterNhanVien @success="handleRegisterSuccess" />
           </div>
 

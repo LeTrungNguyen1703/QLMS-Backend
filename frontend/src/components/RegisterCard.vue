@@ -138,7 +138,7 @@
       </div>
 
       <div class="d-grid gap-2 mt-3">
-        <button class="btn btn-primary" type="submit" :disabled="isLoading">
+        <button class="btn btn-gradient" type="submit" :disabled="isLoading">
           <span v-if="isLoading">Đang đăng ký...</span>
           <span v-else>Đăng ký</span>
         </button>
@@ -289,6 +289,18 @@ const handleRegister = async () => {
 
 .register-form::-webkit-scrollbar-thumb:hover {
   background: #555;
+}
+
+.btn-gradient {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  color: white;
+  transition: all 0.3s;
+}
+
+.btn-gradient:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 }
 </style>
 
