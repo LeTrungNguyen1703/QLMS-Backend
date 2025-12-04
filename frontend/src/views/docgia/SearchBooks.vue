@@ -21,8 +21,60 @@
 
     <!-- Books grid - Full width -->
     <div v-else-if="filteredBooks.length > 0" class="container-fluid px-4 py-4">
+      <!-- Sort Controls -->
+      <div class="sort-controls mb-4">
+        <div class="d-flex align-items-center gap-3 flex-wrap">
+          <span class="fw-semibold text-muted">
+            <i class="bi bi-sort-down me-2"></i>Sắp xếp theo giá:
+          </span>
+          <div class="btn-group" role="group">
+            <button
+                type="button"
+                class="btn btn-outline-primary"
+                :class="{ active: sortOrder === 'default' }"
+                @click="sortOrder = 'default'"
+            >
+              <i class="bi bi-list-ul me-1"></i>Mặc định
+            </button>
+            <button
+                type="button"
+                class="btn btn-outline-primary"
+                :class="{ active: sortOrder === 'asc' }"
+                @click="sortOrder = 'asc'"
+            >
+              <i class="bi bi-sort-numeric-down me-1"></i>Thấp đến cao
+            </button>
+            <button
+                type="button"
+                class="btn btn-outline-primary"
+                :class="{ active: sortOrder === 'desc' }"
+                @click="sortOrder = 'desc'"
+            >
+              <i class="bi bi-sort-numeric-down-alt me-1"></i>Cao đến thấp
+            </button>
+          </div>
+          <span class="text-muted small ms-auto">
+            Tìm thấy {{ filteredBooks.length }} cuốn sách
+          </span>
+          <div class="d-flex align-items-center gap-2">
+            <span class="text-muted small">Hiển thị:</span>
+            <select
+              class="form-select form-select-sm"
+              style="width: auto;"
+              v-model.number="itemsPerPage"
+              @change="changeItemsPerPage(itemsPerPage)"
+            >
+              <option :value="12">12</option>
+              <option :value="24">24</option>
+              <option :value="36">36</option>
+              <option :value="48">48</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
       <div class="row g-4 row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-6">
-        <div v-for="book in filteredBooks" :key="book._id">
+        <div v-for="book in paginatedBooks" :key="book._id">
           <div class="card h-100 book-card">
             <div class="book-image-wrapper">
               <img
@@ -55,6 +107,75 @@
               </div>
             </div>
           </div>
+        </div>
+      </div>
+
+      <!-- Pagination Controls -->
+      <div v-if="totalPages > 1" class="pagination-wrapper mt-5">
+        <nav aria-label="Book pagination">
+          <ul class="pagination justify-content-center">
+            <!-- Previous Button -->
+            <li class="page-item" :class="{ disabled: currentPage === 1 }">
+              <button
+                class="page-link"
+                @click="goToPage(currentPage - 1)"
+                :disabled="currentPage === 1"
+                aria-label="Previous"
+              >
+                <i class="bi bi-chevron-left"></i>
+              </button>
+            </li>
+
+            <!-- First Page -->
+            <li v-if="currentPage > 3" class="page-item">
+              <button class="page-link" @click="goToPage(1)">1</button>
+            </li>
+            <li v-if="currentPage > 4" class="page-item disabled">
+              <span class="page-link">...</span>
+            </li>
+
+            <!-- Page Numbers -->
+            <li
+              v-for="page in getPageNumbers()"
+              :key="page"
+              class="page-item"
+              :class="{ active: page === currentPage }"
+            >
+              <button class="page-link" @click="goToPage(page)">
+                {{ page }}
+              </button>
+            </li>
+
+            <!-- Last Page -->
+            <li v-if="currentPage < totalPages - 3" class="page-item disabled">
+              <span class="page-link">...</span>
+            </li>
+            <li v-if="currentPage < totalPages - 2" class="page-item">
+              <button class="page-link" @click="goToPage(totalPages)">{{ totalPages }}</button>
+            </li>
+
+            <!-- Next Button -->
+            <li class="page-item" :class="{ disabled: currentPage === totalPages }">
+              <button
+                class="page-link"
+                @click="goToPage(currentPage + 1)"
+                :disabled="currentPage === totalPages"
+                aria-label="Next"
+              >
+                <i class="bi bi-chevron-right"></i>
+              </button>
+            </li>
+          </ul>
+        </nav>
+
+        <!-- Pagination Info -->
+        <div class="pagination-info text-center mt-3">
+          <span class="text-muted small">
+            Trang {{ currentPage }} / {{ totalPages }}
+            (Hiển thị {{ (currentPage - 1) * itemsPerPage + 1 }} -
+            {{ Math.min(currentPage * itemsPerPage, filteredBooks.length) }}
+            trong số {{ filteredBooks.length }} sách)
+          </span>
         </div>
       </div>
     </div>
@@ -228,16 +349,70 @@ const borrowQuantity = ref(1)
 const isBorrowing = ref(false)
 const borrowError = ref('')
 const borrowSuccess = ref('')
+const sortOrder = ref<'default' | 'asc' | 'desc'>('default')
+const currentPage = ref(1)
+const itemsPerPage = ref(12)
 
 const filteredBooks = computed(() => {
-  if (!searchQuery.value) return books.value
+  let result = books.value
 
-  const query = searchQuery.value.toLowerCase()
-  return books.value.filter(book =>
-      book.TenSach.toLowerCase().includes(query) ||
-      book.TacGia.toLowerCase().includes(query)
-  )
+  // Apply search filter
+  if (searchQuery.value) {
+    const query = searchQuery.value.toLowerCase()
+    result = result.filter(book =>
+        book.TenSach.toLowerCase().includes(query) ||
+        book.TacGia.toLowerCase().includes(query)
+    )
+  }
+
+  // Apply price sorting
+  if (sortOrder.value === 'asc') {
+    result = [...result].sort((a, b) => a.DonGia - b.DonGia)
+  } else if (sortOrder.value === 'desc') {
+    result = [...result].sort((a, b) => b.DonGia - a.DonGia)
+  }
+
+  return result
 })
+
+const totalPages = computed(() => Math.ceil(filteredBooks.value.length / itemsPerPage.value))
+
+const paginatedBooks = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage.value
+  const end = start + itemsPerPage.value
+  return filteredBooks.value.slice(start, end)
+})
+
+const goToPage = (page: number) => {
+  if (page >= 1 && page <= totalPages.value) {
+    currentPage.value = page
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+}
+
+const changeItemsPerPage = (size: number) => {
+  itemsPerPage.value = size
+  currentPage.value = 1
+}
+
+const getPageNumbers = () => {
+  const pages: number[] = []
+  const maxVisible = 5 // Maximum number of page buttons to show
+
+  let start = Math.max(1, currentPage.value - 2)
+  let end = Math.min(totalPages.value, start + maxVisible - 1)
+
+  // Adjust start if we're near the end
+  if (end - start < maxVisible - 1) {
+    start = Math.max(1, end - maxVisible + 1)
+  }
+
+  for (let i = start; i <= end; i++) {
+    pages.push(i)
+  }
+
+  return pages
+}
 
 const loadBooks = async () => {
   isLoading.value = true
@@ -337,6 +512,87 @@ defineExpose({
 .search-books-page {
   min-height: calc(100vh - 88px);
   background: #f5f7fb;
+}
+
+/* Sort Controls */
+.sort-controls {
+  background: white;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.sort-controls .btn-outline-primary {
+  border-color: #e2e8f0;
+  color: #4a5568;
+  transition: all 0.3s;
+}
+
+.sort-controls .btn-outline-primary:hover {
+  background: #f7fafc;
+  border-color: #667eea;
+  color: #667eea;
+}
+
+.sort-controls .btn-outline-primary.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-color: #667eea;
+  color: white;
+}
+
+/* Pagination Styles */
+.pagination-wrapper {
+  margin-top: 3rem;
+}
+
+.pagination {
+  margin-bottom: 0;
+  gap: 0.5rem;
+}
+
+.pagination .page-item {
+  margin: 0;
+}
+
+.pagination .page-link {
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  color: #4a5568;
+  padding: 0.5rem 0.75rem;
+  font-weight: 600;
+  transition: all 0.3s;
+  min-width: 40px;
+  text-align: center;
+}
+
+.pagination .page-link:hover:not(:disabled) {
+  background: #f7fafc;
+  border-color: #667eea;
+  color: #667eea;
+  transform: translateY(-2px);
+}
+
+.pagination .page-item.active .page-link {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-color: #667eea;
+  color: white;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.pagination .page-item.disabled .page-link {
+  background: #f8f9fa;
+  border-color: #e2e8f0;
+  color: #cbd5e0;
+  cursor: not-allowed;
+}
+
+.pagination .page-link:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pagination-info {
+  font-size: 0.95rem;
 }
 
 .card {
@@ -727,6 +983,30 @@ defineExpose({
 @media (max-width: 768px) {
   .book-image-wrapper {
     height: 180px;
+  }
+
+  .sort-controls .d-flex {
+    flex-direction: column;
+    align-items: flex-start !important;
+  }
+
+  .sort-controls .btn-group {
+    width: 100%;
+  }
+
+  .sort-controls .btn-group .btn {
+    font-size: 0.875rem;
+    padding: 0.5rem;
+  }
+
+  .pagination {
+    gap: 0.25rem;
+  }
+
+  .pagination .page-link {
+    padding: 0.4rem 0.6rem;
+    min-width: 36px;
+    font-size: 0.875rem;
   }
 
   .modal-dialog-wrapper,
