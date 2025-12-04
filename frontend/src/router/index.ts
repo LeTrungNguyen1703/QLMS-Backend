@@ -2,7 +2,11 @@ import {createRouter, createWebHistory} from 'vue-router';
 import AuthLayout from '../layouts/AuthLayout.vue'
 
 const routes = [
-    {path: '/', redirect: '/docgia/search-books'},
+    {
+        path: '/',
+        name: 'Welcome',
+        component: () => import('../views/Welcome.vue'),
+    },
     {
         path: '/auth/login',
         name: 'Login',
