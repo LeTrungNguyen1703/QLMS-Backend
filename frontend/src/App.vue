@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import {RouterLink, useRoute} from 'vue-router';
 import {ref, watch, provide, onMounted} from 'vue';
-import {Cloudinary} from '@cloudinary/url-gen';
 import {authService} from "./services/authService.ts";
 import router from "./router";
 import Cart from './components/Cart.vue';
