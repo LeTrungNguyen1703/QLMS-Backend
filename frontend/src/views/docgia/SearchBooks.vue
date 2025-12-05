@@ -96,14 +96,24 @@
                 <div class="d-flex justify-content-between align-items-center mb-2">
                   <span class="text-primary fw-bold small">{{ formatPrice(book.DonGia) }}</span>
                 </div>
-                <button
-                    class="btn btn-gradient btn-sm w-100"
-                    @click="handleBorrowClick(book)"
-                    :disabled="book.SoQuyen === 0"
-                >
-                  <i class="bi bi-bookmark-plus me-1"></i>
-                  {{ book.SoQuyen === 0 ? 'Hết' : 'Mượn' }}
-                </button>
+                <div class="d-flex gap-1 mb-2">
+                  <button
+                      class="btn btn-gradient btn-sm flex-grow-1"
+                      @click="handleBorrowClick(book)"
+                      :disabled="book.SoQuyen === 0"
+                  >
+                    <i class="bi bi-bookmark-plus me-1"></i>
+                    {{ book.SoQuyen === 0 ? 'Hết' : 'Mượn' }}
+                  </button>
+                  <button
+                      class="btn btn-outline-primary btn-sm"
+                      @click="handleAddToCart(book)"
+                      :disabled="book.SoQuyen === 0 || isInCart(book._id)"
+                      :title="isInCart(book._id) ? 'Đã có trong giỏ' : 'Thêm vào giỏ'"
+                  >
+                    <i :class="isInCart(book._id) ? 'bi bi-check-lg' : 'bi bi-cart-plus'"></i>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -185,6 +195,14 @@
       <i class="bi bi-inbox fs-1 text-muted"></i>
       <p class="text-muted mt-2">Không tìm thấy sách nào</p>
     </div>
+
+    <!-- Cart Notification Toast -->
+    <Transition name="toast-fade">
+      <div v-if="showCartNotification" class="cart-notification-toast">
+        <i class="bi bi-check-circle-fill text-success me-2"></i>
+        {{ cartNotificationMessage }}
+      </div>
+    </Transition>
 
     <!-- Login Prompt Modal -->
     <Transition name="modal-fade">
@@ -333,7 +351,8 @@ import { useRouter } from 'vue-router'
 import {bookService} from '../../services/bookService'
 import {authService} from '../../services/authService'
 import type {Sach} from '../../types/book'
-import CarouselComponent from "./CarouselComponent.vue";
+import CarouselComponent from "./CarouselComponent.vue"
+import { useCart } from '../../composables/useCart'
 
 const books = ref<Sach[]>([])
 // Inject searchQuery từ App.vue
@@ -341,6 +360,11 @@ const searchQuery = inject<Ref<string>>('searchQuery', ref(''))
 const isLoading = ref(false)
 const errorMessage = ref('')
 const router = useRouter()
+
+// Cart composable
+const { addToCart, isInCart } = useCart()
+const showCartNotification = ref(false)
+const cartNotificationMessage = ref('')
 
 const showBorrowModal = ref(false)
 const showLoginPrompt = ref(false)
@@ -464,6 +488,17 @@ const closeLoginPrompt = () => {
 const redirectToLogin = () => {
   showLoginPrompt.value = false
   router.push('/auth/login')
+}
+
+const handleAddToCart = (book: Sach) => {
+  addToCart(book, 1)
+  cartNotificationMessage.value = `Đã thêm "${book.TenSach}" vào giỏ`
+  showCartNotification.value = true
+
+  // Auto hide notification after 3 seconds
+  setTimeout(() => {
+    showCartNotification.value = false
+  }, 3000)
 }
 
 const confirmBorrow = async () => {
@@ -881,6 +916,33 @@ defineExpose({
   border: none;
   padding: 1rem;
   margin-bottom: 1rem;
+}
+
+/* Cart Notification Toast */
+.cart-notification-toast {
+  position: fixed;
+  top: 100px;
+  right: 20px;
+  background: white;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  z-index: 1100;
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  border-left: 4px solid #28a745;
+}
+
+.toast-fade-enter-active,
+.toast-fade-leave-active {
+  transition: all 0.3s ease;
+}
+
+.toast-fade-enter-from,
+.toast-fade-leave-to {
+  opacity: 0;
+  transform: translateX(100px);
 }
 
 /* Login Prompt Modal Styles */

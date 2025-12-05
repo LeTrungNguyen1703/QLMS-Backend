@@ -4,6 +4,8 @@ import {ref, watch, provide, onMounted} from 'vue';
 import {Cloudinary} from '@cloudinary/url-gen';
 import {authService} from "./services/authService.ts";
 import router from "./router";
+import Cart from './components/Cart.vue';
+import CartButton from './components/CartButton.vue';
 
 const route = useRoute();
 const searchQuery = ref('');
@@ -76,6 +78,9 @@ const handleLogin = () => {
           </div>
         </div>
 
+        <!-- Cart Button -->
+        <CartButton />
+
         <!-- Navigation buttons for authenticated users -->
         <template v-if="isAuthenticated">
           <button @click="handleLogout" class="btn btn-outline-light">
@@ -102,6 +107,9 @@ const handleLogin = () => {
   <main>
     <router-view/>
   </main>
+
+  <!-- Cart Drawer Component -->
+  <Cart />
 </template>
 
 <style>
