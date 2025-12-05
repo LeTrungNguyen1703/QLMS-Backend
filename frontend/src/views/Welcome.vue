@@ -40,20 +40,32 @@
         </div>
       </div>
 
-      <button
-        class="btn btn-gradient btn-lg btn-enter"
-        :class="{ 'clicked': isTransitioning }"
-        @click="goToSearchBooks"
-        :disabled="isTransitioning"
-      >
-        <i class="bi bi-arrow-right-circle me-2"></i>
-        <span v-if="!isTransitioning">Khám Phá Ngay</span>
-        <span v-else>
-          <span class="spinner-border spinner-border-sm me-2"></span>
-          Đang chuyển...
-        </span>
-        <span class="btn-shine"></span>
-      </button>
+      <div class="action-buttons">
+        <button
+          class="btn btn-action btn-login"
+          @click="goToLogin"
+        >
+          <i class="bi bi-box-arrow-in-right me-2"></i>
+          <span>Đăng nhập</span>
+        </button>
+        <button
+          class="btn btn-action btn-register"
+          @click="goToRegister"
+        >
+          <i class="bi bi-person-plus me-2"></i>
+          <span>Đăng ký tài khoản</span>
+        </button>
+      </div>
+
+      <div class="text-center mt-4">
+        <button
+          class="btn btn-link text-white text-decoration-none"
+          @click="goToSearchBooks"
+        >
+          <i class="bi bi-search me-2"></i>
+          Hoặc duyệt sách mà không cần đăng nhập
+        </button>
+      </div>
     </div>
 
     <!-- Decorative elements -->
@@ -70,14 +82,25 @@ import { ref } from 'vue';
 const router = useRouter();
 const isTransitioning = ref(false);
 
-const goToSearchBooks = () => {
-  // Start the exit animation
+const goToLogin = () => {
   isTransitioning.value = true;
+  setTimeout(() => {
+    router.push('/login');
+  }, 600);
+};
 
-  // Wait for animation to complete before navigating
+const goToRegister = () => {
+  isTransitioning.value = true;
+  setTimeout(() => {
+    router.push('/register');
+  }, 600);
+};
+
+const goToSearchBooks = () => {
+  isTransitioning.value = true;
   setTimeout(() => {
     router.push('/docgia/search-books');
-  }, 1000); // Match the animation duration
+  }, 600);
 };
 </script>
 
@@ -339,6 +362,76 @@ const goToSearchBooks = () => {
 .feature-item span {
   font-size: 0.9rem;
   text-align: center;
+}
+
+/* Action buttons */
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+  animation: fadeInUp 1s ease-out 1s both;
+}
+
+.btn-action {
+  padding: 1rem 2.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 12px;
+  border: none;
+  color: white;
+  transition: all 0.3s;
+  min-width: 200px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.btn-action::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.2);
+  transition: all 0.4s;
+}
+
+.btn-action:hover::before {
+  left: 100%;
+}
+
+.btn-login {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.btn-login:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+  background: linear-gradient(135deg, #5568d3 0%, #6a3f8f 100%);
+}
+
+.btn-register {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.btn-register:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(245, 87, 108, 0.6);
+  background: linear-gradient(135deg, #e87fe8 0%, #e14359 100%);
+}
+
+.btn-link {
+  opacity: 0.8;
+  transition: all 0.3s;
+  font-size: 1rem;
+}
+
+.btn-link:hover {
+  opacity: 1;
+  text-decoration: underline !important;
 }
 
 /* Enter button */

@@ -1,28 +1,28 @@
 <template>
-  <div class="admin-auth-root d-flex align-items-center justify-content-center">
-    <div class="admin-auth-card p-4">
+  <div class="employee-auth-root d-flex align-items-center justify-content-center">
+    <div class="employee-auth-card p-4">
       <div class="text-center mb-4">
-        <div class="admin-icon-wrapper mb-3">
-          <i class="bi bi-shield-lock-fill"></i>
+        <div class="employee-icon-wrapper mb-3">
+          <i class="bi bi-person-badge-fill"></i>
         </div>
-        <h3 class="mb-2">Đăng nhập Quản trị viên</h3>
+        <h3 class="mb-2">Đăng nhập Nhân viên</h3>
         <p class="text-muted small">
           <i class="bi bi-info-circle me-1"></i>
-          Khu vực dành riêng cho Admin - Toàn quyền quản lý hệ thống
+          Khu vực dành cho nhân viên thư viện
         </p>
       </div>
 
-      <form @submit.prevent="handleAdminLogin">
+      <form @submit.prevent="handleEmployeeLogin">
         <div class="mb-3">
           <label class="form-label">
             <i class="bi bi-person-fill me-1"></i>
-            Tên tài khoản Admin
+            Tên tài khoản
           </label>
           <input
             v-model="loginForm.TenTaiKhoan"
             type="text"
             class="form-control"
-            placeholder="Nhập tên tài khoản admin"
+            placeholder="Nhập tên tài khoản nhân viên"
             required
           />
         </div>
@@ -61,14 +61,14 @@
         </div>
 
         <div class="d-grid gap-2 mt-4">
-          <button class="btn btn-danger btn-lg" type="submit" :disabled="isLoading">
+          <button class="btn btn-success btn-lg" type="submit" :disabled="isLoading">
             <span v-if="isLoading">
               <span class="spinner-border spinner-border-sm me-2"></span>
               Đang đăng nhập...
             </span>
             <span v-else>
-              <i class="bi bi-shield-check me-2"></i>
-              Đăng nhập Admin
+              <i class="bi bi-box-arrow-in-right me-2"></i>
+              Đăng nhập
             </span>
           </button>
         </div>
@@ -76,8 +76,8 @@
 
       <div class="text-center mt-4">
         <div class="small text-muted">
-          Bạn là nhân viên?
-          <router-link to="/employee/login" class="text-decoration-none ms-1">Đăng nhập nhân viên</router-link>
+          Bạn là quản trị viên?
+          <router-link to="/admin/login" class="text-decoration-none ms-1">Đăng nhập Admin</router-link>
         </div>
       </div>
     </div>
@@ -102,23 +102,25 @@ const isLoading = ref(false)
 const errorMessage = ref('')
 const successMessage = ref('')
 
-const handleAdminLogin = async () => {
+const handleEmployeeLogin = async () => {
   errorMessage.value = ''
   successMessage.value = ''
   isLoading.value = true
 
   try {
     const response = await authService.login(loginForm.value, UserType.NHANVIEN)
-    if (response.Role !== 'ADMIN') {
-      throw new Error('Bạn không có quyền truy cập admin.')
+
+    // Ensure the user is not an admin (admins should use /admin/login)
+    if (response.Role === 'ADMIN') {
+      errorMessage.value = 'Vui lòng sử dụng trang đăng nhập Admin.'
+      isLoading.value = false
+      return
     }
 
-    // Kiểm tra xem có phải admin không (có thể check từ response hoặc ChucVu)
-    // Giả sử backend trả về thông tin role
-    successMessage.value = 'Đăng nhập thành công!'
+    successMessage.value = `Đăng nhập thành công! Xin chào ${response.UserName}`
 
     setTimeout(() => {
-      router.push('/admin/dashboard')
+      router.push('/nhanvien/dashboard')
     }, 500)
   } catch (error: any) {
     errorMessage.value = error.message || 'Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.'
@@ -129,16 +131,16 @@ const handleAdminLogin = async () => {
 </script>
 
 <style scoped>
-.admin-auth-root {
+.employee-auth-root {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
   padding: 40px 16px;
 }
 
-.admin-auth-card {
+.employee-auth-card {
   width: 480px;
   max-width: 95vw;
   border-radius: 16px;
@@ -146,19 +148,19 @@ const handleAdminLogin = async () => {
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
 }
 
-.admin-icon-wrapper {
+.employee-icon-wrapper {
   width: 80px;
   height: 80px;
   margin: 0 auto;
   border-radius: 50%;
-  background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
 }
 
-.admin-icon-wrapper i {
+.employee-icon-wrapper i {
   font-size: 2.5rem;
   color: white;
 }
@@ -176,12 +178,12 @@ const handleAdminLogin = async () => {
 }
 
 .form-control:focus {
-  border-color: #dc2626;
-  box-shadow: 0 0 0 0.2rem rgba(220, 38, 38, 0.15);
+  border-color: #10b981;
+  box-shadow: 0 0 0 0.2rem rgba(16, 185, 129, 0.15);
 }
 
-.btn-danger {
-  background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+.btn-success {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
   border: none;
   font-weight: 600;
   padding: 0.875rem;
@@ -189,27 +191,23 @@ const handleAdminLogin = async () => {
   transition: all 0.3s;
 }
 
-.btn-danger:hover:not(:disabled) {
-  background: linear-gradient(135deg, #b91c1c 0%, #7f1d1d 100%);
+.btn-success:hover:not(:disabled) {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
   transform: translateY(-2px);
-  box-shadow: 0 8px 16px rgba(220, 38, 38, 0.4);
+  box-shadow: 0 8px 16px rgba(16, 185, 129, 0.4);
 }
 
-.btn-danger:active:not(:disabled) {
+.btn-success:active:not(:disabled) {
   transform: translateY(0);
+}
+
+.btn-outline-secondary {
+  border-radius: 0 8px 8px 0;
 }
 
 .alert {
   border-radius: 8px;
-  border: none;
-}
-
-a {
-  color: #dc2626;
-  transition: color 0.2s;
-}
-
-a:hover {
-  color: #991b1b;
+  font-size: 0.9rem;
 }
 </style>
+

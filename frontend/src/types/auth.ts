@@ -44,5 +44,6 @@ export interface APIResponse<T> {
 
 export enum UserType {
     DOCGIA = 'docgia',
-    NHANVIEN = 'nhanvien'
+    NHANVIEN = 'nhanvien',
+    ADMIN = 'admin'
 }

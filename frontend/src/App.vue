@@ -46,25 +46,19 @@ const handleLogin = () => {
   router.push('/auth/login');
 }
 
-// Create a Cloudinary instance and set your cloud name.
-const cld = new Cloudinary({
-  cloud: {
-    cloudName: 'demo',
-  },
-});
 </script>
 
 
 <template>
   <header class="app-header d-flex align-items-center">
     <div class="container-fluid d-flex justify-content-between align-items-center py-3 px-4">
-      <div class="brand d-flex align-items-center">
+      <RouterLink to="/" class="brand d-flex align-items-center text-decoration-none">
         <div class="brand-logo"><i class="bi bi-book-half"></i></div>
         <div class="brand-text ms-3">
           <div class="brand-title">Quản lý mượn sách</div>
           <div class="brand-sub">Thư viện - quản lý mượn / trả sách</div>
         </div>
-      </div>
+      </RouterLink>
 
       <nav class="d-flex align-items-center gap-3">
         <!-- Search bar - chỉ hiện khi ở trang tìm sách -->
@@ -133,6 +127,21 @@ body {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
+.brand {
+  color: #fff;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.brand:hover {
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.brand:hover .brand-logo {
+  background: rgba(255, 255, 255, 0.15);
+}
+
 .brand-logo {
   font-weight: 800;
   font-size: 1.6rem;
@@ -140,6 +149,7 @@ body {
   padding: 8px 12px;
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.08);
+  transition: all 0.3s ease;
 }
 
 .brand-title {
