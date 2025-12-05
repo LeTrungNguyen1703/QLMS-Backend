@@ -8,6 +8,39 @@
         </h4>
       </div>
       <div class="card-body">
+        <!-- Search and Filter Section -->
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <div class="input-group">
+              <span class="input-group-text">
+                <i class="bi bi-search"></i>
+              </span>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Tìm theo tên sách hoặc tác giả..."
+                v-model="searchQuery"
+              />
+            </div>
+          </div>
+          <div class="col-md-3">
+            <select class="form-select" v-model="statusFilter">
+              <option value="all">Tất cả trạng thái</option>
+              <option value="CHO_DUYET">Chờ duyệt</option>
+              <option value="DA_DUYET">Đã duyệt</option>
+              <option value="DA_TRA">Đã trả</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <select class="form-select" v-model="sortBy">
+              <option value="date_desc">Ngày mượn (Mới nhất)</option>
+              <option value="date_asc">Ngày mượn (Cũ nhất)</option>
+              <option value="due_date_asc">Hạn trả (Gần nhất)</option>
+              <option value="name_asc">Tên sách (A-Z)</option>
+            </select>
+          </div>
+        </div>
+
         <!-- Loading state -->
         <div v-if="isLoading" class="text-center py-5">
           <div class="spinner-border text-success" role="status">
@@ -23,7 +56,7 @@
         </div>
 
         <!-- Borrowed books list -->
-        <div v-else-if="activeBorrows.length > 0">
+        <div v-else-if="paginatedBorrows.length > 0">
           <div class="table-responsive">
             <table class="table table-hover">
               <thead>
@@ -39,7 +72,7 @@
               </tr>
               </thead>
               <tbody>
-              <tr v-for="borrow in activeBorrows" :key="borrow._id">
+              <tr v-for="borrow in paginatedBorrows" :key="borrow._id">
                 <td>
                   <strong>{{ getBookTitle(borrow.MaSach) }}</strong>
                 </td>
@@ -53,7 +86,7 @@
                 </td>
                 <td>
                     <span :class="getStatusClass(borrow.TrangThai)">
-                      {{ borrow.TrangThai }}
+                      {{ getStatusLabel(borrow.TrangThai) }}
                     </span>
                 </td>
                 <td>
@@ -67,15 +100,31 @@
                     <button
                       class="btn btn-outline-info"
                       @click="viewBookDetail(borrow.MaSach)"
-                      title="Xem chi tiết"
+                      title="Xem chi tiết và mượn lại"
                     >
                       <i class="bi bi-eye"></i>
                     </button>
                     <button
+                      v-if="borrow.TrangThai === TrangThaiMuonSach.CHO_DUYET"
+                      class="btn btn-outline-danger"
+                      @click="cancelBorrowRequest(borrow._id)"
+                      title="Hủy yêu cầu"
+                    >
+                      <i class="bi bi-x-circle"></i>
+                    </button>
+                    <button
+                      v-else
+                      class="btn btn-outline-success"
+                      @click="quickBorrow(borrow.MaSach)"
+                      title="Mượn nhanh (1 quyển)"
+                    >
+                      <i class="bi bi-plus-circle-fill"></i>
+                    </button>
+                    <button
+                      v-if="borrow.TrangThai !== TrangThaiMuonSach.CHO_DUYET"
                       class="btn btn-outline-primary"
                       @click="borrowAgain(borrow.MaSach)"
-                      :disabled="!canBorrowAgain(borrow.MaSach)"
-                      title="Mượn lại"
+                      title="Mượn lại (tùy chọn số lượng)"
                     >
                       <i class="bi bi-arrow-repeat"></i>
                     </button>
@@ -84,6 +133,37 @@
               </tr>
               </tbody>
             </table>
+          </div>
+
+          <!-- Pagination -->
+          <nav aria-label="Page navigation" v-if="totalPages > 1">
+            <ul class="pagination justify-content-center">
+              <li class="page-item" :class="{ disabled: currentPage === 1 }">
+                <a class="page-link" href="#" @click.prevent="changePage(currentPage - 1)">
+                  <i class="bi bi-chevron-left"></i>
+                </a>
+              </li>
+              <li
+                class="page-item"
+                v-for="page in displayPages"
+                :key="page"
+                :class="{ active: currentPage === page }"
+              >
+                <a class="page-link" href="#" @click.prevent="changePage(page)">{{ page }}</a>
+              </li>
+              <li class="page-item" :class="{ disabled: currentPage === totalPages }">
+                <a class="page-link" href="#" @click.prevent="changePage(currentPage + 1)">
+                  <i class="bi bi-chevron-right"></i>
+                </a>
+              </li>
+            </ul>
+          </nav>
+
+          <!-- Showing info -->
+          <div class="text-center text-muted mb-3">
+            Hiển thị {{ (currentPage - 1) * itemsPerPage + 1 }} -
+            {{ Math.min(currentPage * itemsPerPage, sortedActiveBorrows.length) }}
+            trong tổng số {{ sortedActiveBorrows.length }} bản ghi
           </div>
 
           <!-- Summary -->
@@ -116,61 +196,72 @@
                 <i class="bi bi-x-lg"></i>
               </button>
 
-              <div v-if="selectedBook" class="modal-body-custom">
-                <div class="book-detail-image">
-                  <img
-                    :src="selectedBook.HinhAnh || 'https://via.placeholder.com/300x400?text=No+Image'"
-                    :alt="selectedBook.TenSach"
-                  />
+              <div class="modal-body-custom">
+                <!-- Loading state -->
+                <div v-if="isLoadingBookDetail" class="book-detail-loading">
+                  <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Đang tải...</span>
+                  </div>
+                  <p class="mt-3">Đang tải thông tin sách...</p>
                 </div>
 
-                <div class="book-detail-info">
-                  <h4 class="book-detail-title">{{ selectedBook.TenSach }}</h4>
+                <!-- Book details -->
+                <div v-else-if="selectedBook">
+                  <div class="book-detail-image">
+                    <img
+                      :src="selectedBook.HinhAnh || 'https://via.placeholder.com/300x400?text=No+Image'"
+                      :alt="selectedBook.TenSach"
+                    />
+                  </div>
 
-                  <div class="book-detail-meta">
-                    <div class="meta-row">
-                      <span class="meta-label">
-                        <i class="bi bi-person-fill me-1"></i>Tác giả:
-                      </span>
-                      <span class="meta-value">{{ selectedBook.TacGia }}</span>
-                    </div>
-                    <div class="meta-row">
-                      <span class="meta-label">
-                        <i class="bi bi-calendar-event me-1"></i>Năm xuất bản:
-                      </span>
-                      <span class="meta-value">{{ formatYear(selectedBook.NamXuatBan) }}</span>
-                    </div>
-                    <div class="meta-row">
-                      <span class="meta-label">
-                        <i class="bi bi-building me-1"></i>Nhà xuất bản:
-                      </span>
-                      <span class="meta-value">{{ getPublisherName(selectedBook.IdNxb) }}</span>
-                    </div>
-                    <div class="meta-row">
-                      <span class="meta-label">
-                        <i class="bi bi-cash me-1"></i>Đơn giá:
-                      </span>
-                      <span class="meta-value text-success fw-bold">{{ formatPrice(selectedBook.DonGia) }}</span>
-                    </div>
-                    <div class="meta-row">
-                      <span class="meta-label">
-                        <i class="bi bi-book-half me-1"></i>Số lượng:
-                      </span>
-                      <span class="meta-value">
-                        <span :class="selectedBook.SoQuyen > 0 ? 'text-success' : 'text-danger'">
-                          {{ selectedBook.SoQuyen }} quyển
+                  <div class="book-detail-info">
+                    <h4 class="book-detail-title">{{ selectedBook.TenSach }}</h4>
+
+                    <div class="book-detail-meta">
+                      <div class="meta-row">
+                        <span class="meta-label">
+                          <i class="bi bi-person-fill me-1"></i>Tác giả:
                         </span>
-                      </span>
-                    </div>
-                    <div class="meta-row">
-                      <span class="meta-label">
-                        <i class="bi bi-check-circle me-1"></i>Tình trạng:
-                      </span>
-                      <span class="meta-value">
-                        <span :class="selectedBook.SoQuyen > 0 ? 'badge bg-success' : 'badge bg-danger'">
-                          {{ selectedBook.SoQuyen > 0 ? 'Còn sách' : 'Hết sách' }}
+                        <span class="meta-value">{{ selectedBook.TacGia }}</span>
+                      </div>
+                      <div class="meta-row">
+                        <span class="meta-label">
+                          <i class="bi bi-calendar-event me-1"></i>Năm xuất bản:
                         </span>
-                      </span>
+                        <span class="meta-value">{{ formatYear(selectedBook.NamXuatBan) }}</span>
+                      </div>
+                      <div class="meta-row">
+                        <span class="meta-label">
+                          <i class="bi bi-building me-1"></i>Nhà xuất bản:
+                        </span>
+                        <span class="meta-value">{{ getPublisherName(selectedBook.IdNxb) }}</span>
+                      </div>
+                      <div class="meta-row">
+                        <span class="meta-label">
+                          <i class="bi bi-cash me-1"></i>Đơn giá:
+                        </span>
+                        <span class="meta-value text-success fw-bold">{{ formatPrice(selectedBook.DonGia) }}</span>
+                      </div>
+                      <div class="meta-row">
+                        <span class="meta-label">
+                          <i class="bi bi-book-half me-1"></i>Số lượng:
+                        </span>
+                        <span class="meta-value">
+                          <span :class="selectedBook.SoQuyen > 0 ? 'text-success' : 'text-danger'">
+                            {{ selectedBook.SoQuyen }} quyển
+                          </span>
+                        </span>
+                      </div>
+                      <div class="meta-row">
+                        <span class="meta-label">
+                          <i class="bi bi-check-circle me-1"></i>Tình trạng:
+                        </span>
+                        <span class="meta-value">
+                          <span :class="selectedBook.SoQuyen > 0 ? 'badge bg-success' : 'badge bg-danger'">
+                            {{ selectedBook.SoQuyen > 0 ? 'Còn sách' : 'Hết sách' }}
+                          </span>
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -184,7 +275,7 @@
                 <button
                   class="btn btn-gradient"
                   @click="borrowFromDetail"
-                  :disabled="!selectedBook || selectedBook.SoQuyen === 0"
+                  :disabled="isLoadingBookDetail || !selectedBook || selectedBook.SoQuyen === 0"
                 >
                   <i class="bi bi-bookmark-plus me-1"></i>
                   Mượn lại
@@ -306,12 +397,21 @@ import {useRouter} from 'vue-router'
 import {bookService} from '../../services/bookService'
 import {authService} from '../../services/authService'
 import type {TheoDoiMuonSach, Sach} from '../../types/book'
-import {TrangThaiMuonSach} from '../../types/book'
+import {TrangThaiMuonSach, TrangThaiMuonSachLabel} from '../../types/book'
 
 const router = useRouter()
 const borrows = ref<TheoDoiMuonSach[]>([])
 const isLoading = ref(false)
 const errorMessage = ref('')
+
+// Search, filter, sort states
+const searchQuery = ref('')
+const statusFilter = ref<string>('all')
+const sortBy = ref('date_desc')
+
+// Pagination states
+const currentPage = ref(1)
+const itemsPerPage = ref(10)
 
 // Modal states
 const showDetailModal = ref(false)
@@ -322,10 +422,80 @@ const borrowQuantity = ref(1)
 const isBorrowing = ref(false)
 const borrowError = ref('')
 const borrowSuccess = ref('')
+const isLoadingBookDetail = ref(false)
 
-// Filter only active borrows (not returned yet)
+// Show all borrows and let the status filter control visibility
 const activeBorrows = computed(() => {
-  return borrows.value.filter(b => b.TrangThai !== TrangThaiMuonSach.DA_TRA)
+  let result = [...borrows.value]
+
+  // Search filter
+  if (searchQuery.value.trim()) {
+    const query = searchQuery.value.toLowerCase()
+    result = result.filter(b =>
+      getBookTitle(b.MaSach).toLowerCase().includes(query) ||
+      getBookAuthor(b.MaSach).toLowerCase().includes(query)
+    )
+  }
+
+  // Status filter
+  if (statusFilter.value !== 'all') {
+    console.log('Filtering by status:', statusFilter.value)
+    console.log('Sample book status:', result[0]?.TrangThai)
+    result = result.filter(b => {
+      const match = b.TrangThai === statusFilter.value
+      if (!match) {
+        console.log(`No match: "${b.TrangThai}" !== "${statusFilter.value}"`)
+      }
+      return match
+    })
+    console.log('Filtered result count:', result.length)
+  }
+
+  return result
+})
+
+const sortedActiveBorrows = computed(() => {
+  const sorted = [...activeBorrows.value]
+
+  switch (sortBy.value) {
+    case 'date_asc':
+      return sorted.sort((a, b) => new Date(a.NgayMuon).getTime() - new Date(b.NgayMuon).getTime())
+    case 'date_desc':
+      return sorted.sort((a, b) => new Date(b.NgayMuon).getTime() - new Date(a.NgayMuon).getTime())
+    case 'due_date_asc':
+      return sorted.sort((a, b) => new Date(a.NgayTra).getTime() - new Date(b.NgayTra).getTime())
+    case 'name_asc':
+      return sorted.sort((a, b) => getBookTitle(a.MaSach).localeCompare(getBookTitle(b.MaSach)))
+    default:
+      return sorted
+  }
+})
+
+const totalPages = computed(() => {
+  return Math.ceil(sortedActiveBorrows.value.length / itemsPerPage.value)
+})
+
+const paginatedBorrows = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage.value
+  const end = start + itemsPerPage.value
+  return sortedActiveBorrows.value.slice(start, end)
+})
+
+const displayPages = computed(() => {
+  const pages = []
+  const maxDisplay = 5
+  let startPage = Math.max(1, currentPage.value - Math.floor(maxDisplay / 2))
+  let endPage = Math.min(totalPages.value, startPage + maxDisplay - 1)
+
+  if (endPage - startPage < maxDisplay - 1) {
+    startPage = Math.max(1, endPage - maxDisplay + 1)
+  }
+
+  for (let i = startPage; i <= endPage; i++) {
+    pages.push(i)
+  }
+
+  return pages
 })
 
 const overdueCount = computed(() => {
@@ -394,6 +564,10 @@ const getStatusClass = (status: TrangThaiMuonSach): string => {
   }
 }
 
+const getStatusLabel = (status: TrangThaiMuonSach): string => {
+  return TrangThaiMuonSachLabel[status] || status
+}
+
 const formatYear = (date: string | Date): string => {
   return new Date(date).getFullYear().toString()
 }
@@ -412,17 +586,26 @@ const getBook = (maSach: string | Sach): Sach | null => {
   return null
 }
 
-const canBorrowAgain = (maSach: string | Sach): boolean => {
-  const book = getBook(maSach)
-  return book ? book.SoQuyen > 0 : false
-}
-
 // View book detail
-const viewBookDetail = (maSach: string | Sach) => {
+const viewBookDetail = async (maSach: string | Sach) => {
   const book = getBook(maSach)
-  if (book) {
+  if (!book) {
+    return
+  }
+
+  isLoadingBookDetail.value = true
+  showDetailModal.value = true
+
+  try {
+    // Fetch latest book data from API to get current stock quantity
+    const latestBookData = await bookService.getBookById(book._id)
+    selectedBook.value = latestBookData
+  } catch (error: any) {
+    // If API fails, fallback to cached data
+    console.error('Failed to fetch latest book data:', error)
     selectedBook.value = book
-    showDetailModal.value = true
+  } finally {
+    isLoadingBookDetail.value = false
   }
 }
 
@@ -437,8 +620,8 @@ const borrowFromDetail = () => {
   }
 }
 
-// Borrow again functionality
-const borrowAgain = (maSach: string | Sach) => {
+// Quick borrow - instantly borrow 1 copy without modal
+const quickBorrow = async (maSach: string | Sach) => {
   // Check if user is logged in
   if (!authService.isAuthenticated()) {
     showLoginPrompt.value = true
@@ -450,17 +633,79 @@ const borrowAgain = (maSach: string | Sach) => {
     return
   }
 
-  // Check if book is available
-  if (book.SoQuyen === 0) {
-    alert('Sách hiện không còn để mượn')
+  // Confirm quick borrow
+  const bookTitle = getBookTitle(maSach)
+  if (!confirm(`Mượn nhanh "${bookTitle}" (1 quyển)?`)) {
     return
   }
 
-  selectedBook.value = book
-  borrowQuantity.value = 1
-  borrowError.value = ''
-  borrowSuccess.value = ''
-  showBorrowModal.value = true
+  try {
+    // Fetch latest book data to check current availability
+    const latestBookData = await bookService.getBookById(book._id)
+
+    // Check if book is available
+    if (latestBookData.SoQuyen === 0) {
+      alert('Sách hiện không còn để mượn')
+      return
+    }
+
+    // Show loading state
+    isBorrowing.value = true
+
+    // Submit borrow request with quantity 1
+    const userId = localStorage.getItem('userId')
+    if (!userId) {
+      alert('Không tìm thấy thông tin người dùng')
+      return
+    }
+
+    await bookService.borrowBook({
+      MaSach: latestBookData._id,
+      SoQuyen: 1
+    })
+
+    alert('✅ Yêu cầu mượn sách thành công! Chờ nhân viên duyệt.')
+
+    // Reload the borrowed books list
+    await loadBorrowedBooks()
+  } catch (error: any) {
+    alert(error.message || 'Không thể mượn sách. Vui lòng thử lại.')
+  } finally {
+    isBorrowing.value = false
+  }
+}
+
+// Borrow again functionality
+const borrowAgain = async (maSach: string | Sach) => {
+  // Check if user is logged in
+  if (!authService.isAuthenticated()) {
+    showLoginPrompt.value = true
+    return
+  }
+
+  const book = getBook(maSach)
+  if (!book) {
+    return
+  }
+
+  try {
+    // Fetch latest book data to check current availability
+    const latestBookData = await bookService.getBookById(book._id)
+
+    // Check if book is available
+    if (latestBookData.SoQuyen === 0) {
+      alert('Sách hiện không còn để mượn')
+      return
+    }
+
+    selectedBook.value = latestBookData
+    borrowQuantity.value = 1
+    borrowError.value = ''
+    borrowSuccess.value = ''
+    showBorrowModal.value = true
+  } catch (error: any) {
+    alert('Không thể tải thông tin sách. Vui lòng thử lại.')
+  }
 }
 
 const closeBorrowModal = () => {
@@ -511,6 +756,29 @@ const redirectToLogin = () => {
   router.push('/auth/login')
 }
 
+// Pagination handler
+const changePage = (page: number) => {
+  if (page >= 1 && page <= totalPages.value) {
+    currentPage.value = page
+  }
+}
+
+// Cancel borrow request
+const cancelBorrowRequest = async (borrowId: string) => {
+  if (!confirm('Bạn có chắc chắn muốn hủy yêu cầu mượn sách này?')) {
+    return
+  }
+
+  try {
+    // Call the delete API to cancel the request
+    await bookService.cancelBorrowRequest(borrowId)
+    alert('Đã hủy yêu cầu mượn sách thành công')
+    await loadBorrowedBooks() // Reload the list
+  } catch (error: any) {
+    alert(error.message || 'Không thể hủy yêu cầu. Vui lòng thử lại.')
+  }
+}
+
 onMounted(() => {
   loadBorrowedBooks()
 })
@@ -524,6 +792,31 @@ onMounted(() => {
 .btn-group-sm .btn {
   padding: 0.25rem 0.5rem;
   font-size: 0.875rem;
+}
+
+/* Quick borrow button styling */
+.btn-outline-success {
+  transition: all 0.3s ease;
+}
+
+.btn-outline-success:hover:not(:disabled) {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  border-color: #10b981;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.btn-outline-success i {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
 }
 
 /* Modal Backdrop */
@@ -610,6 +903,23 @@ onMounted(() => {
   height: 100%;
   max-width: 100%;
   object-fit: contain;
+}
+
+/* Book Detail Loading */
+.book-detail-loading {
+  padding: 4rem 2rem;
+  text-align: center;
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.book-detail-loading p {
+  color: #4a5568;
+  font-size: 1rem;
+  margin: 0;
 }
 
 /* Book Detail Info */

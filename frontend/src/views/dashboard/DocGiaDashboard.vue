@@ -18,7 +18,7 @@
         <div class="mt-4">
           <h5>Chức năng</h5>
           <div class="row g-3">
-            <div class="col-md-4">
+            <div class="col-md-6">
               <router-link to="/docgia/search-books" class="text-decoration-none">
                 <div class="card feature-card">
                   <div class="card-body text-center">
@@ -29,7 +29,7 @@
                 </div>
               </router-link>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-6">
               <router-link to="/docgia/borrowed-books" class="text-decoration-none">
                 <div class="card feature-card">
                   <div class="card-body text-center">
@@ -40,17 +40,7 @@
                 </div>
               </router-link>
             </div>
-            <div class="col-md-4">
-              <router-link to="/docgia/borrow-history" class="text-decoration-none">
-                <div class="card feature-card">
-                  <div class="card-body text-center">
-                    <i class="bi bi-clock-history fs-1 text-info"></i>
-                    <h6 class="mt-2">Lịch sử</h6>
-                    <p class="text-muted small mb-0">Xem lịch sử mượn trả</p>
-                  </div>
-                </div>
-              </router-link>
-            </div>
+            <!-- BorrowHistory hidden as requested -->
           </div>
         </div>
       </div>

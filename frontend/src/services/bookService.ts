@@ -1,4 +1,4 @@
-import type {Sach, TheoDoiMuonSach, MuonSachRequest} from '../types/book';
+import type {Sach, TheoDoiMuonSach} from '../types/book';
 import type {APIResponse} from '../types/auth';
 import {apiClient} from "./base-url.ts";
 
@@ -140,6 +140,18 @@ export const bookService = {
                 throw new Error(error.response.data.message);
             }
             throw new Error('Không thể xóa sách. Vui lòng thử lại.');
+        }
+    },
+
+    // Hủy yêu cầu mượn sách
+    async cancelBorrowRequest(borrowId: string): Promise<void> {
+        try {
+            await apiClient.delete(`/muonsach/delete-muonsach/${borrowId}`);
+        } catch (error: any) {
+            if (error.response?.data?.message) {
+                throw new Error(error.response.data.message);
+            }
+            throw new Error('Không thể hủy yêu cầu mượn sách. Vui lòng thử lại.');
         }
     }
 };

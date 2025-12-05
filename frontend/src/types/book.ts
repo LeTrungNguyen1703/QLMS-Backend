@@ -22,9 +22,16 @@ export interface NhaXuatBan {
 }
 
 export enum TrangThaiMuonSach {
-  CHO_DUYET = "Chờ duyệt",
-  DA_DUYET = "Đã duyệt",
-  DA_TRA = "Đã trả"
+  CHO_DUYET = "CHO_DUYET",
+  DA_DUYET = "DA_DUYET",
+  DA_TRA = "DA_TRA"
+}
+
+// Display labels for UI
+export const TrangThaiMuonSachLabel: Record<TrangThaiMuonSach, string> = {
+  [TrangThaiMuonSach.CHO_DUYET]: "Chờ duyệt",
+  [TrangThaiMuonSach.DA_DUYET]: "Đã duyệt",
+  [TrangThaiMuonSach.DA_TRA]: "Đã trả"
 }
 
 export interface TheoDoiMuonSach {
